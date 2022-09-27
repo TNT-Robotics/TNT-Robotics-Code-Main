@@ -1,10 +1,10 @@
 [
     {
-        "merged": "org.firstinspires.ftc.teamcode.TeamCode-merged_res-17:/xml_teamwebcamcalibrations.xml.flat",
-        "source": "org.firstinspires.ftc.teamcode.TeamCode-main-19:/xml/teamwebcamcalibrations.xml"
+        "merged": "C:\\Users\\corsairit\\Downloads\\TNT-Robotics-Code-Main-main\\TNT-Robotics-Code-Main-main\\TeamCode\\build\\intermediates\\merged_res\\debug\\raw_readme.md.flat",
+        "source": "C:\\Users\\corsairit\\Downloads\\TNT-Robotics-Code-Main-main\\TNT-Robotics-Code-Main-main\\TeamCode\\src\\main\\res\\raw\\readme.md"
     },
     {
-        "merged": "org.firstinspires.ftc.teamcode.TeamCode-merged_res-17:/raw_readme.md.flat",
-        "source": "org.firstinspires.ftc.teamcode.TeamCode-main-19:/raw/readme.md"
+        "merged": "C:\\Users\\corsairit\\Downloads\\TNT-Robotics-Code-Main-main\\TNT-Robotics-Code-Main-main\\TeamCode\\build\\intermediates\\merged_res\\debug\\xml_teamwebcamcalibrations.xml.flat",
+        "source": "C:\\Users\\corsairit\\Downloads\\TNT-Robotics-Code-Main-main\\TNT-Robotics-Code-Main-main\\TeamCode\\src\\main\\res\\xml\\teamwebcamcalibrations.xml"
     }
 ]

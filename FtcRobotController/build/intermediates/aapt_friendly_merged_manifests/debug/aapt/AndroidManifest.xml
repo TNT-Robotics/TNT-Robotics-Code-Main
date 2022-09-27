@@ -6,8 +6,8 @@
     android:versionName="8.0" >
 
     <uses-sdk
-        android:minSdkVersion="23"
-        android:targetSdkVersion="28" />
+        android:minSdkVersion="24"
+        android:targetSdkVersion="29" />
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
