@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -74,40 +75,47 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
 
+    private double m = 1;
+    private boolean fastSpeed = true;
+
+    static final double INCREMENT   = 1;     // amount to slew servo each CYCLE_MS cycle
+    static final int    CYCLE_MS    =   50;     // period of each cycle
+    static final double MAX_POS     =  359;     // Maximum rotational position
+    static final double MIN_POS     =  0;     // Minimum rotational position
+    Servo servo;
+    //double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
+
     @Override
     public void runOpMode() {
 
-        // Initialize the hardware variables. Note that the strings used here must correspond
-        // to the names assigned during the robot configuration step on the DS or RC devices.
+        // INIT MOTORS
         leftFrontDrive  = hardwareMap.get(DcMotor.class, "fl");
         leftBackDrive  = hardwareMap.get(DcMotor.class, "bl");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "fr");
         rightBackDrive = hardwareMap.get(DcMotor.class, "br");
 
-        // ########################################################################################
-        // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
-        // ########################################################################################
-        // Most robots need the motors on one side to be reversed to drive forward.
-        // The motor reversals shown here are for a "direct drive" robot (the wheels turn the same direction as the motor shaft)
-        // If your robot has additional gear reductions or uses a right-angled drive, it's important to ensure
-        // that your motors are turning in the correct direction.  So, start out with the reversals here, BUT
-        // when you first test your robot, push the left joystick forward and observe the direction the wheels turn.
-        // Reverse the direction (flip FORWARD <-> REVERSE ) of any wheel that runs backward
-        // Keep testing until ALL the wheels move the robot forward when you push the left joystick forward.
+        // MOTOR DIRECTION
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
+        // INIT SERVOS
+        servo = hardwareMap.get(Servo.class, "left_hand");
+
+
         // Wait for the game to start (driver presses PLAY)
+        telemetry.addData(">", "Press Start to scan Servo.");
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
         waitForStart();
         runtime.reset();
 
-        // run until the end of the match (driver presses STOP)
+        // BEGIN CODE
         while (opModeIsActive()) {
+
+            // START OF MOTORS
             double max;
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
@@ -135,31 +143,45 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
                 rightBackPower  /= max;
             }
 
-            // This is test code:
-            //
-            // Uncomment the following code to test your motor directions.
-            // Each button should make the corresponding motor run FORWARD.
-            //   1) First get all the motors to take to correct positions on the robot
-            //      by adjusting your Robot Configuration if necessary.
-            //   2) Then make sure they run in the correct direction by modifying the
-            //      the setDirection() calls above.
-            // Once the correct motors move in the correct direction re-comment this code.
+            // Fast/Slow mode
+            if (gamepad1.cross) {
+                if (fastSpeed) {
+                    m = .25;
+                    fastSpeed = false;
+                } else {
+                    m = 1;
+                    fastSpeed = true;
+                }
+            }
+            // Send calculated power to wheels + adjusted by speed
+            leftFrontDrive.setPower(leftFrontPower * m);
+            rightFrontDrive.setPower(rightFrontPower * m);
+            leftBackDrive.setPower(leftBackPower * m);
+            rightBackDrive.setPower(rightBackPower * m);
 
-            /*
-            leftFrontPower  = gamepad1.x ? 1.0 : 0.0;  // X gamepad
-            leftBackPower   = gamepad1.a ? 1.0 : 0.0;  // A gamepad
-            rightFrontPower = gamepad1.y ? 1.0 : 0.0;  // Y gamepad
-            rightBackPower  = gamepad1.b ? 1.0 : 0.0;  // B gamepad
-            */
+            // END OF MOTORS
+            // START OF SERVOS
+            if (gamepad2.left_bumper == true) {
+                if (servo.getPosition() >= MAX_POS) {
+                    servo.setPosition(MAX_POS);
+                } else {
+                    servo.setPosition(servo.getPosition() + INCREMENT);
+                }
+            }
 
-            // Send calculated power to wheels
-            leftFrontDrive.setPower(leftFrontPower);
-            rightFrontDrive.setPower(rightFrontPower);
-            leftBackDrive.setPower(leftBackPower);
-            rightBackDrive.setPower(rightBackPower);
+            if (gamepad2.right_bumper == true) {
+                if (servo.getPosition() <= MIN_POS) {
+                    servo.setPosition(MIN_POS);
+                } else {
+                    servo.setPosition(servo.getPosition() - INCREMENT);
+                }
+            }
+
+            // END OF SERVOS
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("First servo pos", "%4.2f", servo.getPosition());
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
             telemetry.update();
