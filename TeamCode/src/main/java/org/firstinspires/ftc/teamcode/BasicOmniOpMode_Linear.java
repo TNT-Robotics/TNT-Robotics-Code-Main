@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -75,7 +76,10 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
 
-    private double m = 1;
+    private DcMotor armMotor = null;
+    //private DcMotor slideMotor = null;
+
+    private double speedMultiplier = 1;
     private boolean fastSpeed = true;
 
     static final double INCREMENT   = 1;     // amount to slew servo each CYCLE_MS cycle
@@ -88,22 +92,30 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        // INIT MOTORS
+        // ASSIGN DRIVE MOTORS
         leftFrontDrive  = hardwareMap.get(DcMotor.class, "fl");
         leftBackDrive  = hardwareMap.get(DcMotor.class, "bl");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "fr");
         rightBackDrive = hardwareMap.get(DcMotor.class, "br");
 
-        // MOTOR DIRECTION
+        // ASSIGN LINEAR SLIDE / ARM MOTOR
+        armMotor = hardwareMap.get(DcMotor.class, "armMotor");
+        //slideMotor = hardwareMap.get(DcMotor.class, "slideMotor");
+
+        // ASSIGN SERVOS
+        servo = hardwareMap.get(Servo.class, "left_hand");
+
+        // DRIVE MOTOR DIRECTION
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
-        // INIT SERVOS
-        servo = hardwareMap.get(Servo.class, "left_hand");
+        // ARM MOTOR DIRECTION
+        armMotor.setDirection(DcMotorSimple.Direction.FORWARD); // TEST FORWARD OR BACKWARDS
+        //slideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
-
+        // TELEMETRY
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData(">", "Press Start to scan Servo.");
         telemetry.addData("Status", "Initialized");
@@ -116,6 +128,8 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
         while (opModeIsActive()) {
 
             // START OF MOTORS
+
+            // START OF DRIVING
             double max;
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
@@ -143,21 +157,35 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
                 rightBackPower  /= max;
             }
 
-            // Fast/Slow mode
+            // START OF FAST / SLOW MODE
+
+            // Change state
             if (gamepad1.cross) {
                 if (fastSpeed) {
-                    m = .25;
+                    speedMultiplier = .25;
                     fastSpeed = false;
                 } else {
-                    m = 1;
+                    speedMultiplier = 1;
                     fastSpeed = true;
                 }
             }
-            // Send calculated power to wheels + adjusted by speed
-            leftFrontDrive.setPower(leftFrontPower * m);
-            rightFrontDrive.setPower(rightFrontPower * m);
-            leftBackDrive.setPower(leftBackPower * m);
-            rightBackDrive.setPower(rightBackPower * m);
+            // Adjust power
+            leftFrontPower *= speedMultiplier;
+            rightFrontPower *= speedMultiplier;
+            leftBackPower *= speedMultiplier;
+            rightBackPower *= speedMultiplier;
+            // END OF FAST / SLOW MODE
+            // UPDATE WHEELS POWER
+            leftFrontDrive.setPower(leftFrontPower);
+            rightFrontDrive.setPower(rightFrontPower);
+            leftBackDrive.setPower(leftBackPower);
+            rightBackDrive.setPower(rightBackPower);
+
+            // END OF DRIVING
+            // START OF LINEAR SLIDE / ARM (MOTOR)
+
+
+            // END OF LINEAR SLIDE / ARM (MOTOR)
 
             // END OF MOTORS
             // START OF SERVOS
@@ -179,7 +207,9 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
 
             // END OF SERVOS
 
-            // Show the elapsed game time and wheel power.
+
+
+            // TELEMETRY
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("First servo pos", "%4.2f", servo.getPosition());
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
