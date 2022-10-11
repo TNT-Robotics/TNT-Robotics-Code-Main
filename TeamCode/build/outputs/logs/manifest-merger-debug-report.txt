@@ -27,7 +27,10 @@ MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] /Users/tomp/.gradle/c
 MERGED from [androidx.customview:customview:1.0.0] /Users/tomp/.gradle/caches/transforms-3/26d6fa7fb052f57d5ee8379c38531bde/transformed/customview-1.0.0/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.core:core:1.9.0] /Users/tomp/.gradle/caches/transforms-3/78446bb7c1bc5f913255a6808a9f9007/transformed/core-1.9.0/AndroidManifest.xml:17:1-30:12
 MERGED from [androidx.core:core-ktx:1.9.0] /Users/tomp/.gradle/caches/transforms-3/1362cd53a202fb9a53c694f9efca84a6/transformed/jetified-core-ktx-1.9.0/AndroidManifest.xml:2:1-7:12
+<<<<<<< HEAD
 MERGED from [org.openftc:easyopencv:1.5.2] /Users/tomp/.gradle/caches/transforms-3/cf8030cc656e308b057074efbc8c7191/transformed/jetified-easyopencv-1.5.2/AndroidManifest.xml:2:1-11:12
+=======
+>>>>>>> parent of f24fc33 (.)
 MERGED from [androidx.annotation:annotation-experimental:1.3.0] /Users/tomp/.gradle/caches/transforms-3/76dbe74a24c967fdd325881f8190c5ff/transformed/jetified-annotation-experimental-1.3.0/AndroidManifest.xml:17:1-22:12
 MERGED from [com.journeyapps:zxing-android-embedded:4.3.0] /Users/tomp/.gradle/caches/transforms-3/f7123ab530310d43aac4c4b1dff65858/transformed/jetified-zxing-android-embedded-4.3.0/AndroidManifest.xml:17:1-56:12
 MERGED from [com.jakewharton.threetenabp:threetenabp:1.3.1] /Users/tomp/.gradle/caches/transforms-3/8baff4c13bdfd8f26a4b8c90024cf71c/transformed/jetified-threetenabp-1.3.1/AndroidManifest.xml:2:1-9:12
@@ -42,7 +45,10 @@ MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/tomp/.gradle/cache
 MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] /Users/tomp/.gradle/caches/transforms-3/f0a6571a2aecbf64d7863fa6b58d0665/transformed/lifecycle-livedata-2.0.0/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] /Users/tomp/.gradle/caches/transforms-3/f3484df3bb8ab4be99efbb1cc416be60/transformed/lifecycle-livedata-core-2.0.0/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.arch.core:core-runtime:2.1.0] /Users/tomp/.gradle/caches/transforms-3/3eedb47c08acd4cb6d42e2366a95c309/transformed/core-runtime-2.1.0/AndroidManifest.xml:17:1-24:12
+<<<<<<< HEAD
 MERGED from [org.openftc:opencv-repackaged:4.5.3-B] /Users/tomp/.gradle/caches/transforms-3/31f0ccc5bbfe0a27b2ddf1f73e1e9e6d/transformed/jetified-opencv-repackaged-4.5.3-B/AndroidManifest.xml:2:1-11:12
+=======
+>>>>>>> parent of f24fc33 (.)
 MERGED from [org.tensorflow:tensorflow-lite:2.4.0] /Users/tomp/.gradle/caches/transforms-3/bef19584e34e7b0ca4cfd7c5e9789212/transformed/jetified-tensorflow-lite-2.4.0/AndroidManifest.xml:2:1-12:12
 INJECTED from /Users/tomp/Documents/TNT-Robotics-Code-Main/TeamCode/src/main/AndroidManifest.xml:8:1-11:12
 INJECTED from /Users/tomp/Documents/TNT-Robotics-Code-Main/TeamCode/src/main/AndroidManifest.xml:8:1-11:12
@@ -151,8 +157,11 @@ MERGED from [androidx.core:core:1.9.0] /Users/tomp/.gradle/caches/transforms-3/7
 MERGED from [androidx.core:core:1.9.0] /Users/tomp/.gradle/caches/transforms-3/78446bb7c1bc5f913255a6808a9f9007/transformed/core-1.9.0/AndroidManifest.xml:20:5-44
 MERGED from [androidx.core:core-ktx:1.9.0] /Users/tomp/.gradle/caches/transforms-3/1362cd53a202fb9a53c694f9efca84a6/transformed/jetified-core-ktx-1.9.0/AndroidManifest.xml:5:5-44
 MERGED from [androidx.core:core-ktx:1.9.0] /Users/tomp/.gradle/caches/transforms-3/1362cd53a202fb9a53c694f9efca84a6/transformed/jetified-core-ktx-1.9.0/AndroidManifest.xml:5:5-44
+<<<<<<< HEAD
 MERGED from [org.openftc:easyopencv:1.5.2] /Users/tomp/.gradle/caches/transforms-3/cf8030cc656e308b057074efbc8c7191/transformed/jetified-easyopencv-1.5.2/AndroidManifest.xml:7:5-9:41
 MERGED from [org.openftc:easyopencv:1.5.2] /Users/tomp/.gradle/caches/transforms-3/cf8030cc656e308b057074efbc8c7191/transformed/jetified-easyopencv-1.5.2/AndroidManifest.xml:7:5-9:41
+=======
+>>>>>>> parent of f24fc33 (.)
 MERGED from [androidx.annotation:annotation-experimental:1.3.0] /Users/tomp/.gradle/caches/transforms-3/76dbe74a24c967fdd325881f8190c5ff/transformed/jetified-annotation-experimental-1.3.0/AndroidManifest.xml:20:5-44
 MERGED from [androidx.annotation:annotation-experimental:1.3.0] /Users/tomp/.gradle/caches/transforms-3/76dbe74a24c967fdd325881f8190c5ff/transformed/jetified-annotation-experimental-1.3.0/AndroidManifest.xml:20:5-44
 MERGED from [com.journeyapps:zxing-android-embedded:4.3.0] /Users/tomp/.gradle/caches/transforms-3/f7123ab530310d43aac4c4b1dff65858/transformed/jetified-zxing-android-embedded-4.3.0/AndroidManifest.xml:20:5-44
@@ -179,8 +188,11 @@ MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] /Users/tomp/.grad
 MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] /Users/tomp/.gradle/caches/transforms-3/f3484df3bb8ab4be99efbb1cc416be60/transformed/lifecycle-livedata-core-2.0.0/AndroidManifest.xml:20:5-44
 MERGED from [androidx.arch.core:core-runtime:2.1.0] /Users/tomp/.gradle/caches/transforms-3/3eedb47c08acd4cb6d42e2366a95c309/transformed/core-runtime-2.1.0/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.arch.core:core-runtime:2.1.0] /Users/tomp/.gradle/caches/transforms-3/3eedb47c08acd4cb6d42e2366a95c309/transformed/core-runtime-2.1.0/AndroidManifest.xml:20:5-22:41
+<<<<<<< HEAD
 MERGED from [org.openftc:opencv-repackaged:4.5.3-B] /Users/tomp/.gradle/caches/transforms-3/31f0ccc5bbfe0a27b2ddf1f73e1e9e6d/transformed/jetified-opencv-repackaged-4.5.3-B/AndroidManifest.xml:7:5-9:41
 MERGED from [org.openftc:opencv-repackaged:4.5.3-B] /Users/tomp/.gradle/caches/transforms-3/31f0ccc5bbfe0a27b2ddf1f73e1e9e6d/transformed/jetified-opencv-repackaged-4.5.3-B/AndroidManifest.xml:7:5-9:41
+=======
+>>>>>>> parent of f24fc33 (.)
 MERGED from [org.tensorflow:tensorflow-lite:2.4.0] /Users/tomp/.gradle/caches/transforms-3/bef19584e34e7b0ca4cfd7c5e9789212/transformed/jetified-tensorflow-lite-2.4.0/AndroidManifest.xml:7:5-8:41
 MERGED from [org.tensorflow:tensorflow-lite:2.4.0] /Users/tomp/.gradle/caches/transforms-3/bef19584e34e7b0ca4cfd7c5e9789212/transformed/jetified-tensorflow-lite-2.4.0/AndroidManifest.xml:7:5-8:41
 INJECTED from /Users/tomp/Documents/TNT-Robotics-Code-Main/TeamCode/src/main/AndroidManifest.xml
