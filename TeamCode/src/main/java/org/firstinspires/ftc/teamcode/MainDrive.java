@@ -75,7 +75,7 @@ public class MainDrive extends LinearOpMode {
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
 
-    private DcMotor armMotor = null;
+    //private DcMotor armMotor = null;
     //private DcMotor slideMotor = null;
 
     private double speedMultiplier = 1;
@@ -97,7 +97,7 @@ public class MainDrive extends LinearOpMode {
         rightBackDrive = hardwareMap.get(DcMotor.class, "br");
 
         // ASSIGN LINEAR SLIDE / ARM MOTOR
-        armMotor = hardwareMap.get(DcMotor.class, "armMotor");
+        //armMotor = hardwareMap.get(DcMotor.class, "armMotor");
         //slideMotor = hardwareMap.get(DcMotor.class, "slideMotor");
 
         // ASSIGN SERVOS
@@ -110,7 +110,7 @@ public class MainDrive extends LinearOpMode {
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
         // ARM MOTOR DIRECTION
-        armMotor.setDirection(DcMotorSimple.Direction.FORWARD); // TEST FORWARD OR BACKWARDS
+        //armMotor.setDirection(DcMotorSimple.Direction.FORWARD); // TEST FORWARD OR BACKWARDS
         //slideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // TELEMETRY
