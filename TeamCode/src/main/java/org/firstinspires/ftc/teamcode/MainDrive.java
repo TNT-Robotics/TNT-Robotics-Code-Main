@@ -75,12 +75,12 @@ public class MainDrive extends LinearOpMode {
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
 
-    //private DcMotor armMotor = null;
+    private DcMotor armMotor = null;
     //private DcMotor slideMotor = null;
 
     private double speedMultiplier = 1;
 
-    static final double INCREMENT   = 0.001;     // amount to slew servo each CYCLE_MS cycle
+    static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
     static final int    CYCLE_MS    =   50;     // period of each cycle
     static final double MAX_POS     =  1;     // Maximum rotational position
     static final double MIN_POS     =  0;     // Minimum rotational position
@@ -97,7 +97,7 @@ public class MainDrive extends LinearOpMode {
         rightBackDrive = hardwareMap.get(DcMotor.class, "br");
 
         // ASSIGN LINEAR SLIDE / ARM MOTOR
-        //armMotor = hardwareMap.get(DcMotor.class, "armMotor");
+        armMotor = hardwareMap.get(DcMotor.class, "armMotor");
         //slideMotor = hardwareMap.get(DcMotor.class, "slideMotor");
 
         // ASSIGN SERVOS
@@ -110,7 +110,7 @@ public class MainDrive extends LinearOpMode {
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
         // ARM MOTOR DIRECTION
-        //armMotor.setDirection(DcMotorSimple.Direction.FORWARD); // TEST FORWARD OR BACKWARDS
+        armMotor.setDirection(DcMotorSimple.Direction.FORWARD); // TEST FORWARD OR BACKWARDS
         //slideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // TELEMETRY
@@ -143,7 +143,7 @@ public class MainDrive extends LinearOpMode {
             double rightBackPower = axial + lateral - yaw;
 
             // arm variable for power level
-            //double armPower = -gamepad1.left_stick_y;
+            double armPower = -gamepad1.left_stick_y;
 
             // Normalize the values so no wheel power exceeds 100%
             // This ensures that the robot maintains the desired motion.
@@ -194,14 +194,14 @@ public class MainDrive extends LinearOpMode {
             // END OF MOTORS
             // START OF SERVOS
             // START OF CLAW 1
-            if (gamepad2.left_bumper) {
+            if (gamepad2.left_bumper == true) {
                 if (left_hand.getPosition() >= MAX_POS) {
                     left_hand.setPosition(MAX_POS);
                 } else {
                     left_hand.setPosition(left_hand.getPosition() + INCREMENT);
                 }
             }
-            if (gamepad2.right_bumper) {
+            if (gamepad2.right_bumper == true) {
                 if (left_hand.getPosition() <= MIN_POS) {
                     left_hand.setPosition(MIN_POS);
                 } else {
@@ -218,7 +218,7 @@ public class MainDrive extends LinearOpMode {
             telemetry.addLine("Motors");
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
-            //telemetry.addData("Arm", "%4.2f", armPower);
+            telemetry.addData("Arm", "%4.2f", armPower);
             telemetry.addLine("Servos");
             telemetry.addData("Claw1", "%4.2f", left_hand.getPosition());
             telemetry.update();
