@@ -74,11 +74,11 @@ public class redAutoV1 extends LinearOpMode {
 
         dontMove(2000);
 
-        turnLeft(.5, 1000);
+        turnLeft(.5, 500);
 
         dontMove(2000);
 
-        turnRight(.6,1000);
+        turnRight(1,500);
         runtime.reset();
 
 
@@ -94,14 +94,6 @@ public class redAutoV1 extends LinearOpMode {
         }
 
          */
-    }
-
-    public void goForward(double power, int time) {
-        rightFrontDrive.setPower(power);
-        leftFrontDrive.setPower(power);
-        leftBackDrive.setPower(power);
-        rightBackDrive.setPower(power);
-        sleep(time);
     }
     public void goBackwards(double power, int time) {
         power *= -1;
@@ -158,6 +150,24 @@ public class redAutoV1 extends LinearOpMode {
         leftBackDrive.setPower(0);
         rightBackDrive.setPower(power);
         sleep(time);
+        dontMove();
+    }
+
+    public void turn90left() {
+        rightFrontDrive.setPower(1);
+        leftFrontDrive.setPower(0);
+        leftBackDrive.setPower(0);
+        rightBackDrive.setPower(1);
+        sleep(500);
+        dontMove();
+    }
+
+    public void turn90right() {
+        rightFrontDrive.setPower(0);
+        leftFrontDrive.setPower(1);
+        leftBackDrive.setPower(1);
+        rightBackDrive.setPower(0);
+        sleep(500);
         dontMove();
     }
 }
