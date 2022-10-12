@@ -1,3 +1,4 @@
+/*
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -70,7 +71,7 @@ public class redAutoV1 extends LinearOpMode {
 
 
 
-        runtime.reset();
+        runtime.reset(); */
         /*
         // BEGIN CODE
         while (opModeIsActive()) {
@@ -83,6 +84,7 @@ public class redAutoV1 extends LinearOpMode {
         }
 
          */
+/*
     }
 
     // statusNum > 0 = Nominal | 1 = Warning | 2 = Minor Error | 3 = Fatal Error
@@ -211,3 +213,4 @@ public class redAutoV1 extends LinearOpMode {
         dontMove();
     }
 }
+*/
