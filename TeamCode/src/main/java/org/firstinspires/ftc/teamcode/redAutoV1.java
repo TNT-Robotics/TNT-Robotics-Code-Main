@@ -62,38 +62,13 @@ public class redAutoV1 extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        // move the robot forward
-        goForward(.5, 1500);
-        // move the robot backwards
-        goBackwards(.5,1500);
-        // Do not move
-        dontMove(1000);
+        // write test code here
 
-        // turn robot
-        strafeLeft(.5, 1000);
+        goForward(1.0, 1000);
+        strafeLeft(1.0, 1000);
 
-        strafeRight(.5, 1000);
 
-        dontMove(2000);
 
-        turnLeft(1, 1000);
-
-        dontMove(2000);
-
-        turnRight(1,1000);
-
-        dontMove(1000);
-
-        turn90left();
-
-        dontMove(1000);
-
-        turn90right();
-
-        dontMove(1000);
-
-        turn90left();
-        turn90left();
 
         runtime.reset();
         /*
@@ -118,7 +93,7 @@ public class redAutoV1 extends LinearOpMode {
         telemetry.update();
     }
 
-    public void goForward(double power, int time) {
+    public void goForward(double power, int time) { // 1 sec is about 9ft
         updateTele("Going forward with power " + power + " for " + time + "ms", 0);
         rightFrontDrive.setPower(power);
         leftFrontDrive.setPower(power);
@@ -158,8 +133,8 @@ public class redAutoV1 extends LinearOpMode {
         rightBackDrive.setPower(0);
     }
 
-    public void strafeLeft(double power, int time) {
-        updateTele("Strafing left with power " + power + " for " + time + "ms", 0);
+    public void diagonalLeft(double power, int time) {
+        updateTele("Strafing diagonal left with power " + power + " for " + time + "ms", 0);
         rightFrontDrive.setPower(power);
         leftFrontDrive.setPower(0);
         leftBackDrive.setPower(power);
@@ -168,8 +143,8 @@ public class redAutoV1 extends LinearOpMode {
         dontMove();
     }
 
-    public void strafeRight(double power, int time) {
-        updateTele("Strafing right with power " + power + " for " + time + "ms", 0);
+    public void diagonalRight(double power, int time) {
+        updateTele("Strafing diagonal right with power " + power + " for " + time + "ms", 0);
         rightFrontDrive.setPower(0);
         leftFrontDrive.setPower(power);
         leftBackDrive.setPower(0);
@@ -214,6 +189,25 @@ public class redAutoV1 extends LinearOpMode {
         leftBackDrive.setPower(1);
         rightBackDrive.setPower(0);
         sleep(500);
+        dontMove();
+    }
+
+    public void strafeLeft(double power, int time) {
+        updateTele("Strafing left with power " + power + " for " + time + " ms.", 0);
+        rightFrontDrive.setPower(power);
+        leftFrontDrive.setPower(power * -1);
+        leftBackDrive.setPower(power);
+        rightBackDrive.setPower(power * -1);
+        sleep(time);
+        dontMove();
+    }
+    public void strafeRight(double power, int time) {
+        updateTele("Strafing left with power " + power + " for " + time + " ms.", 0);
+        rightFrontDrive.setPower(power * -1);
+        leftFrontDrive.setPower(power);
+        leftBackDrive.setPower(power * -1);
+        rightBackDrive.setPower(power);
+        sleep(time);
         dontMove();
     }
 }
