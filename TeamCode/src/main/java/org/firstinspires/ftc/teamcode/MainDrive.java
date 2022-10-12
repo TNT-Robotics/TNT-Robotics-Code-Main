@@ -194,14 +194,14 @@ public class MainDrive extends LinearOpMode {
             // END OF MOTORS
             // START OF SERVOS
             // START OF CLAW 1
-            if (gamepad2.left_bumper == true) {
+            if (gamepad2.left_bumper) {
                 if (left_hand.getPosition() >= MAX_POS) {
                     left_hand.setPosition(MAX_POS);
                 } else {
                     left_hand.setPosition(left_hand.getPosition() + INCREMENT);
                 }
             }
-            if (gamepad2.right_bumper == true) {
+            if (gamepad2.right_bumper) {
                 if (left_hand.getPosition() <= MIN_POS) {
                     left_hand.setPosition(MIN_POS);
                 } else {

@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import java.lang.String;
 
 @TeleOp(name="redAutoV1", group="Linear Opmode")
 public class redAutoV1 extends LinearOpMode {
@@ -59,10 +60,11 @@ public class redAutoV1 extends LinearOpMode {
         telemetry.update();
 
         waitForStart();
+        runtime.reset();
 
         // move the robot forward
         goForward(.5, 1500);
-
+        // move the robot backwards
         goBackwards(.5,1500);
         // Do not move
         dontMove(1000);
@@ -74,14 +76,26 @@ public class redAutoV1 extends LinearOpMode {
 
         dontMove(2000);
 
-        turnLeft(.5, 500);
+        turnLeft(1, 1000);
 
         dontMove(2000);
 
-        turnRight(1,500);
+        turnRight(1,1000);
+
+        dontMove(1000);
+
+        turn90left();
+
+        dontMove(1000);
+
+        turn90right();
+
+        dontMove(1000);
+
+        turn90left();
+        turn90left();
+
         runtime.reset();
-
-
         /*
         // BEGIN CODE
         while (opModeIsActive()) {
@@ -95,16 +109,41 @@ public class redAutoV1 extends LinearOpMode {
 
          */
     }
-    public void goBackwards(double power, int time) {
-        power *= -1;
+
+    // statusNum > 0 = Nominal | 1 = Warning | 2 = Minor Error | 3 = Fatal Error
+    public void updateTele(String action, int statusNum) {
+        telemetry.addData("Status", statusNum);
+        telemetry.addData("Action", action);
+        telemetry.addData("Running for", runtime.toString());
+        telemetry.update();
+    }
+
+    public void goForward(double power, int time) {
+        updateTele("Going forward with power " + power + " for " + time + "ms", 0);
         rightFrontDrive.setPower(power);
         leftFrontDrive.setPower(power);
         leftBackDrive.setPower(power);
         rightBackDrive.setPower(power);
         sleep(time);
+        dontMove();
+    }
+
+    public void goBackwards(double power, int time) {
+        power *= -1;
+
+        updateTele("Going backwards with power " + power + " for " + time + "ms", 0);
+
+        rightFrontDrive.setPower(power);
+        leftFrontDrive.setPower(power);
+        leftBackDrive.setPower(power);
+        rightBackDrive.setPower(power);
+        sleep(time);
+        dontMove();
     }
 
     public void dontMove(int time) {
+
+        updateTele("Waiting for " + time + "ms", 0);
         rightFrontDrive.setPower(0);
         leftFrontDrive.setPower(0);
         leftBackDrive.setPower(0);
@@ -112,6 +151,7 @@ public class redAutoV1 extends LinearOpMode {
         sleep(time);
     }
     public void dontMove() {
+        updateTele("Stopped", 0);
         rightFrontDrive.setPower(0);
         leftFrontDrive.setPower(0);
         leftBackDrive.setPower(0);
@@ -119,6 +159,7 @@ public class redAutoV1 extends LinearOpMode {
     }
 
     public void strafeLeft(double power, int time) {
+        updateTele("Strafing left with power " + power + " for " + time + "ms", 0);
         rightFrontDrive.setPower(power);
         leftFrontDrive.setPower(0);
         leftBackDrive.setPower(power);
@@ -128,6 +169,7 @@ public class redAutoV1 extends LinearOpMode {
     }
 
     public void strafeRight(double power, int time) {
+        updateTele("Strafing right with power " + power + " for " + time + "ms", 0);
         rightFrontDrive.setPower(0);
         leftFrontDrive.setPower(power);
         leftBackDrive.setPower(0);
@@ -137,6 +179,7 @@ public class redAutoV1 extends LinearOpMode {
     }
 
     public void turnRight(double power, int time) {
+        updateTele("Turning right with power " + power + " for " + time + "ms", 0);
         rightFrontDrive.setPower(0);
         leftFrontDrive.setPower(power);
         leftBackDrive.setPower(power);
@@ -145,6 +188,7 @@ public class redAutoV1 extends LinearOpMode {
         dontMove();
     }
     public void turnLeft(double power, int time) {
+        updateTele("Turning left with power " + power + " for " + time + "ms", 0);
         rightFrontDrive.setPower(power);
         leftFrontDrive.setPower(0);
         leftBackDrive.setPower(0);
@@ -154,6 +198,7 @@ public class redAutoV1 extends LinearOpMode {
     }
 
     public void turn90left() {
+        updateTele("Doing 90 degrees left turn!", 0);
         rightFrontDrive.setPower(1);
         leftFrontDrive.setPower(0);
         leftBackDrive.setPower(0);
@@ -163,6 +208,7 @@ public class redAutoV1 extends LinearOpMode {
     }
 
     public void turn90right() {
+        updateTele("Doing 90 degrees right turn!", 0);
         rightFrontDrive.setPower(0);
         leftFrontDrive.setPower(1);
         leftBackDrive.setPower(1);

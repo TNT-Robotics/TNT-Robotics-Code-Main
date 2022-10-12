@@ -18,7 +18,6 @@ public class blueAutoV1 extends LinearOpMode {
     //private DcMotor slideMotor = null;
 
     private double speedMultiplier = 1;
-
     static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
     static final int    CYCLE_MS    =   50;     // period of each cycle
     static final double MAX_POS     =  1;     // Maximum rotational position
