@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\Users\\corsairit\\Documents\\GitHub\\TNT-Robotics-Code-Main\\TeamCode\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-land\\values-land.xml",
+            "outputFile": "/Users/tomp/Documents/TNT-Robotics-Code-Main/TeamCode/build/intermediates/incremental/mergeDebugResources/merged.dir/values-land/values-land.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\corsairit\\.gradle\\caches\\transforms-3\\3310bf50fff684c4853ad43991e9a406\\transformed\\appcompat-1.2.0\\res\\values-land\\values-land.xml",
+                    "source": "/Users/tomp/.gradle/caches/transforms-3/3310bf50fff684c4853ad43991e9a406/transformed/appcompat-1.2.0/res/values-land/values-land.xml",
                     "from": {
                         "startLines": "2,3,4",
                         "startColumns": "4,4,4",
