@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.auton;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,7 +13,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.firstinspires.ftc.teamcode.vision.AprilTagDemo;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 
-@TeleOp(name = "redAutoV1", group = "Red")
+@Autonomous
 public class redAutoV1 extends LinearOpMode {
     private final ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftFrontDrive = null;
@@ -20,20 +21,23 @@ public class redAutoV1 extends LinearOpMode {
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
 
+    //private DcMotor pivotMotor = null;
     //private DcMotor armMotor = null;
-    //private DcMotor slideMotor = null;
 
-    private final double speedMultiplier = 1;
+    // motors vars
+    // 1 rotation (360 degrees) is equal to about 145ms
+    // 360 = 145ms or 146ms (145.6ms) | 270 = 109ms | 180 = 73ms | 90 = 36ms
 
-
-    static final double INCREMENT = 0.01;     // amount to slew servo each CYCLE_MS cycle
-    static final int CYCLE_MS = 50;     // period of each cycle
     static final double MAX_POS = 1;     // Maximum rotational position
     static final double MIN_POS = 0;     // Minimum rotational position
-    Servo left_hand;
+    Servo claw1;
+    Servo claw2;
+    Servo claw3;
+    Servo claw4;
     //double  position = ((MAX_POS - MIN_POS) / 2) + MIN_POS; // Start at halfway position
 
     // vision
+    int camCounter = 0;
     OpenCvCamera camera;
 
     AprilTagDemo vision = new AprilTagDemo();
@@ -57,11 +61,14 @@ public class redAutoV1 extends LinearOpMode {
         rightBackDrive = hardwareMap.get(DcMotor.class, "br");
 
         // ASSIGN LINEAR SLIDE / ARM MOTOR
-        //armMotor = hardwareMap.get(DcMotor.class, "armMotor");
-        //slideMotor = hardwareMap.get(DcMotor.class, "slideMotor");
+        //pivotMotor = hardwareMap.get(DcMotor.class, "pivotMotor");
+        //elbowMotor = hardwareMap.get(DcMotor.class, "elbowMotor");
 
         // ASSIGN SERVOS
-        left_hand = hardwareMap.get(Servo.class, "left_hand");
+        claw1 = hardwareMap.get(Servo.class, "left_hand"); // CHANGE NAME
+        //claw2 = hardwareMap.get(Servo.class, "claw2");
+        //claw3 = hardwareMap.get(Servo.class, "claw3");
+        //claw4 = hardwareMap.get(Servo.class, "claw4");
 
         // DRIVE MOTOR DIRECTION
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -91,36 +98,33 @@ public class redAutoV1 extends LinearOpMode {
             if (vision.idGetter() != 0) {
                 // ID Found
                 coneId = vision.idGetter();
-                position[0] = vision.xGetter();
-                position[1] = vision.yGetter();
-                position[2] = vision.zGetter();
-
-                rotation[0] = vision.yawGetter();
-                rotation[1] = vision.pitchGetter();
-                rotation[2] = vision.rollGeter();
+                position = vision.position();
+                rotation = vision.rotation();
 
                 updateTele("Found ID " + coneId, 0);
             }
             if (runtime.milliseconds() > 1500) {
                 goForward(.2, 100);
                 dontMove(50);
+                camCounter++;
             } else {
                 sleep(50);
             }
+        }
+        if (camCounter > 0) {
+            goBackwards(1, (camCounter * 100) / 5);
         }
 
         // grab cones
         for (int counter = 0; counter < 3; counter++) {
             moveToPole();
-            dontMove(1000);
+            dontMove(200);
+            placeCone(2);
             moveToCone();
+            grabCone();
         }
 
-        goToAfterId(
-                coneId, // ID
-                position[0], position[1], position[2], // POS
-                rotation[0], rotation[1], rotation[2] // ROT
-        );
+        goToAfterId(coneId, position, rotation);
 
         /*
         while (opModeIsActive()) {
@@ -282,7 +286,7 @@ public class redAutoV1 extends LinearOpMode {
 
     // vision
 
-    public void goToAfterId(int id, double xdist, double ydist, double zdist, double roll, double yaw, double pitch) {
+    public void goToAfterId(int id, double[] pos, double[] rot) {
         if (id == 440) { // Number 1
 
         } else if (id == 373) { // Number 2

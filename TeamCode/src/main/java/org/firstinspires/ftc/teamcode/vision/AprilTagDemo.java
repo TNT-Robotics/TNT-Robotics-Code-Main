@@ -115,27 +115,11 @@ public class AprilTagDemo {
         return getterId;
     }
 
-    public double xGetter() {
-        return xGetter;
+    public double[] position() {
+        return new double[]{xGetter, yGetter, zGetter};
     }
 
-    public double yGetter() {
-        return yGetter;
-    }
-
-    public double zGetter() {
-        return zGetter;
-    }
-
-    public double rollGeter() {
-        return rollGetter;
-    }
-
-    public double pitchGetter() {
-        return pitchGetter;
-    }
-
-    public double yawGetter() {
-        return yawGetter;
+    public double[] rotation() {
+        return new double[] {yawGetter, pitchGetter, rollGetter};
     }
 }
