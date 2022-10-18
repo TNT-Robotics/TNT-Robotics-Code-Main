@@ -75,16 +75,26 @@ public class MainDrive extends LinearOpMode {
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
 
-    //private DcMotor armMotor = null;
+    private DcMotor armMotor = null;
+    private DcMotor elbowMotor = null;
     //private DcMotor slideMotor = null;
 
     private double speedMultiplier = 1;
+    private double armElbowSpeedMultiplier = .5;
+
+    boolean dpadUpBool = false;
+
+    boolean dpadDownBool = false;
 
     static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
     static final int    CYCLE_MS    =   50;     // period of each cycle
     static final double MAX_POS     =  1;     // Maximum rotational position
     static final double MIN_POS     =  0;     // Minimum rotational position
-    Servo left_hand;
+
+
+    Servo arm1;
+    Servo arm2;
+    Servo arm3;
     //double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
 
     @Override
@@ -97,11 +107,14 @@ public class MainDrive extends LinearOpMode {
         rightBackDrive = hardwareMap.get(DcMotor.class, "br");
 
         // ASSIGN LINEAR SLIDE / ARM MOTOR
-        //armMotor = hardwareMap.get(DcMotor.class, "armMotor");
+        armMotor = hardwareMap.get(DcMotor.class, "armMotor");
+        elbowMotor = hardwareMap.get(DcMotor.class, "elbowMotor");
         //slideMotor = hardwareMap.get(DcMotor.class, "slideMotor");
 
         // ASSIGN SERVOS
-        left_hand = hardwareMap.get(Servo.class, "left_hand");
+        arm1 = hardwareMap.get(Servo.class, "arm1");
+        arm2 = hardwareMap.get(Servo.class, "arm2");
+        arm3 = hardwareMap.get(Servo.class, "arm3");
 
         // DRIVE MOTOR DIRECTION
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -110,7 +123,8 @@ public class MainDrive extends LinearOpMode {
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
         // ARM MOTOR DIRECTION
-        //armMotor.setDirection(DcMotorSimple.Direction.FORWARD); // TEST FORWARD OR BACKWARDS
+        armMotor.setDirection(DcMotorSimple.Direction.FORWARD); // TEST FORWARD OR BACKWARDS
+        armMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         //slideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // TELEMETRY
@@ -143,7 +157,8 @@ public class MainDrive extends LinearOpMode {
             double rightBackPower = axial + lateral - yaw;
 
             // arm variable for power level
-            double armPower = -gamepad1.left_stick_y;
+            double armPower = -gamepad2.left_stick_y;
+            double elbowPower = -gamepad2.right_stick_y;
 
             // Normalize the values so no wheel power exceeds 100%
             // This ensures that the robot maintains the desired motion.
@@ -188,6 +203,49 @@ public class MainDrive extends LinearOpMode {
             // END OF DRIVING
             // START OF LINEAR SLIDE / ARM (MOTOR)
 
+            // gamepad2 speed mutliplier
+            // Change state
+            if (gamepad2.cross) {
+                armElbowSpeedMultiplier = 1;
+            }
+            if (gamepad2.square) {
+                armElbowSpeedMultiplier = 0.75;
+            }
+            if (gamepad2.triangle) {
+                armElbowSpeedMultiplier = 0.5;
+            }
+            if (gamepad2.circle) {
+                armElbowSpeedMultiplier = 0.25;
+            }
+
+            //
+            if (gamepad2.dpad_up) {
+                if (!dpadUpBool) {
+                    dpadUpBool = true;
+                } else {
+                    dpadUpBool = false;
+                }
+            }
+            if (gamepad2.dpad_down) {
+                if (!dpadDownBool) {
+                    dpadDownBool = true;
+                } else {
+                    dpadDownBool = false;
+                }
+            }
+
+           // Set power
+            if (dpadUpBool) {
+                armMotor.setPower(armPower * armElbowSpeedMultiplier);
+            } else {
+                armMotor.setPower(0);
+            }
+            if (dpadDownBool) {
+                elbowMotor.setPower(elbowPower * elbowPower);
+            } else {
+                elbowMotor.setPower(0);
+            }
+
 
             // END OF LINEAR SLIDE / ARM (MOTOR)
 
@@ -195,20 +253,54 @@ public class MainDrive extends LinearOpMode {
             // START OF SERVOS
             // START OF CLAW 1
             if (gamepad2.left_bumper) {
-                if (left_hand.getPosition() >= MAX_POS) {
-                    left_hand.setPosition(MAX_POS);
+                if (arm1.getPosition() >= MAX_POS) {
+                    arm1.setPosition(MAX_POS);
                 } else {
-                    left_hand.setPosition(left_hand.getPosition() + INCREMENT);
+                    arm1.setPosition(arm1.getPosition() + INCREMENT);
                 }
             }
             if (gamepad2.right_bumper) {
-                if (left_hand.getPosition() <= MIN_POS) {
-                    left_hand.setPosition(MIN_POS);
+                if (arm1.getPosition() <= MIN_POS) {
+                    arm1.setPosition(MIN_POS);
                 } else {
-                    left_hand.setPosition(left_hand.getPosition() - INCREMENT);
+                    arm1.setPosition(arm1.getPosition() - INCREMENT);
                 }
             }
             // END OF CLAW 1
+
+            // START OF CLAW 2
+            if (gamepad2.left_trigger != 0) {
+                if (arm2.getPosition() >= MAX_POS) {
+                    arm2.setPosition(MAX_POS);
+                } else {
+                    arm2.setPosition(arm2.getPosition() + INCREMENT);
+                }
+            }
+            if (gamepad2.right_trigger != 0) {
+                if (arm2.getPosition() <= MIN_POS) {
+                    arm2.setPosition(MIN_POS);
+                } else {
+                    arm2.setPosition(arm2.getPosition() - INCREMENT);
+                }
+            }
+            // END OF CLAW 2
+
+            // START OF CLAW 3
+            if (gamepad2.dpad_left) {
+                if (arm3.getPosition() >= MAX_POS) {
+                    arm3.setPosition(MAX_POS);
+                } else {
+                    arm3.setPosition(arm3.getPosition() + INCREMENT);
+                }
+            }
+            if (gamepad2.dpad_right) {
+                if (arm3.getPosition() <= MIN_POS) {
+                    arm3.setPosition(MIN_POS);
+                } else {
+                    arm3.setPosition(arm3.getPosition() - INCREMENT);
+                }
+            }
+            // END OF CLAW 3
 
             // END OF SERVOS
 
@@ -220,7 +312,12 @@ public class MainDrive extends LinearOpMode {
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
             telemetry.addData("Arm", "%4.2f", armPower);
             telemetry.addLine("Servos");
-            telemetry.addData("Claw1", "%4.2f", left_hand.getPosition());
+            telemetry.addData("Claw1", "%4.2f", arm1.getPosition());
+            telemetry.addData("Claw2", "%4.2f", arm2.getPosition());
+            telemetry.addData("Claw3", "%4.2f", arm3.getPosition());
+            telemetry.addLine("On/Off");
+            telemetry.addData("Arm motor", "%b", dpadDownBool);
+            telemetry.addData("Elbow motor", "%b", dpadUpBool);
             telemetry.update();
         }
     }
