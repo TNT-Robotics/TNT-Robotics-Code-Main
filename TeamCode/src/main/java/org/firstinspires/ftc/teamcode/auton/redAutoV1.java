@@ -21,20 +21,21 @@ public class redAutoV1 extends LinearOpMode {
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
 
-    //private DcMotor pivotMotor = null;
-    //private DcMotor armMotor = null;
+    // private DcMotor pivotMotor = null;
+    // private DcMotor armMotor = null;
 
     // motors vars
     // 1 rotation (360 degrees) is equal to about 145ms
     // 360 = 145ms or 146ms (145.6ms) | 270 = 109ms | 180 = 73ms | 90 = 36ms
 
-    static final double MAX_POS = 1;     // Maximum rotational position
-    static final double MIN_POS = 0;     // Minimum rotational position
+    static final double MAX_POS = 1; // Maximum rotational position
+    static final double MIN_POS = 0; // Minimum rotational position
     Servo claw1;
     Servo claw2;
     Servo claw3;
     Servo claw4;
-    //double  position = ((MAX_POS - MIN_POS) / 2) + MIN_POS; // Start at halfway position
+    // double position = ((MAX_POS - MIN_POS) / 2) + MIN_POS; // Start at halfway
+    // position
 
     // vision
     int camCounter = 0;
@@ -43,16 +44,17 @@ public class redAutoV1 extends LinearOpMode {
     AprilTagDemo vision = new AprilTagDemo();
     int coneId = 0;
 
-    double[] position = {0, 0, 0}; // X,Y,Z
-    double[] rotation = {0, 0, 0}; // YAW, PITCH, ROLL
+    double[] position = { 0, 0, 0 }; // X,Y,Z
+    double[] rotation = { 0, 0, 0 }; // YAW, PITCH, ROLL
 
     @Override
     public void runOpMode() {
 
         // BEGIN VISION
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
-
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id",
+                hardwareMap.appContext.getPackageName());
+        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"),
+                cameraMonitorViewId);
 
         // ASSIGN DRIVE MOTORS
         leftFrontDrive = hardwareMap.get(DcMotor.class, "fl");
@@ -61,14 +63,14 @@ public class redAutoV1 extends LinearOpMode {
         rightBackDrive = hardwareMap.get(DcMotor.class, "br");
 
         // ASSIGN LINEAR SLIDE / ARM MOTOR
-        //pivotMotor = hardwareMap.get(DcMotor.class, "pivotMotor");
-        //elbowMotor = hardwareMap.get(DcMotor.class, "elbowMotor");
+        // pivotMotor = hardwareMap.get(DcMotor.class, "pivotMotor");
+        // elbowMotor = hardwareMap.get(DcMotor.class, "elbowMotor");
 
         // ASSIGN SERVOS
         claw1 = hardwareMap.get(Servo.class, "left_hand"); // CHANGE NAME
-        //claw2 = hardwareMap.get(Servo.class, "claw2");
-        //claw3 = hardwareMap.get(Servo.class, "claw3");
-        //claw4 = hardwareMap.get(Servo.class, "claw4");
+        // claw2 = hardwareMap.get(Servo.class, "claw2");
+        // claw3 = hardwareMap.get(Servo.class, "claw3");
+        // claw4 = hardwareMap.get(Servo.class, "claw4");
 
         // DRIVE MOTOR DIRECTION
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -77,8 +79,9 @@ public class redAutoV1 extends LinearOpMode {
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
         // ARM MOTOR DIRECTION
-        //armMotor.setDirection(DcMotorSimple.Direction.FORWARD); // TEST FORWARD OR BACKWARDS
-        //slideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        // armMotor.setDirection(DcMotorSimple.Direction.FORWARD); // TEST FORWARD OR
+        // BACKWARDS
+        // slideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // TELEMETRY
         // Wait for the game to start (driver presses PLAY)
@@ -91,7 +94,8 @@ public class redAutoV1 extends LinearOpMode {
 
         // write test code here
 
-        // if nothing detected for 1.5s move a bit forward until 5s then stop searching for cone id
+        // if nothing detected for 1.5s move a bit forward until 5s then stop searching
+        // for cone id
         while (runtime.milliseconds() < 5000) {
             vision.updateTags(camera);
 
@@ -127,8 +131,9 @@ public class redAutoV1 extends LinearOpMode {
         goToAfterId(coneId, position, rotation);
 
         /*
-        while (opModeIsActive()) {
-        }*/
+         * while (opModeIsActive()) {
+         * }
+         */
     }
 
     // statusNum > 0 = Nominal | 1 = Warning | 2 = Minor Error | 3 = Fatal Error
@@ -260,6 +265,21 @@ public class redAutoV1 extends LinearOpMode {
         dontMove();
     }
 
+    // ARM Code
+    // 1 rotation (360 degrees) is equal to about 145ms
+    // 360 = 145ms or 146ms (145.6ms) | 270 = 109ms | 180 = 73ms | 90 = 36ms
+    public void moveArmForward(double power, int time) {
+        updateTele("Going turning arm forward with " + power + " for " + time + "ms", 0);
+        //armMotor.setPower(power);
+        dontMove(time);
+    }
+
+    public void moveArmBackwards(double power, int time) {
+        updateTele("Going turning arm backwards with " + power + " for " + time + "ms", 0);
+        //armMotor.setPower(power * -1);
+        dontMove(time);
+    }
+
     // advanced drive
 
     public void moveToPole() {
@@ -282,7 +302,6 @@ public class redAutoV1 extends LinearOpMode {
     public void placeCone(int level) { // small = 0, medium = 1, large = 2
 
     }
-
 
     // vision
 
