@@ -29,12 +29,14 @@
 
 package org.firstinspires.ftc.teamcode.driver;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
+import java.lang.Math;
+
+import org.firstinspires.ftc.teamcode.misc.config;
+import org.firstinspires.ftc.teamcode.misc.driverInit;
 
 /**
  * This file contains an example of a Linear "OpMode".
@@ -67,7 +69,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @TeleOp(name="MainDrive", group="Driving")
 
 public class MainDrive extends LinearOpMode {
-
+/*
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftFrontDrive = null;
@@ -82,9 +84,11 @@ public class MainDrive extends LinearOpMode {
     private double speedMultiplier = 1;
     private double armElbowSpeedMultiplier = .5;
 
-    boolean dpadUpBool = false;
+    boolean armBool = false;
+    boolean elbowBool = false;
 
-    boolean dpadDownBool = false;
+    int armCurrentPos = 0;
+    int elbowCurrentPos = 0;
 
     static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
     static final int    CYCLE_MS    =   50;     // period of each cycle
@@ -97,44 +101,19 @@ public class MainDrive extends LinearOpMode {
     Servo arm3;
     //double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
 
-    @Override
+ */
     public void runOpMode() {
+        driverInit init = new driverInit();
+        config cfg = new config();
 
-        // ASSIGN DRIVE MOTORS
-        leftFrontDrive = hardwareMap.get(DcMotor.class, "fl");
-        leftBackDrive = hardwareMap.get(DcMotor.class, "bl");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "fr");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "br");
-
-        // ASSIGN LINEAR SLIDE / ARM MOTOR
-        armMotor = hardwareMap.get(DcMotor.class, "armMotor");
-        elbowMotor = hardwareMap.get(DcMotor.class, "elbowMotor");
-        //slideMotor = hardwareMap.get(DcMotor.class, "slideMotor");
-
-        // ASSIGN SERVOS
-        arm1 = hardwareMap.get(Servo.class, "arm1");
-        arm2 = hardwareMap.get(Servo.class, "arm2");
-        arm3 = hardwareMap.get(Servo.class, "arm3");
-
-        // DRIVE MOTOR DIRECTION
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
-
-        // ARM MOTOR DIRECTION
-        armMotor.setDirection(DcMotorSimple.Direction.FORWARD); // TEST FORWARD OR BACKWARDS
-        armMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        //slideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        // TELEMETRY
-        // Wait for the game to start (driver presses PLAY)
+        // INIT
+        init.initDrive(hardwareMap);
         telemetry.addData(">", "Press Start to scan Servo.");
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
         waitForStart();
-        runtime.reset();
+        cfg.getrTime().reset();
 
         // BEGIN CODE
         while (opModeIsActive()) {
@@ -177,28 +156,28 @@ public class MainDrive extends LinearOpMode {
 
             // Change state
             if (gamepad1.cross) {
-                speedMultiplier = 1;
+                cfg.setSpdMult(1);
             }
             if (gamepad1.square) {
-                speedMultiplier = 0.75;
+                cfg.setSpdMult(.75);
             }
             if (gamepad1.triangle) {
-                speedMultiplier = 0.5;
+                cfg.setSpdMult(.5);
             }
             if (gamepad1.circle) {
-                speedMultiplier = 0.25;
+                cfg.setSpdMult(.25);
             }
             // Adjust power
-            leftFrontPower *= speedMultiplier;
-            rightFrontPower *= speedMultiplier;
-            leftBackPower *= speedMultiplier;
-            rightBackPower *= speedMultiplier;
+            leftFrontPower *= cfg.getSpdMult();
+            rightFrontPower *= cfg.getSpdMult();
+            leftBackPower *= cfg.getSpdMult();
+            rightBackPower *= cfg.getSpdMult();
             // END OF FAST / SLOW MODE
             // UPDATE WHEELS POWER
-            leftFrontDrive.setPower(leftFrontPower);
-            rightFrontDrive.setPower(rightFrontPower);
-            leftBackDrive.setPower(leftBackPower);
-            rightBackDrive.setPower(rightBackPower);
+            cfg.getLfD().setPower(leftFrontPower);
+            cfg.getRfD().setPower(rightFrontPower);
+            cfg.getLbD().setPower(leftBackPower);
+            cfg.getRbD().setPower(rightBackPower);
 
             // END OF DRIVING
             // START OF LINEAR SLIDE / ARM (MOTOR)
@@ -206,120 +185,107 @@ public class MainDrive extends LinearOpMode {
             // gamepad2 speed mutliplier
             // Change state
             if (gamepad2.cross) {
-                armElbowSpeedMultiplier = 1;
+                cfg.setArmElbowSpdMult(1);
             }
             if (gamepad2.square) {
-                armElbowSpeedMultiplier = 0.75;
+                cfg.setArmElbowSpdMult(.75);
             }
             if (gamepad2.triangle) {
-                armElbowSpeedMultiplier = 0.5;
+                cfg.setArmElbowSpdMult(.5);
             }
             if (gamepad2.circle) {
-                armElbowSpeedMultiplier = 0.25;
+                cfg.setArmElbowSpdMult(.25);
             }
 
-            //
-            if (gamepad2.dpad_up) {
-                if (!dpadUpBool) {
-                    dpadUpBool = true;
-                } else {
-                    dpadUpBool = false;
-                }
-            }
-            if (gamepad2.dpad_down) {
-                if (!dpadDownBool) {
-                    dpadDownBool = true;
-                } else {
-                    dpadDownBool = false;
-                }
-            }
+
 
            // Set power
-            if (dpadUpBool) {
-                armMotor.setPower(armPower * armElbowSpeedMultiplier);
-            } else {
-                armMotor.setPower(0);
-            }
-            if (dpadDownBool) {
-                elbowMotor.setPower(elbowPower * elbowPower);
-            } else {
-                elbowMotor.setPower(0);
-            }
+            int armNewPos = (int)(cfg.getArmPos() + -gamepad2.left_stick_y * .1);
+            int elbowNewPos = (int)(cfg.getElbowPos() + -gamepad2.right_stick_y * .1);
+
+            cfg.getArm().setTargetPosition(armNewPos);
+            cfg.getElbow().setTargetPosition(elbowNewPos);
+
+            cfg.setArmPos(armNewPos);
+            cfg.setElbowPos(elbowNewPos);
 
 
             // END OF LINEAR SLIDE / ARM (MOTOR)
 
             // END OF MOTORS
             // START OF SERVOS
-            // START OF CLAW 1
+            // START OF CLAW 1 (
             if (gamepad2.left_bumper) {
-                if (arm1.getPosition() >= MAX_POS) {
-                    arm1.setPosition(MAX_POS);
+                if (cfg.getA1().getPosition() >= cfg.getMAX_POS()) {
+                    cfg.getA1().setPosition(cfg.getMAX_POS());
                 } else {
-                    arm1.setPosition(arm1.getPosition() + INCREMENT);
+                    cfg.getA1().setPosition(cfg.getA1().getPosition() + cfg.getINCREMENT());
                 }
             }
             if (gamepad2.right_bumper) {
-                if (arm1.getPosition() <= MIN_POS) {
-                    arm1.setPosition(MIN_POS);
+                if (cfg.getA1().getPosition() <= cfg.getMIN_POS()) {
+                    cfg.getA1().setPosition(cfg.getMIN_POS());
                 } else {
-                    arm1.setPosition(arm1.getPosition() - INCREMENT);
+                    cfg.getA1().setPosition(cfg.getA1().getPosition() - cfg.getINCREMENT());
                 }
             }
             // END OF CLAW 1
 
             // START OF CLAW 2
             if (gamepad2.left_trigger != 0) {
-                if (arm2.getPosition() >= MAX_POS) {
-                    arm2.setPosition(MAX_POS);
+                if (cfg.getA1().getPosition() >= cfg.getMAX_POS()) {
+                    cfg.getA1().setPosition(cfg.getMAX_POS());
                 } else {
-                    arm2.setPosition(arm2.getPosition() + INCREMENT);
+                    cfg.getA1().setPosition(cfg.getA1().getPosition() + cfg.getINCREMENT());
                 }
             }
-            if (gamepad2.right_trigger != 0) {
-                if (arm2.getPosition() <= MIN_POS) {
-                    arm2.setPosition(MIN_POS);
+            if (gamepad2.left_trigger != 0) {
+                if (cfg.getA2().getPosition() <= cfg.getMIN_POS()) {
+                    cfg.getA2().setPosition(cfg.getMIN_POS());
                 } else {
-                    arm2.setPosition(arm2.getPosition() - INCREMENT);
+                    cfg.getA2().setPosition(cfg.getA2().getPosition() - cfg.getINCREMENT());
                 }
             }
             // END OF CLAW 2
 
             // START OF CLAW 3
-            if (gamepad2.dpad_left) {
-                if (arm3.getPosition() >= MAX_POS) {
-                    arm3.setPosition(MAX_POS);
+            if (gamepad2.dpad_up) {
+                if (cfg.getA3().getPosition() >= cfg.getMAX_POS()) {
+                    cfg.getA3().setPosition(cfg.getMAX_POS());
                 } else {
-                    arm3.setPosition(arm3.getPosition() + INCREMENT);
+                    cfg.getA3().setPosition(cfg.getA3().getPosition() + cfg.getINCREMENT());
                 }
             }
-            if (gamepad2.dpad_right) {
-                if (arm3.getPosition() <= MIN_POS) {
-                    arm3.setPosition(MIN_POS);
+            if (gamepad2.dpad_down) {
+                if (cfg.getA3().getPosition() <= cfg.getMIN_POS()) {
+                    cfg.getA3().setPosition(cfg.getMIN_POS());
                 } else {
-                    arm3.setPosition(arm3.getPosition() - INCREMENT);
+                    cfg.getA3().setPosition(cfg.getA3().getPosition() - cfg.getINCREMENT());
                 }
             }
             // END OF CLAW 3
 
             // END OF SERVOS
 
-
-            // TELEMETRY
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            // telemetry
+            telemetry.addData("Status", "Run Time: " + cfg.getrTime().toString());
             telemetry.addLine("Motors");
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
             telemetry.addData("Arm", "%4.2f", armPower);
             telemetry.addLine("Servos");
-            telemetry.addData("Claw1", "%4.2f", arm1.getPosition());
-            telemetry.addData("Claw2", "%4.2f", arm2.getPosition());
-            telemetry.addData("Claw3", "%4.2f", arm3.getPosition());
-            telemetry.addLine("On/Off");
-            telemetry.addData("Arm motor", "%b", dpadDownBool);
-            telemetry.addData("Elbow motor", "%b", dpadUpBool);
+            telemetry.addData("Claw1", "%4.2f", cfg.getA1().getPosition());
+            telemetry.addData("Claw2", "%4.2f", cfg.getA2().getPosition());
+            telemetry.addData("Claw3", "%4.2f", cfg.getA3().getPosition());
             telemetry.update();
         }
+    }
+
+    public void grabCone() {
+
+    }
+    public void placeCode(int level) {
+
     }
 }
 
