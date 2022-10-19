@@ -75,6 +75,10 @@ public class autonInit {
         // reset encoder
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         elbowMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        // set motors to run forward for 5000 encoder counts.
+        armMotor.setTargetPosition(0);
+        elbowMotor.setTargetPosition(0);
         // Set pos mode for grab mechanism motors
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         elbowMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);

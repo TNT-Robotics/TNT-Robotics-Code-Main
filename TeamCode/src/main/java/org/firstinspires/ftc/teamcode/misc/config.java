@@ -20,7 +20,7 @@ public class config {
     DcMotor elbow;
 
     // Runtime
-    ElapsedTime rTime;
+    ElapsedTime rTime = new ElapsedTime();
 
     // Speed
     double spdMult;

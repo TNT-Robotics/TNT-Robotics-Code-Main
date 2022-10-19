@@ -142,6 +142,14 @@ public class autonFunc {
         dontMove(time);
     }
 
+    public void setArmMotorPos(int position) {
+        newFunctions.updateTele("Arm turning to " + position, 0);
+        cfg.getArm().setTargetPosition(position);
+    }
+    public void setElbowMotorPos(int position) {
+        newFunctions.updateTele("Elbow turning to " + position, 0);
+        cfg.getElbow().setTargetPosition(position);
+    }
     // advanced drive
 
     public void moveToPole(int team) {
@@ -149,7 +157,7 @@ public class autonFunc {
             strafeRight(1, 600);
             dontMove(1000);
             goBackwards(1, 350);
-        } else if (team == 1) {
+        } else if (team == 1) { // RED CODE (EDIT)
             goForward(1, 350);
             dontMove(1000);
             strafeLeft(1, 600);
@@ -169,19 +177,33 @@ public class autonFunc {
     }
 
     // cones
-    public void grabCone() {
 
+    // WRTIE THIS
+
+    public void grabCone() {
     }
 
-    public void placeCone(int level) { // small = 0, medium = 1, large = 2
+    // WRITE THIS
+    public void placeCone(int level) { // ground = 0, small = 1, medium = 2, high = 3
+        if (level == 0) { // GROUND
+            // open and close claw
 
+        } else if (level == 1) { // SMALL
+
+        } else if (level == 2) { // MEDIUM
+
+        } else if (level == 3) { // HIGH
+
+        }
     }
 
     // vision
 
+    // WRITE THIS
     public void goToAfterId(int id, double[] pos, double[] rot, int team) {
         if (team == 0) { // BLUE CODE
             if (id == 440) { // Number 1
+
 
             } else if (id == 373) { // Number 2
 
