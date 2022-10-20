@@ -73,6 +73,9 @@ public class driverInit {
         armMotor.setTargetPosition(0);
         elbowMotor.setTargetPosition(0);
 
+        cfg.setArmPos(armMotor.getCurrentPosition());
+        cfg.setElbowPos(elbowMotor.getCurrentPosition());
+
         // Set pos mode for grab mechanism motors
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         elbowMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
