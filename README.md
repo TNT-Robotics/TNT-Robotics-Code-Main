@@ -34,7 +34,7 @@
 #### goForward (double power, int time)
 Moves the bot forward for the given **time** in milliseconds and given **power** from 0,1. Value from 0, -1 for power is also permitted with the effect of backward driving. 
 
-Additionally, a [telemetry](#updateTele-(String-action,-int-statusNum)) update is called. 
+Additionally, a [telemetry](#updateTele) update is called. 
 
 | Action   | Type    |
 | :---------| :------- |
@@ -329,7 +329,7 @@ Additionally, a [telemetry](#updateTele) update is called.
 ### Methods that are usually helper methods for larger methods
 ---
 
-#### updateTele (String action, int statusNum)
+<h4 id="updateTele">updateTele (String action, int statusNum)</h4>
 Updates the telemetry on the driver's hub. The argument of **action** is setting the display name of what is written on the screen while the **status argument** is a simple form of telling the driver that something either works, is in danger or is not working. </br> </br>
 Status values meanings -> 0 - Nominal, everything is working as planned | 1 = Warning, write down and remember to fix after competition  | 2 - Minor error, consider fixing before next match if appliciable | 3 - Fatal error, robot is not performing as expected, possibility of turning off should be considered.
 
@@ -349,3 +349,7 @@ Status values meanings -> 0 - Nominal, everything is working as planned | 1 = Wa
     }
   ```
 </details>
+
+
+
+
