@@ -29,7 +29,7 @@
 **Bold** - Important variable / concept
 
 ## Basic move methods
-### Methods that are used to control the movement of the robot. The simplest methods possible. They allow movement in any direction.
+### Methods that are used to control the movement of the robot. They allow movement in any direction.
 
 #### goForward (double power, int time)
 Moves the bot forward for the given **time** in milliseconds and given **power** from 0,1. Value from 0, -1 for power is also permitted with the effect of backward driving. 
