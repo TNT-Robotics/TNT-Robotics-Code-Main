@@ -11,19 +11,18 @@
 - [ ] Complex move methods
 - [ ] Arm methods
 - [ ] Vision methods
-- [ ] Misc methods
+- [ ] Miscellaneous methods
 - [ ] Configuration file
 
 ## Table of Contents
-- [Definitions / Rules](#Definitions-/-Rules)
-- [Basic move methods](#Basic-move-methods)
+- [Definitions / Rules](#definitions
 - [Complex move methods](#example2)
 - [Arm methods](#third-example)
 - [Vision methods](#fourth-examplehttpwwwfourthexamplecom)
 - [Miscellaneous methods](#Miscellaneous)
 - [Configuration file](#config)
 
-## Definitions / Rules
+<h2 id="definitions">Definitions / Rules</h2>
 
 *Italics* - Overloaded variable <br>
 **Bold** - Important variable / concept
