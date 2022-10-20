@@ -3,7 +3,7 @@
 #### Written by [Tomas Pokorny](  mailto:tomasekpokorny02@gmail.com?subject=TNT%20Robotics%20Code)
 ##### Last updated - 19/10/2022
 
-## [! Original ReadMe with FTC Notes !](https://pastebin.com/raw/4G7yeTEW)
+## [! Original ReadMe with FTC Notes !](https://github.com/TNT-Robotics/TNT-Robotics-Code-Main/blob/main/FTCReadMe.md)
 
 ## Contents
 - [Basic driving functions](#example)
