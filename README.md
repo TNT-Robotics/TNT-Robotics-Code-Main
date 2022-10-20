@@ -86,6 +86,8 @@ Additionally, a [telemetry](#updateTele) update is called.
   ```
 </details>
 
+---
+
 #### diagonalLeft (double power, int time)
 Moves the bot diagonally left for the given **time** in milliseconds and given **power** from 0,1. Value from 0, -1 for power is also permitted with the effect of diagonal-right driving. 
 
@@ -111,6 +113,8 @@ Additionally, a [telemetry](#updateTele) update is called.
   ```
 </details>
 
+---
+
 #### diagonalRight (double power, int time)
 Moves the bot diagonally right for the given **time** in milliseconds and given **power** from 0,1. Value from 0, -1 for power is also permitted with the effect of diagonal-left driving. 
 
@@ -135,6 +139,9 @@ Additionally, a [telemetry](#updateTele) update is called.
     }
   ```
 </details>
+
+---
+
 #### turnLeft (double power, int time)
 Turn the bot left for the given **time** in milliseconds and given **power** from 0,1. Value from 0, -1 for power is also permitted with the effect of weird backward turning, **definitely not recommended.**
 
@@ -159,6 +166,8 @@ Additionally, a [telemetry](#updateTele) update is called.
     }
   ```
 </details>
+
+---
 
 #### turnRight (double power, int time)
 Turn the bot right for the given **time** in milliseconds and given **power** from 0,1. Value from 0, -1 for power is also permitted with the effect of weird backward turning, **definitely not recommended.**
@@ -185,6 +194,8 @@ Additionally, a [telemetry](#updateTele) update is called.
   ```
 </details>
 
+---
+
 #### turn90Left ()
 Turn the bot 90 degrees to the left. This is accomplished by turning left with maximum power for 500ms.
 
@@ -210,7 +221,7 @@ Additionally, a [telemetry](#updateTele) update is called.
   ```
 </details>
 
-</details>
+---
 
 #### turn90Right ( )
 Turn the bot 90 degrees to the right. This is accomplished by turning right with maximum power for 500ms.
@@ -237,6 +248,8 @@ Additionally, a [telemetry](#updateTele) update is called.
   ```
 </details>
 
+---
+
 #### strafeLeft (double power, int time)
 The bot strafes to the left for the given **time** in milliseconds and given **power** from 0,1. Value from 0, -1 for power is also permitted with the effect of possibly strafing right. **(not tested)**
 
@@ -261,6 +274,8 @@ Additionally, a [telemetry](#updateTele) update is called.
     }
   ```
 </details>
+
+---
 
 #### strafeRight (double power, int time)
 The bot strafes to the right for the given **time** in milliseconds and given **power** from 0,1. Value from 0, -1 for power is also permitted with the effect of possibly strafing left. **(not tested)**
@@ -287,6 +302,8 @@ Additionally, a [telemetry](#updateTele) update is called.
   ```
 </details>
 
+---
+
 
 #### dontMove (*int time*)
 A function that turns off all 4 of the robots drive motors. *Time* argument may be used to overload a wait functionality to the method.
@@ -309,8 +326,6 @@ Additionally, a [telemetry](#updateTele) update is called.
         cfg.getRbD().setPower(0);
     }
   ```
-</details>
-<details>
   <summary>Overloaded method code</summary>
   
   ```java
