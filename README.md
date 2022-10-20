@@ -17,19 +17,21 @@
 ## Definitions / Rules
 
 *Italics* - Overloaded variable <br>
-**Bold** - 
+**Bold** - Important variable / concept
 
 ## Basic move methods
 
-#### GoForward (double power, int time)
-Moves the bot forward for the given **time** in milliseconds and given **power** from 0,1. Value from 0, -1 for power is also permitted with the effect of backward driving. Additionally, a [telemetry](#telemetry) update is called. 
+#### goForward (double power, int time)
+Moves the bot forward for the given **time** in milliseconds and given **power** from 0,1. Value from 0, -1 for power is also permitted with the effect of backward driving. 
+
+Additionally, a [telemetry](#telemetry) update is called. 
 
 | Action   | Type    |
 | :---------| :------- |
 | Input    | Double & Integer  |
 | Output   | Void |
 <details>
-  <summary>Function code</summary>
+  <summary>Method code</summary>
   
   ```java
   public void goForward(double power, int time) {
@@ -45,15 +47,17 @@ Moves the bot forward for the given **time** in milliseconds and given **power**
 </details>
 
 
-#### GoBackward (double power, int time)
-Moves the bot backward for the given **time** in milliseconds and given **power** from 0,1. Value from 0, -1 for power is also permitted with the effect of forward driving. Additionally, a [telemetry](#telemetry) update is called. 
+#### goBackward (double power, int time)
+Moves the bot backward for the given **time** in milliseconds and given **power** from 0,1. Value from 0, -1 for power is also permitted with the effect of forward driving. 
+
+Additionally, a [telemetry](#telemetry) update is called. 
 
 | Action   | Type    |
 | :---------| :------- |
 | Input    | Double & Integer  |
 | Output   | Void |
 <details>
-  <summary>Function code</summary>
+  <summary>Method code</summary>
   
   ```java
   public void goBackward(double power, int time) {
@@ -64,6 +68,56 @@ Moves the bot backward for the given **time** in milliseconds and given **power*
         cfg.getRfD().setPower(power);
         cfg.getLfD().setPower(power);
         cfg.getLbD().setPower(power);
+        cfg.getRbD().setPower(power);
+        newFunctions.slp(time);
+        dontMove();
+    }
+  ```
+</details>
+
+#### diagonalLeft (double power, int time)
+Moves the bot diagonally left for the given **time** in milliseconds and given **power** from 0,1. Value from 0, -1 for power is also permitted with the effect of diagonal-right driving. 
+
+Additionally, a [telemetry](#telemetry) update is called. 
+
+| Action   | Type    |
+| :---------| :------- |
+| Input    | Double & Integer  |
+| Output   | Void |
+<details>
+  <summary>Method code</summary>
+  
+  ```java
+  public void diagonalLeft(double power, int time) {
+        newFunctions.updateTele("Strafing diagonal left with power " + power + " for " + time + "ms", 0);
+        cfg.getRfD().setPower(power);
+        cfg.getLfD().setPower(0);
+        cfg.getLbD().setPower(power);
+        cfg.getRbD().setPower(0);
+        newFunctions.slp(time);
+        dontMove();
+    }
+  ```
+</details>
+
+#### diagonalRight (double power, int time)
+Moves the bot diagonally right for the given **time** in milliseconds and given **power** from 0,1. Value from 0, -1 for power is also permitted with the effect of diagonal-left driving. 
+
+Additionally, a [telemetry](#telemetry) update is called. 
+
+| Action   | Type    |
+| :---------| :------- |
+| Input    | Double & Integer  |
+| Output   | Void |
+<details>
+  <summary>Method code</summary>
+  
+  ```java
+  public void diagonalRight(double power, int time) {
+        newFunctions.updateTele("Strafing diagonal right with power " + power + " for " + time + "ms", 0);
+        cfg.getRfD().setPower(0);
+        cfg.getLfD().setPower(power);
+        cfg.getLbD().setPower(0);
         cfg.getRbD().setPower(power);
         newFunctions.slp(time);
         dontMove();
@@ -72,28 +126,42 @@ Moves the bot backward for the given **time** in milliseconds and given **power*
 </details>
 
 #### dontMove (*int time*)
+A function that turns off all 4 of the robots drive motors. *Time* variable may be used to overload a wait functionality to the method.
+
 Additionally, a [telemetry](#telemetry) update is called. 
 
 | Action   | Type    |
 | :---------| :------- |
-| Input    | Double & Integer  |
+| Input    | *Integer*  |
 | Output   | Void |
 <details>
-  <summary>Function code</summary>
+  <summary>Method code</summary>
   
   ```java
-  public void goBackward(double power, int time) {
-        power *= -1;
-
-        newFunctions.updateTele("Going backwards with power " + power + " for " + time + "ms", 0);
-
-        cfg.getRfD().setPower(power);
-        cfg.getLfD().setPower(power);
-        cfg.getLbD().setPower(power);
-        cfg.getRbD().setPower(power);
-        newFunctions.slp(time);
-        dontMove();
+  public void dontMove() {
+        newFunctions.updateTele("Stopped", 0);
+        cfg.getRfD().setPower(0);
+        cfg.getLfD().setPower(0);
+        cfg.getLbD().setPower(0);
+        cfg.getRbD().setPower(0);
     }
   ```
 </details>
+<details>
+  <summary>Overloaded method code</summary>
+  
+  ```java
+  public void dontMove(int time) {
+
+        newFunctions.updateTele("Waiting for " + time + "ms", 0);
+        cfg.getRfD().setPower(0);
+        cfg.getLfD().setPower(0);
+        cfg.getLbD().setPower(0);
+        cfg.getRbD().setPower(0);
+        newFunctions.slp(time);
+    }
+  ```
+</details>
+
+
 
