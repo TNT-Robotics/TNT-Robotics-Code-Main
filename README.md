@@ -7,7 +7,7 @@
 
 ### Completion of Documentation
 - [x] Definitions / Rules
-- [ ] Basic move methods
+- [x] Basic move methods
 - [ ] Complex move methods
 - [ ] Arm methods
 - [ ] Vision methods
