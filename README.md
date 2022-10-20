@@ -20,21 +20,10 @@ This
 | ---------| ------- |
 | Input    | Double  |
 | Output   | Void    |
-
-
-
-
-
 <details>
-<summary>
-
-*List of groceries*
-</summary>
-
-* Vegetables
-</details>
-
-java
+  <summary>Function code</summary>
+  
+  ```java
 	    public void strafeLeft(double power, int time) {
 	        newFunctions.updateTele("Strafing left with power " + power + " for " + time + "ms.", 0);
 	        cfg.getRfD().setPower(power);
@@ -44,3 +33,5 @@ java
 	        newFunctions.slp(time);
 	        dontMove();
 	    }
+  ```
+</details>
