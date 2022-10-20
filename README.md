@@ -352,7 +352,7 @@ Updates the telemetry on the driver's hub. The argument of **action** is setting
 <b>Status values meanings</b> </br>
 0 - Nominal, everything is working as planned </br>
 1 - Warning, write down and remember to fix after competition </br>
-2 - Minor error, consider fixing before next match if appliciable  </br>
+2 - Minor error, consider fixing before next match if applicable  </br>
 3 - Fatal error, robot is not performing as expected, possibility of turning off should be considered. </br>
 
 | Action   | Type    |
