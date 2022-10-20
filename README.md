@@ -34,7 +34,7 @@
 #### goForward (double power, int time)
 Moves the bot forward for the given **time** in milliseconds and given **power** from 0,1. Value from 0, -1 for power is also permitted with the effect of backward driving. 
 
-Additionally, a [telemetry](#updateTele) update is called. 
+Additionally, a [telemetry](#updateTele-(String-action,-int-statusNum)) update is called. 
 
 | Action   | Type    |
 | :---------| :------- |
