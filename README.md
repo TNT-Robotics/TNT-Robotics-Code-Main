@@ -5,16 +5,21 @@
 
 ## [! Original ReadMe with FTC Notes !](https://github.com/TNT-Robotics/TNT-Robotics-Code-Main/blob/main/FTCReadMe.md)
 
-## Contents
-- [Basic driving functions](#example)
+## Table of Contents
+- [Basic driving functions](#Basic%20driving%20functions)
 - [Advanced driving functions](#example2)
 - [Arm functions](#third-example)
 - [Vision functions](#fourth-examplehttpwwwfourthexamplecom)
 
-` 
-| Item | Value | Qty | No |
-| :------- | ----: | :---: |
-| Computer | $1600 | 5 |
+## Basic driving functions
+
+
+#### GoForward (double power, int time)
+This
+| Action   | Type    |
+| ---------| ------- |
+| Input    | Double  |
+| Output   | Void    |
 
 ```java
     public void strafeLeft(double power, int time) {
