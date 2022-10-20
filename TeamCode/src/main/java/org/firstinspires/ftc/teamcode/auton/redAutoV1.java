@@ -11,12 +11,13 @@ import org.firstinspires.ftc.teamcode.misc.config;
 @Autonomous
 public class redAutoV1 extends LinearOpMode {
 
-    autonInit aiInit = new autonInit();
     config cfg = new config();
-    autonFunc aiFunc = new autonFunc();
-
     @Override
     public void runOpMode() {
+
+        autonFunc aiFunc = new autonFunc(cfg);
+        autonInit aiInit = new autonInit(cfg);
+
         aiInit.initAuton(hardwareMap, 1);
         telemetry.addData(">", "Press Start to scan Servo.");
         telemetry.addData("Status", "Initialized");
@@ -71,10 +72,12 @@ public class redAutoV1 extends LinearOpMode {
 
     // statusNum > 0 = Nominal | 1 = Warning | 2 = Minor Error | 3 = Fatal Error
     public void updateTele(String action, int statusNum) {
-        telemetry.addData("Status", statusNum);
-        telemetry.addData("Action", action);
-        telemetry.addData("Running for", cfg.getrTime().toString());
-        telemetry.update();
+        if (action != null) {
+            telemetry.addData("Status", statusNum);
+            telemetry.addData("Action", action);
+            telemetry.addData("Running for", cfg.getrTime().toString());
+            telemetry.update();
+        }
     }
 
     public void slp(int time) {

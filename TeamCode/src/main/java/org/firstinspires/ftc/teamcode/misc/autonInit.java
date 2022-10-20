@@ -12,7 +12,11 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 
 public class autonInit {
 
-    config cfg = new config();
+    config cfg;
+
+    public autonInit(config cfg) {
+        this.cfg = cfg;
+    }
 
     public void initAuton(HardwareMap hwMap, int teamColor) {
         // Declare OpMode members for each of the 4 motors.

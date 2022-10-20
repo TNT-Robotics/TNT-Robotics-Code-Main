@@ -103,8 +103,8 @@ public class MainDrive extends LinearOpMode {
 
  */
     public void runOpMode() {
-        driverInit init = new driverInit();
         config cfg = new config();
+        driverInit init = new driverInit(cfg);
 
         // INIT
         init.initDrive(hardwareMap);
@@ -272,11 +272,15 @@ public class MainDrive extends LinearOpMode {
             telemetry.addLine("Motors");
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
-            telemetry.addData("Arm", "%4.2f", armPower);
+            telemetry.addData("Arm", "%d", armNewPos);
+            telemetry.addData("Elbow", "%d", elbowNewPos);
             telemetry.addLine("Servos");
             telemetry.addData("Claw1", "%4.2f", cfg.getA1().getPosition());
             telemetry.addData("Claw2", "%4.2f", cfg.getA2().getPosition());
             telemetry.addData("Claw3", "%4.2f", cfg.getA3().getPosition());
+            telemetry.addLine("Motor Rotations (Current vs Set)");
+            telemetry.addData("Arm", "%d, %d", cfg.getArm().getCurrentPosition(), cfg.getArm().getTargetPosition());
+            telemetry.addData("Elbow",  "%d, %d", cfg.getElbow().getCurrentPosition(), cfg.getElbow().getTargetPosition());
             telemetry.update();
         }
     }

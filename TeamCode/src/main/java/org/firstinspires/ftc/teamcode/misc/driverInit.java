@@ -8,7 +8,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class driverInit {
 
-    config cfg = new config();
+    config cfg;
+
+    public driverInit(config cfg) {
+        this.cfg = cfg;
+    }
 
     public void initDrive(HardwareMap hwMap) {
         // Declare OpMode members for each of the 4 motors.
