@@ -6,8 +6,8 @@
 ## [! Original ReadMe with FTC Notes !](https://github.com/TNT-Robotics/TNT-Robotics-Code-Main/blob/main/FTCReadMe.md)
 
 ## Table of Contents
-- [Definitions / Rules](#Definitions/Rules)
-- [Basic move methods](#Basic%20move%20methods)
+- [Definitions / Rules](#Definitions-/-Rules)
+- [Basic move methods](#Basic-move-methods)
 - [Complex move methods](#example2)
 - [Arm methods](#third-example)
 - [Vision methods](#fourth-examplehttpwwwfourthexamplecom)
