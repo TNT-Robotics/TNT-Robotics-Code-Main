@@ -326,6 +326,8 @@ Additionally, a [telemetry](#updateTele) update is called.
         cfg.getRbD().setPower(0);
     }
   ```
+  </details>
+  <details>
   <summary>Overloaded method code</summary>
   
   ```java
