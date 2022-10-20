@@ -16,7 +16,7 @@ public class autonFunc {
         dontMove();
     }
 
-    public void goBackwards(double power, int time) {
+    public void goBackward(double power, int time) {
         power *= -1;
 
         newFunctions.updateTele("Going backwards with power " + power + " for " + time + "ms", 0);
@@ -153,11 +153,11 @@ public class autonFunc {
     // advanced drive
 
     public void moveToPole(int team) {
-        if (team == 0) { // BLUE CODE (EDIT)
+        if (team == 0) { // BLUE CODE
             strafeRight(1, 600);
             dontMove(1000);
-            goBackwards(1, 350);
-        } else if (team == 1) { // RED CODE (EDIT)
+            goBackward(1, 350);
+        } else if (team == 1) { // RED CODE
             goForward(1, 350);
             dontMove(1000);
             strafeLeft(1, 600);
@@ -165,14 +165,14 @@ public class autonFunc {
     }
 
     public void moveToCone(int team) {
-        if (team == 0) { // BLUE CODE (EDIT)
+        if (team == 0) { // BLUE CODE
             strafeRight(1, 600);
             dontMove(1000);
-            goBackwards(1, 350);
+            goBackward(1, 350);
         } else if (team == 1) { // RED CODE
             strafeRight(1, 600);
             dontMove(1000);
-            goBackwards(1, 350);
+            goBackward(1, 350);
         }
     }
 

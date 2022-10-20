@@ -200,8 +200,8 @@ public class MainDrive extends LinearOpMode {
 
 
            // Set power
-            int armNewPos = (int)(cfg.getArmPos() + -gamepad2.left_stick_y * .1);
-            int elbowNewPos = (int)(cfg.getElbowPos() + -gamepad2.right_stick_y * .1);
+            int armNewPos = (int)(cfg.getArmPos() + armPower * .1);
+            int elbowNewPos = (int)(cfg.getElbowPos() + elbowPower * .1);
 
             cfg.getArm().setTargetPosition(armNewPos);
             cfg.getElbow().setTargetPosition(elbowNewPos);

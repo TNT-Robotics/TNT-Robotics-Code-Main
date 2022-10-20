@@ -49,7 +49,7 @@ public class redAutoV1 extends LinearOpMode {
             }
         }
         if (cfg.getCamCounter() > 0) {
-            aiFunc.goBackwards(1, (cfg.getCamCounter() * 100) / 5);
+            aiFunc.goBackward(1, (cfg.getCamCounter() * 100) / 5);
         }
 
         // grab cones

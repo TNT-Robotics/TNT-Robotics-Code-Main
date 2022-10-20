@@ -11,24 +11,24 @@ public class config {
     int teamColor = 1; // 0 - Blue | 1 - Red
 
     // Motors
-    DcMotor lfD;
-    DcMotor lbD;
-    DcMotor rfD;
-    DcMotor rbD;
+    DcMotor lfD = null;
+    DcMotor lbD = null;
+    DcMotor rfD = null;
+    DcMotor rbD = null;
 
-    DcMotor arm;
-    DcMotor elbow;
+    DcMotor arm = null;
+    DcMotor elbow = null;
 
     // Runtime
     ElapsedTime rTime = new ElapsedTime();
 
     // Speed
-    double spdMult;
-    double armElbowSpdMult;
+    double spdMult = 1.0;
+    double armElbowSpdMult = 1.0;
 
 
-    int armPos;
-    int elbowPos;
+    int armPos = 0;
+    int elbowPos = 0;
 
     // Claw
     Servo a1;
