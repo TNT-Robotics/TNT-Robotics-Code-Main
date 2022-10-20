@@ -15,7 +15,7 @@
 - [ ] Configuration file
 
 ## Table of Contents
-- [Definitions / Rules](#definitions
+- [Definitions / Rules](#definitions)
 - [Complex move methods](#example2)
 - [Arm methods](#third-example)
 - [Vision methods](#fourth-examplehttpwwwfourthexamplecom)
