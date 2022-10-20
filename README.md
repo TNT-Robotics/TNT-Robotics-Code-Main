@@ -56,6 +56,7 @@ Additionally, a [telemetry](#updateTele) update is called.
   ```
 </details>
 
+---
 
 #### goBackward (double power, int time)
 Moves the bot backward for the given **time** in milliseconds and given **power** from 0,1. Value from 0, -1 for power is also permitted with the effect of forward driving. 
