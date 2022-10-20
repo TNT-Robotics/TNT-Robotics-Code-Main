@@ -21,15 +21,26 @@ This
 | Input    | Double  |
 | Output   | Void    |
 
-```java
-    public void strafeLeft(double power, int time) {
-        newFunctions.updateTele("Strafing left with power " + power + " for " + time + "ms.", 0);
-        cfg.getRfD().setPower(power);
-        cfg.getLfD().setPower(power * -1);
-        cfg.getLbD().setPower(power);
-        cfg.getRbD().setPower(power * - 1);
-        newFunctions.slp(time);
-        dontMove();
-    }
 
-````
+
+
+
+<details>
+<summary>
+
+*List of groceries*
+</summary>
+
+* Vegetables
+</details>
+
+java
+	    public void strafeLeft(double power, int time) {
+	        newFunctions.updateTele("Strafing left with power " + power + " for " + time + "ms.", 0);
+	        cfg.getRfD().setPower(power);
+	        cfg.getLfD().setPower(power * -1);
+	        cfg.getLbD().setPower(power);
+	        cfg.getRbD().setPower(power * - 1);
+	        newFunctions.slp(time);
+	        dontMove();
+	    }
