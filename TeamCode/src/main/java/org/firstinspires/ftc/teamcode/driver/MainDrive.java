@@ -35,6 +35,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import java.lang.Math;
 
+import org.firstinspires.ftc.teamcode.misc.PID;
 import org.firstinspires.ftc.teamcode.misc.config;
 import org.firstinspires.ftc.teamcode.misc.driverInit;
 
@@ -105,6 +106,11 @@ public class MainDrive extends LinearOpMode {
     public void runOpMode() {
         config cfg = new config();
         driverInit init = new driverInit(cfg);
+        PID armPID = new PID(.02,.0,.02,.008);
+        PID elbowPID = new PID(.02,.0,.02,.008);
+
+        armPID.getOutputFromError(0,0);
+        elbowPID.getOutputFromError(0,0);
 
         // INIT
         init.initDrive(hardwareMap);
@@ -138,6 +144,7 @@ public class MainDrive extends LinearOpMode {
             // arm variable for power level
             double armPower = -gamepad2.left_stick_y;
             double elbowPower = -gamepad2.right_stick_y;
+
 
             // Normalize the values so no wheel power exceeds 100%
             // This ensures that the robot maintains the desired motion.
@@ -199,47 +206,55 @@ public class MainDrive extends LinearOpMode {
 
 
 
-           // Set power
-            int armNewPos = (int)(cfg.getArmPos() + armPower * .1);
-            int elbowNewPos = (int)(cfg.getElbowPos() + elbowPower * .1);
+           // Set adjust position
+            int armNewPos = (int) (cfg.getArmDefaultPos() + (cfg.getArmPos() + armPower));
+            int elbowNewPos = (int)(cfg.getElbowDefaultPos() + (cfg.getElbowPos() + elbowPower));
 
-            cfg.getArm().setTargetPosition(armNewPos);
-            cfg.getElbow().setTargetPosition(elbowNewPos);
-
-            cfg.setArmPos(armNewPos);
-            cfg.setElbowPos(elbowNewPos);
-
+            double currentArmPID = armPID.getOutputFromError(armNewPos, cfg.getArmDefaultPos() + cfg.getArm().getCurrentPosition());
+            double currentElbowPID = elbowPID.getOutputFromError(elbowNewPos, cfg.getElbowDefaultPos() + cfg.getElbow().getCurrentPosition());
+            if (armNewPos >cfg.getArmDefaultPos() -340 && armNewPos < cfg.getArmDefaultPos() + 340) {
+                //cfg.getArm().setPower(currentArmPID);
+                cfg.setArmPos(armNewPos - cfg.getArmDefaultPos());
+            } else {
+                cfg.getArm().setPower(0);
+            }
+            if (elbowNewPos > cfg.getElbowDefaultPos() - 340 && elbowNewPos < cfg.getElbowDefaultPos() + 340) {
+                //cfg.getElbow().setPower(currentElbowPID);
+                cfg.setElbowPos(elbowNewPos - cfg.getElbowDefaultPos());
+            } else {
+                cfg.getArm().setPower(0);
+            }
 
             // END OF LINEAR SLIDE / ARM (MOTOR)
 
             // END OF MOTORS
             // START OF SERVOS
-            // START OF CLAW 1 (
+            // START OF CLAW 1 (Claw grab)
             if (gamepad2.left_bumper) {
-                if (cfg.getA1().getPosition() >= cfg.getMAX_POS()) {
-                    cfg.getA1().setPosition(cfg.getMAX_POS());
+                if (cfg.getA1().getPosition() >= .53) {
+                    cfg.getA1().setPosition(.53);
                 } else {
                     cfg.getA1().setPosition(cfg.getA1().getPosition() + cfg.getINCREMENT());
                 }
             }
             if (gamepad2.right_bumper) {
-                if (cfg.getA1().getPosition() <= cfg.getMIN_POS()) {
-                    cfg.getA1().setPosition(cfg.getMIN_POS());
+                if (cfg.getA1().getPosition() <= .13) {
+                    cfg.getA1().setPosition(.13);
                 } else {
                     cfg.getA1().setPosition(cfg.getA1().getPosition() - cfg.getINCREMENT());
                 }
             }
             // END OF CLAW 1
 
-            // START OF CLAW 2
+            // START OF CLAW 2 (180 turn around)
             if (gamepad2.left_trigger != 0) {
-                if (cfg.getA1().getPosition() >= cfg.getMAX_POS()) {
-                    cfg.getA1().setPosition(cfg.getMAX_POS());
+                if (cfg.getA2().getPosition() >= cfg.getMAX_POS()) {
+                    cfg.getA2().setPosition(cfg.getMAX_POS());
                 } else {
-                    cfg.getA1().setPosition(cfg.getA1().getPosition() + cfg.getINCREMENT());
+                    cfg.getA2().setPosition(cfg.getA2().getPosition() + cfg.getINCREMENT());
                 }
             }
-            if (gamepad2.left_trigger != 0) {
+            if (gamepad2.right_trigger != 0) {
                 if (cfg.getA2().getPosition() <= cfg.getMIN_POS()) {
                     cfg.getA2().setPosition(cfg.getMIN_POS());
                 } else {
@@ -248,7 +263,7 @@ public class MainDrive extends LinearOpMode {
             }
             // END OF CLAW 2
 
-            // START OF CLAW 3
+            // START OF CLAW 3 (pivot)
             if (gamepad2.dpad_up) {
                 if (cfg.getA3().getPosition() >= cfg.getMAX_POS()) {
                     cfg.getA3().setPosition(cfg.getMAX_POS());
@@ -272,15 +287,13 @@ public class MainDrive extends LinearOpMode {
             telemetry.addLine("Motors");
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
-            telemetry.addData("Arm", "%d", armNewPos);
-            telemetry.addData("Elbow", "%d", elbowNewPos);
+            telemetry.addData("PID Arm, Elbow", "%4.2f, %4.2f", currentArmPID, currentElbowPID);
             telemetry.addLine("Servos");
-            telemetry.addData("Claw1", "%4.2f", cfg.getA1().getPosition());
-            telemetry.addData("Claw2", "%4.2f", cfg.getA2().getPosition());
-            telemetry.addData("Claw3", "%4.2f", cfg.getA3().getPosition());
+            telemetry.addData("Claw1, Claw2, Claw3", "%4.2f, %4.2f, %4.2f", cfg.getA1().getPosition(), cfg.getA2().getPosition(), cfg.getA3().getPosition());
             telemetry.addLine("Motor Rotations (Current vs Set)");
             telemetry.addData("Arm", "%d, %d", cfg.getArm().getCurrentPosition(), cfg.getArm().getTargetPosition());
             telemetry.addData("Elbow",  "%d, %d", cfg.getElbow().getCurrentPosition(), cfg.getElbow().getTargetPosition());
+            telemetry.addData("Arm, Elbow", "%d, %d", armNewPos, elbowNewPos);
             telemetry.update();
         }
     }

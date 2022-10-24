@@ -21,6 +21,7 @@
 
 package org.firstinspires.ftc.teamcode.vision;
 
+import org.firstinspires.ftc.teamcode.misc.config;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -52,9 +53,11 @@ public class AprilTagDemo {
     double cy = 221.506;
     // UNITS ARE METERS
     double tagsize = 0.166;
-    int numFramesWithoutDetection = 0;
+    AprilTagDetection tagOfInterest = null;
 
-    public void updateTags(OpenCvCamera cam) {
+    int[] ID_TAG_OF_INTEREST = {440,373, 182};
+
+    public void initCamera(OpenCvCamera cam) {
         camera = cam;
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
         camera.setPipeline(aprilTagDetectionPipeline);
@@ -67,7 +70,9 @@ public class AprilTagDemo {
 
             }
         });
+    }
 
+    public void updateTags(config cfg) {
         // Calling getDetectionsUpdate() will only return an object if there was a new frame
         // processed since the last time we called it. Otherwise, it will return null. This
         // enables us to only run logic when there has been a new frame, as opposed to the
@@ -76,6 +81,7 @@ public class AprilTagDemo {
 
         // If there's been a new frame...
         if (detections != null) {
+            /*
 
             // If we don't see any tags
             if (detections.size() == 0) {
@@ -98,13 +104,33 @@ public class AprilTagDemo {
                 }
 
                 for (AprilTagDetection detection : detections) {
-                    getterId = detection.id;
-                    xGetter = detection.pose.x;
-                    yGetter = detection.pose.y;
-                    zGetter = detection.pose.z;
-                    yawGetter = Math.toDegrees(detection.pose.yaw);
-                    pitchGetter = Math.toDegrees(detection.pose.pitch);
-                    rollGetter = Math.toDegrees(detection.pose.roll);
+                    this.getterId = detection.id;
+                    this.xGetter = detection.pose.x;
+                    this.yGetter = detection.pose.y;
+                    this.zGetter = detection.pose.z;
+                    this.yawGetter = Math.toDegrees(detection.pose.yaw);
+                    this.pitchGetter = Math.toDegrees(detection.pose.pitch);
+                    this.rollGetter = Math.toDegrees(detection.pose.roll);
+                }
+            } */
+            if(detections.size() != 0) {
+                boolean tagFound = false;
+
+                for (AprilTagDetection tag : detections) {
+                    for (int id : ID_TAG_OF_INTEREST) {
+                        if (id == tag.id) {
+                            tagOfInterest = tag;
+                            cfg.setConeId(tag.id);
+                            this.getterId = tag.id;
+                            this.xGetter = tag.pose.x;
+                            this.yGetter = tag.pose.y;
+                            this.zGetter = tag.pose.z;
+                            this.yawGetter = Math.toDegrees(tag.pose.yaw);
+                            this.pitchGetter = Math.toDegrees(tag.pose.pitch);
+                            this.rollGetter = Math.toDegrees(tag.pose.roll);
+                            break;
+                        }
+                    }
                 }
             }
         }

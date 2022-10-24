@@ -50,7 +50,7 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
     double cy = 221.506;
 
     // UNITS ARE METERS
-    double tagsize = 0.166;
+    double tagsize = 0.04;
 
     int[] ID_TAG_OF_INTEREST = {440,373, 182}; // Tag IDs - Sleeve order > 1 = 182 2 = 373
 
@@ -85,7 +85,7 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
          * The INIT-loop:
          * This REPLACES waitForStart!
          */
-        while (!isStarted() && !isStopRequested())
+        while (opModeIsActive())
         {
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
 
@@ -95,15 +95,17 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
 
                 for(AprilTagDetection tag : currentDetections)
                 {
+                    telemetry.addLine("FOUND ONE");
                     for(int id : ID_TAG_OF_INTEREST) {
+                        telemetry.addLine("ID");
                         if (id == tag.id) {
+                            telemetry.addLine("XDD");
                             tagOfInterest = tag;
                             tagFound = true;
                             break;
                         }
                     }
                 }
-
                 if(tagFound)
                 {
                     telemetry.addLine("Tag of interest is in sight!\n\nLocation data:");
