@@ -12,6 +12,28 @@ Arm1 - Grab servo
 Arm2 - 180 degrees turn
 Arm3 - Pivot
 
+-------TO DO 10/24/2022-------
+
+IF YOU NEED HELP
+https://github.com/TNT-Robotics/TNT-Robotics-Code-Main/blob/main/README.md
+
+Method MoveToPole (ADD FOR PHILIPS DESIGN AS CURRENT ONE IS FOR BRIAN'S)
+
+Method placeCone (LOOK AT THE COMMENTS AND WRITE CODE ACCORDINGLY)
+
+Method goToAfterId (EACH SECTION NEEDS TO BE DONE)
+
+---- If you want extra challenge --
+Method grabCone (LOOK AT COMMENTS CODE ACCORDINGLY)
+
+
+
+
+Think how much time we need before that and write that down here. (this is the last moment we can go for
+a cone place before returning back to spawn and going to id place)
+How much time before end in milliseconds - < WRITE THE TIME HERE
+
+
 */
 
 @Autonomous
@@ -58,13 +80,11 @@ public class redAutoV1 extends LinearOpMode {
         }
 
         // grab cones
-        moveToPole(cfg.getTeamColor());
-        for (int counter = 0; counter < 3; counter++) {
-            conePhase(3, 10000); // Time before end in milliseconds
-        }
-        moveToSpawn(cfg.getTeamColor());
+        moveToPole(cfg.getTeamColor(), 0);
+        conePhase(3, 10000); // Time before end in milliseconds
+        moveToSpawn(cfg.getTeamColor(), 0);
 
-        goToAfterId(cfg.getConeId(), cfg.getPosition(), cfg.getRotation(), cfg.getTeamColor());
+        goToAfterId(cfg.getConeId());
 
         /*
          * while (opModeIsActive()) {
@@ -215,29 +235,78 @@ public class redAutoV1 extends LinearOpMode {
         updateTele("Elbow turning to " + position, 0);
         cfg.getElbow().setTargetPosition(position);
     }
-    // advanced drive
+    public void waitForArmMotor() {
+        int deathZone = 10;
+        while (deathZone == 10) {
+            if (cfg.getArm().getCurrentPosition() < cfg.getArm().getTargetPosition() + deathZone && cfg.getArm().getCurrentPosition() > cfg.getArm().getTargetPosition() - deathZone)
+            {
+                break;
+            }
 
-    public void moveToPole(int team) {
-        if (team == 0) { // BLUE CODE
-            strafeRight(1, 600);
-            dontMove(1000);
-            goBackward(1, 350);
-        } else if (team == 1) { // RED CODE
-            goForward(1, 350);
-            dontMove(1000);
-            strafeLeft(1, 600);
         }
     }
 
-    public void moveToSpawn(int team) {
+    public void waitForElbowMotor() {
+        int deathZone = 10;
+        while (deathZone == 10) {
+            if (cfg.getElbow().getCurrentPosition() < cfg.getElbow().getTargetPosition() + deathZone && cfg.getElbow().getCurrentPosition() > cfg.getElbow().getTargetPosition() - deathZone)
+            {
+                break;
+            }
+
+        }
+    }
+
+    // advanced drive
+
+    public void moveToPole(int team, int pos) { // A2:F2 - Pos 0 | A5:F5 - Pos 1
+        goForward(.1,100);
         if (team == 0) { // BLUE CODE
-            strafeRight(1, 600);
-            dontMove(1000);
-            goBackward(1, 350);
+            if (pos == 0) {
+                strafeLeft(1,111);
+                goForward(1, 222);
+                turnRight(.2, 200);
+            } else if (pos == 1) {
+                strafeRight(1,111);
+                goForward(1, 222);
+                turnLeft(.2, 200);
+
+            }
         } else if (team == 1) { // RED CODE
-            strafeRight(1, 600);
-            dontMove(1000);
-            goBackward(1, 350);
+            if (pos == 0) {
+                strafeRight(1,111);
+                goForward(1, 222);
+                turnLeft(.2, 200);
+            } else if (pos == 1) {
+                strafeLeft(1,111);
+                goForward(1, 222);
+                turnRight(.2, 200);
+            }
+        }
+    }
+
+    public void moveToSpawn(int team, int pos) {
+        if (team == 0) { // BLUE CODE
+            if (pos == 0) {
+                turnLeft(.2,200);
+                goBackward(1,222);
+                strafeRight(1,111);
+            } else if (pos == 1) {
+                turnRight(.2,200);
+                goBackward(1,222);
+                strafeLeft(1,111);
+
+            }
+        } else if (team == 1) { // RED CODE
+            if (pos == 0) {
+                turnRight(.2,200);
+                goBackward(1,222);
+                strafeLeft(1,111);
+            } else if (pos == 1) {
+                turnLeft(.2,200);
+                goBackward(1,222);
+                strafeRight(1,111);
+            }
         }
     }
 
@@ -246,34 +315,65 @@ public class redAutoV1 extends LinearOpMode {
     // WRTIE THIS
 
     public void grabCone() {
-        // open servo
+        // open servo (claw)
         cfg.getA1().setPosition(.53);
         // turn motors to pickup zone
-        // close servo
+        // close servo (claw)
         cfg.getA1().setPosition(.12);
 
 
     }
-
+//    Arm1 - Grab servo
+//    Arm2 - 180 degrees turn
+//    Arm3 - Pivot
     // WRITE THIS
     public void placeCone(int level) { // ground = 0, small = 1, medium = 2, high = 3
         if (level == 0) { // GROUND
+            // write MOTOR code in pseudocode aka comments
             // move motors above pole
             // rotate claw 180 degrees
             // open claw
             // repeat for all levels
 
+            setArmMotorPos(713);
+            setElbowMotorPos(69);
+            cfg.getA2().setPosition(1);
+            waitForElbowMotor();
+            waitForArmMotor();
+            cfg.getA1().setPosition(.53);
+
+
+
+
         } else if (level == 1) { // SMALL
+            setArmMotorPos(713);
+            setElbowMotorPos(69);
+            cfg.getA2().setPosition(1);
+            waitForElbowMotor();
+            waitForArmMotor();
+            cfg.getA1().setPosition(.53);
 
         } else if (level == 2) { // MEDIUM
+            setArmMotorPos(713);
+            setElbowMotorPos(69);
+            cfg.getA2().setPosition(1);
+            waitForElbowMotor();
+            waitForArmMotor();
+            cfg.getA1().setPosition(.53);
 
         } else if (level == 3) { // HIGH
+            setArmMotorPos(420);
+            setElbowMotorPos(69);
+            cfg.getA2().setPosition(1);
+            waitForElbowMotor();
+            waitForArmMotor();
+            cfg.getA1().setPosition(.53);
 
         }
     }
 
     public void conePhase(int lvl, int timeBeforeEnd) {
-        if (30000 - cfg.getrTime().milliseconds() < timeBeforeEnd) {
+        while (30000 - cfg.getrTime().milliseconds() < timeBeforeEnd) {
             placeCone(lvl);
             grabCone();
         }
@@ -282,25 +382,29 @@ public class redAutoV1 extends LinearOpMode {
     // vision
 
     // WRITE THIS
-    public void goToAfterId(int id, double[] pos, double[] rot, int team) {
-        if (team == 0) { // BLUE CODE
-            if (id == 440) { // Number 1
+    public void goToAfterId(int id) {
+        if (id == 440) { // Number 1
                 // move to sector 1/2/3 depending on the id
+                // JUST USE BASIC MOVE FUNCTIONS DOCS ARE ONLINE JUST IN CASE
+            strafeLeft(1, 1000);
+            goForward(1, 1000);
 
-            } else if (id == 373) { // Number 2
 
-            } else if (id == 182) { // Number 3
+        } else if (id == 373) { // Number 2
+
+            strafeLeft(1,1000);
+            goForward(1,2000);
+            goBackward(1,1000);
+
+        } else if (id == 182) { // Number 3
+            strafeLeft(1,1000);
+            goForward(1,3000);
+            strafeRight(1,3000);
+            goBackward(1,1000);
+
 
             }
-        } else if (team == 1) { // RED CODE
-            if (id == 440) { // Number 1
 
-            } else if (id == 373) { // Number 2
-
-            } else if (id == 182) { // Number 3
-
-            }
-        }
 }
 
 
