@@ -54,6 +54,15 @@ public class config {
     int armDefaultPos = 0;
     int elbowDefaultPos = 0;
 
+    // targetPos
+    int armTargetPos = 0;
+    int elbowTargetPos = 0;
+
+    int lfdTargetPos = 0;
+    int lbdTargetPos = 0;
+    int rfdTargetPos = 0;
+    int rbdTargetPos = 0;
+
     // SETTERS AND GETTERS
 
     public DcMotor getLfD() {
@@ -245,5 +254,53 @@ public class config {
 
     public void setElbowDefaultPos(int elbowDefaultPos) {
         this.elbowDefaultPos = elbowDefaultPos;
+    }
+
+    public int getArmTargetPos() {
+        return armTargetPos;
+    }
+
+    public void setArmTargetPos(int armTargetPos) {
+        this.armTargetPos = armTargetPos;
+    }
+
+    public int getElbowTargetPos() {
+        return elbowTargetPos;
+    }
+
+    public void setElbowTargetPos(int elbowTargetPos) {
+        this.elbowTargetPos = elbowTargetPos;
+    }
+
+    public int getLfdTargetPos() {
+        return lfdTargetPos;
+    }
+
+    public void setLfdTargetPos(int lfdTargetPos) {
+        this.lfdTargetPos = lfdTargetPos;
+    }
+
+    public int getLbdTargetPos() {
+        return lbdTargetPos;
+    }
+
+    public void setLbdTargetPos(int lbdTargetPos) {
+        this.lbdTargetPos = lbdTargetPos;
+    }
+
+    public int getRfdTargetPos() {
+        return rfdTargetPos;
+    }
+
+    public void setRfdTargetPos(int rfdTargetPos) {
+        this.rfdTargetPos = rfdTargetPos;
+    }
+
+    public int getRbdTargetPos() {
+        return rbdTargetPos;
+    }
+
+    public void setRbdTargetPos(int rbdTargetPos) {
+        this.rbdTargetPos = rbdTargetPos;
     }
 }

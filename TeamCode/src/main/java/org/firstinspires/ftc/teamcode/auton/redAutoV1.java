@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.auton;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.misc.PID;
 import org.firstinspires.ftc.teamcode.misc.autonInit;
 import org.firstinspires.ftc.teamcode.misc.config;
 
@@ -45,6 +46,16 @@ public class redAutoV1 extends LinearOpMode {
 
         autonInit aiInit = new autonInit(cfg);
 
+        PID lfdPID = new PID(.02,.0,.02,.008);
+        PID lbdPID = new PID(.02,.0,.02,.008);
+        PID rfdPID = new PID(.02,.0,.02,.008);
+        PID rbdPID = new PID(.02,.0,.02,.008);
+
+        lfdPID.getOutputFromError(0,0);
+        lbdPID.getOutputFromError(0,0);
+        rfdPID.getOutputFromError(0,0);
+        rbdPID.getOutputFromError(0,0);
+
         aiInit.initAuton(hardwareMap, 1);
         cfg.getVision().initCamera(cfg.getCamera());
         telemetry.addData("Status", "Initialized");
@@ -55,6 +66,7 @@ public class redAutoV1 extends LinearOpMode {
 
         // if nothing detected for 1.5s move a bit forward until 5s then stop searching
         // for cone id
+        /*
         while (cfg.getrTime().milliseconds() < 5000 && opModeIsActive()) {
             cfg.getVision().updateTags(cfg);
 
@@ -78,27 +90,69 @@ public class redAutoV1 extends LinearOpMode {
         if (cfg.getCamCounter() > 0) {
             goBackward(1, (cfg.getCamCounter() * 100) / 5);
         }
-
         // grab cones
         moveToPole(cfg.getTeamColor(), 0);
         conePhase(3, 10000); // Time before end in milliseconds
         moveToSpawn(cfg.getTeamColor(), 0);
 
-        goToAfterId(cfg.getConeId());
-
+*/
+        goForward(400, 5, rfdPID, lfdPID, lbdPID, rbdPID);
         /*
          * while (opModeIsActive()) {
          * }
          */
     }
-    public void goForward(double power, int time) { // 1 sec is about 9ft
-        updateTele("Going forward with power " + power + " for " + time + "ms", 0);
-        cfg.getRfD().setPower(power);
-        cfg.getLfD().setPower(power);
-        cfg.getLbD().setPower(power);
-        cfg.getRbD().setPower(power);
-        slp(time);
-        dontMove();
+
+    /* Driving handler
+    * Driving motor - 312rpm = 537.7 pulses
+    */
+
+
+// Reps = Repetitions | Power1 - Starting power | Power2 - End Power | IF POWER1 HIGHER THEN DESCENDING
+    public double gradualPower(int reps, double power1, double power2) {
+        if (power1 < power2) {
+            return (power2-power1) / reps;
+        } else if (power1 > power2) {
+            return (power1-power2) / reps;
+        }
+        return power1;
+    }
+
+
+
+    public void goForward(int position, int reps, PID rfd, PID lfd, PID lbd, PID rbd) { // 1 sec is about 9ft
+        updateTele("Going forward to " + position + " pulses", 0);
+        int deadZone = 10;
+        boolean atPos = false;
+        boolean goUp = false;
+
+        if (cfg.getRfD().getCurrentPosition() < cfg.getRfdTargetPos()) {
+            goUp = true;
+        }
+        while (atPos == false) {
+            cfg.getRfD().setPower(gradualPower(reps, cfg.getRfD().getPower(), rfd.getOutputFromError(position, cfg.getRfD().getCurrentPosition())));
+            cfg.setRfdTargetPos(position);
+
+            cfg.getLfD().setPower(gradualPower(reps, cfg.getRfD().getPower(), lfd.getOutputFromError(position, cfg.getRfD().getCurrentPosition())));
+            cfg.setLfdTargetPos(position);
+
+            cfg.getLbD().setPower(gradualPower(reps, cfg.getRfD().getPower(), lbd.getOutputFromError(position, cfg.getRfD().getCurrentPosition())));
+            cfg.setLbdTargetPos(position);
+
+            cfg.getRbD().setPower(gradualPower(reps, cfg.getRfD().getPower(), rbd.getOutputFromError(position, cfg.getRfD().getCurrentPosition())));
+            cfg.setRbdTargetPos(position);
+
+            if (goUp == true) {
+                if (cfg.getRfD().getCurrentPosition() + deadZone > cfg.getRfdTargetPos() && cfg.getRfD().getCurrentPosition() - deadZone < cfg.getRfdTargetPos())  {
+                    break;
+                }
+            } else {
+
+                if (cfg.getRfD().getCurrentPosition() + deadZone < cfg.getRfdTargetPos() && cfg.getRfD().getCurrentPosition() - deadZone > cfg.getRfdTargetPos())  {
+                    break;
+                }
+            }
+        }
     }
 
     public void goBackward(double power, int time) {
@@ -132,26 +186,6 @@ public class redAutoV1 extends LinearOpMode {
         cfg.getRbD().setPower(0);
     }
 
-    public void diagonalLeft(double power, int time) {
-        updateTele("Strafing diagonal left with power " + power + " for " + time + "ms", 0);
-        cfg.getRfD().setPower(power);
-        cfg.getLfD().setPower(0);
-        cfg.getLbD().setPower(power);
-        cfg.getRbD().setPower(0);
-        slp(time);
-        dontMove();
-    }
-
-    public void diagonalRight(double power, int time) {
-        updateTele("Strafing diagonal right with power " + power + " for " + time + "ms", 0);
-        cfg.getRfD().setPower(0);
-        cfg.getLfD().setPower(power);
-        cfg.getLbD().setPower(0);
-        cfg.getRbD().setPower(power);
-        slp(time);
-        dontMove();
-    }
-
     public void turnRight(double power, int time) {
         updateTele("Turning right with power " + power + " for " + time + "ms", 0);
         cfg.getRfD().setPower(0);
@@ -169,26 +203,6 @@ public class redAutoV1 extends LinearOpMode {
         cfg.getLbD().setPower(0);
         cfg.getRbD().setPower(power);
         slp(time);
-        dontMove();
-    }
-
-    public void turn90left() {
-        updateTele("Doing 90 degrees left turn!", 0);
-        cfg.getRfD().setPower(1);
-        cfg.getLfD().setPower(0);
-        cfg.getLbD().setPower(0);
-        cfg.getRbD().setPower(1);
-        slp(500);
-        dontMove();
-    }
-
-    public void turn90right() {
-        updateTele("Doing 90 degrees right turn!", 0);
-        cfg.getRfD().setPower(0);
-        cfg.getLfD().setPower(1);
-        cfg.getLbD().setPower(1);
-        cfg.getRbD().setPower(0);
-        slp(500);
         dontMove();
     }
 
@@ -212,33 +226,18 @@ public class redAutoV1 extends LinearOpMode {
         dontMove();
     }
 
-    // ARM Code
-    // 1 rotation (360 degrees) is equal to about 138ms (435rpm)
-    // 360 = 138ms | 270 = 103ms | 180 = 69ms | 90 = 34ms
-    public void moveArmForward(double power, int time) {
-        updateTele("Going turning arm forward with " + power + " for " + time + "ms", 0);
-        cfg.getArm().setPower(power);
-        dontMove(time);
-    }
-
-    public void moveArmBackwards(double power, int time) {
-        updateTele("Going turning arm backwards with " + power + " for " + time + "ms", 0);
-        cfg.getArm().setPower(power * -1);
-        dontMove(time);
-    }
-
     public void setArmMotorPos(int position) { // re-do
         updateTele("Arm turning to " + position, 0);
-        cfg.getArm().setTargetPosition(position);
+        cfg.setArmTargetPos(position);
     }
     public void setElbowMotorPos(int position) { // re-do
         updateTele("Elbow turning to " + position, 0);
-        cfg.getElbow().setTargetPosition(position);
+        cfg.setElbowTargetPos(position);
     }
     public void waitForArmMotor() {
         int deathZone = 10;
         while (deathZone == 10) {
-            if (cfg.getArm().getCurrentPosition() < cfg.getArm().getTargetPosition() + deathZone && cfg.getArm().getCurrentPosition() > cfg.getArm().getTargetPosition() - deathZone)
+            if (cfg.getArm().getCurrentPosition() < cfg.getArmTargetPos() + deathZone && cfg.getArmTargetPos() > cfg.getArmTargetPos() - deathZone)
             {
                 break;
             }
@@ -249,7 +248,7 @@ public class redAutoV1 extends LinearOpMode {
     public void waitForElbowMotor() {
         int deathZone = 10;
         while (deathZone == 10) {
-            if (cfg.getElbow().getCurrentPosition() < cfg.getElbow().getTargetPosition() + deathZone && cfg.getElbow().getCurrentPosition() > cfg.getElbow().getTargetPosition() - deathZone)
+            if (cfg.getElbow().getCurrentPosition() < cfg.getElbowTargetPos() + deathZone && cfg.getElbow().getCurrentPosition() > cfg.getElbowTargetPos() - deathZone)
             {
                 break;
             }
@@ -260,26 +259,25 @@ public class redAutoV1 extends LinearOpMode {
     // advanced drive
 
     public void moveToPole(int team, int pos) { // A2:F2 - Pos 0 | A5:F5 - Pos 1
-        goForward(.1,100);
+        //goForward(1,100);
         if (team == 0) { // BLUE CODE
             if (pos == 0) {
                 strafeLeft(1,111);
-                goForward(1, 222);
+                //goForward(1, 222);
                 turnRight(.2, 200);
             } else if (pos == 1) {
                 strafeRight(1,111);
-                goForward(1, 222);
+                //goForward(1, 222);
                 turnLeft(.2, 200);
-
             }
         } else if (team == 1) { // RED CODE
             if (pos == 0) {
-                strafeRight(1,111);
-                goForward(1, 222);
+                strafeRight(1,400);
+                //goForward(1, 500);
                 turnLeft(.2, 200);
             } else if (pos == 1) {
                 strafeLeft(1,111);
-                goForward(1, 222);
+                //goForward(1, 222);
                 turnRight(.2, 200);
             }
         }
@@ -387,18 +385,18 @@ public class redAutoV1 extends LinearOpMode {
                 // move to sector 1/2/3 depending on the id
                 // JUST USE BASIC MOVE FUNCTIONS DOCS ARE ONLINE JUST IN CASE
             strafeLeft(1, 1000);
-            goForward(1, 1000);
+           // goForward(1, 1000);
 
 
         } else if (id == 373) { // Number 2
 
             strafeLeft(1,1000);
-            goForward(1,2000);
+            //goForward(1,2000);
             goBackward(1,1000);
 
         } else if (id == 182) { // Number 3
             strafeLeft(1,1000);
-            goForward(1,3000);
+            //goForward(1,3000);
             strafeRight(1,3000);
             goBackward(1,1000);
 
