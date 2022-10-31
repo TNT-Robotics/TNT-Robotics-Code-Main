@@ -212,7 +212,7 @@ public class MainDrive extends LinearOpMode {
 
             double currentArmPID = armPID.getOutputFromError(armNewPos, cfg.getArmDefaultPos() + cfg.getArm().getCurrentPosition());
             double currentElbowPID = elbowPID.getOutputFromError(elbowNewPos, cfg.getElbowDefaultPos() + cfg.getElbow().getCurrentPosition());
-            if (armNewPos >cfg.getArmDefaultPos() -340 && armNewPos < cfg.getArmDefaultPos() + 340) {
+            /*if (armNewPos >cfg.getArmDefaultPos() -340 && armNewPos < cfg.getArmDefaultPos() + 340) {
                 //cfg.getArm().setPower(currentArmPID);
                 cfg.setArmPos(armNewPos - cfg.getArmDefaultPos());
             } else {
@@ -223,7 +223,13 @@ public class MainDrive extends LinearOpMode {
                 cfg.setElbowPos(elbowNewPos - cfg.getElbowDefaultPos());
             } else {
                 cfg.getArm().setPower(0);
-            }
+            }*/
+
+            cfg.getElbow().setPower(currentElbowPID);
+            cfg.getArm().setPower(currentArmPID);
+
+            cfg.setArmPos(armNewPos - cfg.getArmDefaultPos());
+            cfg.setElbowPos(elbowNewPos - cfg.getElbowDefaultPos());
 
             // END OF LINEAR SLIDE / ARM (MOTOR)
 

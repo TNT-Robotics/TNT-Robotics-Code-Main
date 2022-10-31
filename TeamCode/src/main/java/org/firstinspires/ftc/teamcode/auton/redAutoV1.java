@@ -97,6 +97,8 @@ public class redAutoV1 extends LinearOpMode {
 
 */
         goForward(400, 5, rfdPID, lfdPID, lbdPID, rbdPID);
+        goBackward(400, 5, rfdPID, lfdPID, lbdPID, rbdPID);
+
         /*
          * while (opModeIsActive()) {
          * }
@@ -130,7 +132,7 @@ public class redAutoV1 extends LinearOpMode {
         if (cfg.getRfD().getCurrentPosition() < cfg.getRfdTargetPos()) {
             goUp = true;
         }
-        while (atPos == false) {
+        while (atPos == false && opModeIsActive()) {
             cfg.getRfD().setPower(gradualPower(currentRep, cfg.getRfD().getPower(), rfd.getOutputFromError(cfg.getRfD().getCurrentPosition() + position, cfg.getRfD().getCurrentPosition())));
             cfg.setRfdTargetPos(cfg.getRfD().getCurrentPosition() + position);
 
@@ -170,7 +172,7 @@ public class redAutoV1 extends LinearOpMode {
         if (cfg.getRfD().getCurrentPosition() < cfg.getRfdTargetPos()) {
             goUp = true;
         }
-        while (atPos == false) {
+        while (atPos == false && opModeIsActive()) {
             cfg.getRfD().setPower(gradualPower(currentRep, cfg.getRfD().getPower(), rfd.getOutputFromError(cfg.getRfD().getCurrentPosition() - position, cfg.getRfD().getCurrentPosition())));
             cfg.setRfdTargetPos(cfg.getRfD().getCurrentPosition() - position);
 
@@ -319,22 +321,22 @@ public class redAutoV1 extends LinearOpMode {
         if (team == 0) { // BLUE CODE
             if (pos == 0) {
                 turnLeft(.2,200);
-                goBackward(1,222);
+                //goBackward(1,222);
                 strafeRight(1,111);
             } else if (pos == 1) {
                 turnRight(.2,200);
-                goBackward(1,222);
+                //goBackward(1,222);
                 strafeLeft(1,111);
 
             }
         } else if (team == 1) { // RED CODE
             if (pos == 0) {
                 turnRight(.2,200);
-                goBackward(1,222);
+                //goBackward(1,222);
                 strafeLeft(1,111);
             } else if (pos == 1) {
                 turnLeft(.2,200);
-                goBackward(1,222);
+                //goBackward(1,222);
                 strafeRight(1,111);
             }
         }
@@ -424,13 +426,13 @@ public class redAutoV1 extends LinearOpMode {
 
             strafeLeft(1,1000);
             //goForward(1,2000);
-            goBackward(1,1000);
+            //goBackward(1,1000);
 
         } else if (id == 182) { // Number 3
             strafeLeft(1,1000);
             //goForward(1,3000);
             strafeRight(1,3000);
-            goBackward(1,1000);
+            //goBackward(1,1000);
 
 
             }
