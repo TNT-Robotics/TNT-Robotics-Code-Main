@@ -125,22 +125,27 @@ public class redAutoV1 extends LinearOpMode {
         int deadZone = 10;
         boolean atPos = false;
         boolean goUp = false;
+        int currentRep = reps;
 
         if (cfg.getRfD().getCurrentPosition() < cfg.getRfdTargetPos()) {
             goUp = true;
         }
         while (atPos == false) {
-            cfg.getRfD().setPower(gradualPower(reps, cfg.getRfD().getPower(), rfd.getOutputFromError(position, cfg.getRfD().getCurrentPosition())));
-            cfg.setRfdTargetPos(position);
+            cfg.getRfD().setPower(gradualPower(currentRep, cfg.getRfD().getPower(), rfd.getOutputFromError(cfg.getRfD().getCurrentPosition() + position, cfg.getRfD().getCurrentPosition())));
+            cfg.setRfdTargetPos(cfg.getRfD().getCurrentPosition() + position);
 
-            cfg.getLfD().setPower(gradualPower(reps, cfg.getRfD().getPower(), lfd.getOutputFromError(position, cfg.getRfD().getCurrentPosition())));
-            cfg.setLfdTargetPos(position);
+            cfg.getLfD().setPower(gradualPower(currentRep, cfg.getLfD().getPower(), lfd.getOutputFromError(cfg.getLfD().getCurrentPosition() + position, cfg.getRfD().getCurrentPosition())));
+            cfg.setLfdTargetPos(cfg.getLfD().getCurrentPosition() + position);
 
-            cfg.getLbD().setPower(gradualPower(reps, cfg.getRfD().getPower(), lbd.getOutputFromError(position, cfg.getRfD().getCurrentPosition())));
-            cfg.setLbdTargetPos(position);
+            cfg.getLbD().setPower(gradualPower(currentRep, cfg.getLbD().getPower(), lbd.getOutputFromError(cfg.getLbD().getCurrentPosition() + position, cfg.getRfD().getCurrentPosition())));
+            cfg.setLbdTargetPos(cfg.getLbD().getCurrentPosition() + position);
 
-            cfg.getRbD().setPower(gradualPower(reps, cfg.getRfD().getPower(), rbd.getOutputFromError(position, cfg.getRfD().getCurrentPosition())));
-            cfg.setRbdTargetPos(position);
+            cfg.getRbD().setPower(gradualPower(currentRep, cfg.getRbD().getPower(), rbd.getOutputFromError(cfg.getRbD().getCurrentPosition() + position, cfg.getRfD().getCurrentPosition())));
+            cfg.setRbdTargetPos(cfg.getRbD().getCurrentPosition() + position);
+
+            if (currentRep > 1) {
+                currentRep--;
+            }
 
             if (goUp == true) {
                 if (cfg.getRfD().getCurrentPosition() + deadZone > cfg.getRfdTargetPos() && cfg.getRfD().getCurrentPosition() - deadZone < cfg.getRfdTargetPos())  {
@@ -155,17 +160,44 @@ public class redAutoV1 extends LinearOpMode {
         }
     }
 
-    public void goBackward(double power, int time) {
-        power *= -1;
+    public void goBackward(int position, int reps, PID rfd, PID lfd, PID lbd, PID rbd) {
+        updateTele("Going backward to " + position + " pulses", 0);
+        int deadZone = 10;
+        boolean atPos = false;
+        boolean goUp = false;
+        int currentRep = reps;
 
-        updateTele("Going backwards with power " + power + " for " + time + "ms", 0);
+        if (cfg.getRfD().getCurrentPosition() < cfg.getRfdTargetPos()) {
+            goUp = true;
+        }
+        while (atPos == false) {
+            cfg.getRfD().setPower(gradualPower(currentRep, cfg.getRfD().getPower(), rfd.getOutputFromError(cfg.getRfD().getCurrentPosition() - position, cfg.getRfD().getCurrentPosition())));
+            cfg.setRfdTargetPos(cfg.getRfD().getCurrentPosition() - position);
 
-        cfg.getRfD().setPower(power);
-        cfg.getLfD().setPower(power);
-        cfg.getLbD().setPower(power);
-        cfg.getRbD().setPower(power);
-        slp(time);
-        dontMove();
+            cfg.getLfD().setPower(gradualPower(currentRep, cfg.getLfD().getPower(), lfd.getOutputFromError(cfg.getLfD().getCurrentPosition() - position, cfg.getRfD().getCurrentPosition())));
+            cfg.setLfdTargetPos(cfg.getLfD().getCurrentPosition() - position);
+
+            cfg.getLbD().setPower(gradualPower(currentRep, cfg.getLbD().getPower(), lbd.getOutputFromError(cfg.getLbD().getCurrentPosition() - position, cfg.getRfD().getCurrentPosition())));
+            cfg.setLbdTargetPos(cfg.getLbD().getCurrentPosition() - position);
+
+            cfg.getRbD().setPower(gradualPower(currentRep, cfg.getRbD().getPower(), rbd.getOutputFromError(cfg.getRbD().getCurrentPosition() - position, cfg.getRfD().getCurrentPosition())));
+            cfg.setRbdTargetPos(cfg.getRbD().getCurrentPosition() - position);
+
+            if (currentRep > 1) {
+                currentRep--;
+            }
+
+            if (goUp == true) {
+                if (cfg.getRfD().getCurrentPosition() + deadZone > cfg.getRfdTargetPos() && cfg.getRfD().getCurrentPosition() - deadZone < cfg.getRfdTargetPos())  {
+                    break;
+                }
+            } else {
+
+                if (cfg.getRfD().getCurrentPosition() + deadZone < cfg.getRfdTargetPos() && cfg.getRfD().getCurrentPosition() - deadZone > cfg.getRfdTargetPos())  {
+                    break;
+                }
+            }
+        }
     }
 
     public void dontMove(int time) {
