@@ -1,0 +1,105 @@
+package org.firstinspires.ftc.teamcode.misc;
+
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+public class brianDriverInit {
+
+    config cfg;
+
+    public brianDriverInit(config cfg) {
+        this.cfg = cfg;
+    }
+
+    public void initDrive(HardwareMap hwMap) {
+        // Declare OpMode members for each of the 4 motors.
+        ElapsedTime runtime = new ElapsedTime();
+
+        DcMotor leftFrontDrive = null;
+        DcMotor leftBackDrive = null;
+        DcMotor rightFrontDrive = null;
+        DcMotor rightBackDrive = null;
+
+        DcMotor armMotor = null;
+        //private DcMotor slideMotor = null;
+
+        Servo arm1;
+        Servo arm2;
+        Servo arm3;
+
+        double speedMultiplier = 1;
+        double armElbowSpeedMultiplier = .5;
+
+        int armCurrentPos = 0;
+
+        //double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
+        // ASSIGN DRIVE MOTORS
+        leftFrontDrive = (hwMap.get(DcMotor.class, "fl"));
+        leftBackDrive = hwMap.get(DcMotor.class, "bl");
+        rightFrontDrive = hwMap.get(DcMotor.class, "fr");
+        rightBackDrive = hwMap.get(DcMotor.class, "br");
+
+
+        // ASSIGN LINEAR SLIDE / ARM MOTOR
+        armMotor = hwMap.get(DcMotor.class, "armMotor");//slideMotor = hardwareMap.get(DcMotor.class, "slideMotor");
+
+
+        // ASSIGN SERVOS
+        arm1 = hwMap.get(Servo.class, "arm1");
+        arm2 = hwMap.get(Servo.class, "arm2");
+        arm3 = hwMap.get(Servo.class, "arm3");
+
+
+        // DRIVE MOTOR DIRECTION
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+
+        // ARM MOTOR DIRECTION
+        armMotor.setDirection(DcMotorSimple.Direction.REVERSE); // TEST FORWARD OR BACKWARDS
+        //slideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        /*
+        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        elbowMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        // reset encoder
+        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        elbowMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        */
+
+        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
+        cfg.setArmPos(armMotor.getCurrentPosition());
+        // Setters
+
+        //Speed
+        cfg.setSpdMult(speedMultiplier);
+        cfg.setArmElbowSpdMult(armElbowSpeedMultiplier);
+        // Runtime
+        cfg.setrTime(runtime);
+
+        // Positions
+        cfg.setArmPos(armCurrentPos);
+
+        // Motors
+        cfg.setLfD(leftFrontDrive);
+        cfg.setLbD(leftBackDrive);
+        cfg.setRfD(rightFrontDrive);
+        cfg.setRbD(rightBackDrive);
+
+        cfg.setArm(armMotor);
+
+        // Servos
+        cfg.setA1(arm1);
+        cfg.setA2(arm2);
+        cfg.setA3(arm3);
+
+
+    }
+}

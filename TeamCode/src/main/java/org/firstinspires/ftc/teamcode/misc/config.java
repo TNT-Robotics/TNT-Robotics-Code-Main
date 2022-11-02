@@ -50,10 +50,6 @@ public class config {
     final double MAX_POS     =  1;     // Maximum rotational position
     final double MIN_POS     =  0;     // Minimum rotational position
 
-    // PID
-    int armDefaultPos = 0;
-    int elbowDefaultPos = 0;
-
     // targetPos
     int armTargetPos = 0;
     int elbowTargetPos = 0;
@@ -238,22 +234,6 @@ public class config {
 
     public AprilTagDemo getVision() {
         return vision;
-    }
-
-    public int getArmDefaultPos() {
-        return armDefaultPos;
-    }
-
-    public void setArmDefaultPos(int armDefaultPos) {
-        this.armDefaultPos = armDefaultPos;
-    }
-
-    public int getElbowDefaultPos() {
-        return elbowDefaultPos;
-    }
-
-    public void setElbowDefaultPos(int elbowDefaultPos) {
-        this.elbowDefaultPos = elbowDefaultPos;
     }
 
     public int getArmTargetPos() {

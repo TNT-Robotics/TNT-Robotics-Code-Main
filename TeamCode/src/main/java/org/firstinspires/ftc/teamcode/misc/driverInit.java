@@ -67,22 +67,17 @@ public class driverInit {
         armMotor.setDirection(DcMotorSimple.Direction.FORWARD); // TEST FORWARD OR BACKWARDS
         elbowMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         //slideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        /*
-        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        elbowMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        // reset encoder
+
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         elbowMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        // set motors to run forward for 5000 encoder counts.
-        armMotor.setTargetPosition(0);
-        elbowMotor.setTargetPosition(0);*/
+        armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        elbowMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
 
         cfg.setArmPos(armMotor.getCurrentPosition());
         cfg.setElbowPos(elbowMotor.getCurrentPosition());
 
-        cfg.setArmDefaultPos(armMotor.getCurrentPosition());
-        cfg.setElbowDefaultPos(elbowMotor.getCurrentPosition());
 
         // Setters
 

@@ -106,8 +106,8 @@ public class MainDrive extends LinearOpMode {
     public void runOpMode() {
         config cfg = new config();
         driverInit init = new driverInit(cfg);
-        PID armPID = new PID(.02,.0,.02,.008);
-        PID elbowPID = new PID(.02,.0,.02,.008);
+        PID armPID = new PID(.02,.0,.02,0.00);
+        PID elbowPID = new PID(.02,.0,.02,0.00);
 
         armPID.getOutputFromError(0,0);
         elbowPID.getOutputFromError(0,0);
@@ -174,11 +174,13 @@ public class MainDrive extends LinearOpMode {
             if (gamepad1.circle) {
                 cfg.setSpdMult(.25);
             }
+
             // Adjust power
             leftFrontPower *= cfg.getSpdMult();
             rightFrontPower *= cfg.getSpdMult();
             leftBackPower *= cfg.getSpdMult();
             rightBackPower *= cfg.getSpdMult();
+
             // END OF FAST / SLOW MODE
             // UPDATE WHEELS POWER
             cfg.getLfD().setPower(leftFrontPower);
@@ -205,31 +207,19 @@ public class MainDrive extends LinearOpMode {
             }
 
 
+           // Set adjust position.
+            int armNewPos = (int) (cfg.getArmPos() + armPower);
+            int elbowNewPos = (int) (cfg.getElbowPos() + elbowPower);
 
-           // Set adjust position
-            int armNewPos = (int) (cfg.getArmDefaultPos() + (cfg.getArmPos() + armPower));
-            int elbowNewPos = (int)(cfg.getElbowDefaultPos() + (cfg.getElbowPos() + elbowPower));
+            double currentArmPID = armPID.getOutputFromError(armNewPos, cfg.getArm().getCurrentPosition());
+            double currentElbowPID = elbowPID.getOutputFromError(elbowNewPos, cfg.getElbow().getCurrentPosition());
 
-            double currentArmPID = armPID.getOutputFromError(armNewPos, cfg.getArmDefaultPos() + cfg.getArm().getCurrentPosition());
-            double currentElbowPID = elbowPID.getOutputFromError(elbowNewPos, cfg.getElbowDefaultPos() + cfg.getElbow().getCurrentPosition());
-            /*if (armNewPos >cfg.getArmDefaultPos() -340 && armNewPos < cfg.getArmDefaultPos() + 340) {
-                //cfg.getArm().setPower(currentArmPID);
-                cfg.setArmPos(armNewPos - cfg.getArmDefaultPos());
-            } else {
-                cfg.getArm().setPower(0);
-            }
-            if (elbowNewPos > cfg.getElbowDefaultPos() - 340 && elbowNewPos < cfg.getElbowDefaultPos() + 340) {
-                //cfg.getElbow().setPower(currentElbowPID);
-                cfg.setElbowPos(elbowNewPos - cfg.getElbowDefaultPos());
-            } else {
-                cfg.getArm().setPower(0);
-            }*/
 
             cfg.getElbow().setPower(currentElbowPID);
             cfg.getArm().setPower(currentArmPID);
 
-            cfg.setArmPos(armNewPos - cfg.getArmDefaultPos());
-            cfg.setElbowPos(elbowNewPos - cfg.getElbowDefaultPos());
+            cfg.setArmPos(armNewPos);
+            cfg.setElbowPos(elbowNewPos);
 
             // END OF LINEAR SLIDE / ARM (MOTOR)
 
