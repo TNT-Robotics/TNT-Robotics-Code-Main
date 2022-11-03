@@ -106,8 +106,8 @@ public class MainDrive extends LinearOpMode {
     public void runOpMode() {
         config cfg = new config();
         driverInit init = new driverInit(cfg);
-        PID armPID = new PID(.02,.0,.02,0.00);
-        PID elbowPID = new PID(.02,.0,.02,0.00);
+        PID armPID = new PID(.02,.0,.02,0.0);
+        PID elbowPID = new PID(.02,.0,.02,0.0);
 
         armPID.getOutputFromError(0,0);
         elbowPID.getOutputFromError(0,0);
@@ -142,8 +142,8 @@ public class MainDrive extends LinearOpMode {
             double rightBackPower = axial + lateral - yaw;
 
             // arm variable for power level
-            double armPower = -gamepad2.left_stick_y;
-            double elbowPower = -gamepad2.right_stick_y;
+            double armPower = -gamepad2.left_stick_y*5;
+            double elbowPower = -gamepad2.right_stick_y*5;
 
 
             // Normalize the values so no wheel power exceeds 100%
