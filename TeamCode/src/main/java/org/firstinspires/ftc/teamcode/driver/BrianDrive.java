@@ -103,7 +103,7 @@ public class BrianDrive extends LinearOpMode {
     public void runOpMode() {
         config cfg = new config();
         brianDriverInit init = new brianDriverInit(cfg);
-        PID armPID = new PID(.06,.0,.06,.008);
+        PID armPID = new PID(.02,.0,.02,0);
         armPID.getOutputFromError(0,0);
 
         // INIT
@@ -136,7 +136,7 @@ public class BrianDrive extends LinearOpMode {
             double rightBackPower = axial + lateral - yaw;
 
             // arm variable for power level
-            double armPower = -gamepad2.left_stick_y;
+            double armPower = -gamepad2.left_stick_y * 5;
 
             // Normalize the values so no wheel power exceeds 100%
             // This ensures that the robot maintains the desired motion.
@@ -293,6 +293,7 @@ public class BrianDrive extends LinearOpMode {
             telemetry.addData("Claw1, Claw2, Claw3", "%4.2f, %4.2f, %4.2f", cfg.getA1().getPosition(), cfg.getA2().getPosition(), cfg.getA3().getPosition());
             telemetry.addLine("Motor Rotations (Current vs Set)");
             telemetry.addData("Arm", "%d, %d", cfg.getArm().getCurrentPosition(), cfg.getArmTargetPos());
+            telemetry.addData("Arm Power", "%d", cfg.getArm().getPower());
             telemetry.update();
         }
     }

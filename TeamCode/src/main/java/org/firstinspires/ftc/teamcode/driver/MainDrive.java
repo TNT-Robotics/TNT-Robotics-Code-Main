@@ -142,8 +142,8 @@ public class MainDrive extends LinearOpMode {
             double rightBackPower = axial + lateral - yaw;
 
             // arm variable for power level
-            double armPower = -gamepad2.left_stick_y*5;
-            double elbowPower = -gamepad2.right_stick_y*5;
+            double armPower = -gamepad2.left_stick_y * 5;
+            double elbowPower = -gamepad2.right_stick_y * 5;
 
 
             // Normalize the values so no wheel power exceeds 100%
