@@ -41,16 +41,20 @@ How much time before end in milliseconds - < WRITE THE TIME HERE
 public class redAutoV1 extends LinearOpMode {
 
     config cfg = new config();
-
+    int lfdTarget = 0;
+    int rfdTarget = 0;
+    int lbdTarget = 0;
+    int rbdTarget = 0;
     @Override
     public void runOpMode() {
 
             autonInit aiInit = new autonInit(cfg);
 
-            PID lfdPID = new PID(.2, .0, .4, 0);
-            PID lbdPID = new PID(.2, .0, .4, .0);
-            PID rfdPID = new PID(.2, .0, .4, .0);
-            PID rbdPID = new PID(.2, .0, .4, .0);
+
+            PID lfdPID = new PID(.02, .0, .04, 0);
+            PID lbdPID = new PID(.02, .0, .04, .0);
+            PID rfdPID = new PID(.02, .0, .04, .0);
+            PID rbdPID = new PID(.02, .0, .04, .0);
 
             lfdPID.getOutputFromError(0, 0);
             lbdPID.getOutputFromError(0, 0);
@@ -70,7 +74,7 @@ public class redAutoV1 extends LinearOpMode {
 
             // if nothing detected for 1.5s move a bit forward until 5s then stop searching
             // for cone id
-            /*
+
             while (cfg.getrTime().milliseconds() < 5000 && opModeIsActive()) {
                 cfg.getVision().updateTags(cfg);
 
@@ -80,11 +84,19 @@ public class redAutoV1 extends LinearOpMode {
                     cfg.setPosition(cfg.getVision().position());
                     cfg.setRotation(cfg.getVision().rotation());
 
+                    if (cfg.getVision().idGetter() == 440) {
+                        cfg.setPhase1Check(true);
+                    } else if (cfg.getVision().idGetter() == 373) {
+
+                    } else if (cfg.getVision().idGetter() == 182) {
+
+                    }
+
                     updateTele("Found ID " + cfg.getConeId(), 0);
                     break;
                 }
                 if (cfg.getrTime().milliseconds() > 1500) {
-                    goForward(.2, 100);
+                    moveForwardBackward(50, rfdPID, lfdPID, lbdPID, rbdPID, 10, 0.2);
                     dontMove(50);
                     cfg.setCamCounter(cfg.getCamCounter()+1);
                 } else {
@@ -92,24 +104,114 @@ public class redAutoV1 extends LinearOpMode {
                 }
             }
             if (cfg.getCamCounter() > 0) {
-                goBackward(1, (cfg.getCamCounter() * 100) / 5);
+                moveForwardBackward(cfg.getCamCounter() * -50, rfdPID, lfdPID, lbdPID, rbdPID, 10, 0.4);
             }
-            // grab cones
-            moveToPole(cfg.getTeamColor(), 0);
-            conePhase(3, 10000); // Time before end in milliseconds
-            moveToSpawn(cfg.getTeamColor(), 0);
-
-    */
+            /* FULL AUTON
             if (cfg.isPhase1Check() && !cfg.isHappenedCycle()) {
-                boolean finished = moveForwardBackward(500, 5, rfdPID, lfdPID, lbdPID, rbdPID, 10);
-                telemetry.addData("Finished", "%b", finished);
+                boolean finished = moveForwardBackward(200, rfdPID, lfdPID, lbdPID, rbdPID, 10, 0.5);
+                telemetry.addLine("Current phase: 1");
                 if (finished) {
                  cfg.setPhase1Check(false);
                  cfg.setPhase2Check(true);
                 }
                 cfg.setHappenedCycle(true);
             }
-            //moveForwardBackward(-50, 5, rfdPID, lfdPID, lbdPID, rbdPID, 10);
+
+            if (cfg.isPhase2Check() && !cfg.isHappenedCycle()) {
+                boolean finished = strafeLeft(800, rfdPID, lfdPID, lbdPID, rbdPID, 10, 0.5);
+                telemetry.addLine("Current phase: 2");
+                if (finished) {
+                    cfg.setPhase2Check(false);
+                    cfg.setPhase3Check(true);
+                }
+                cfg.setHappenedCycle(true);
+            }
+
+            if (cfg.isPhase3Check() && !cfg.isHappenedCycle()) {
+                boolean finished = moveForwardBackward(300, rfdPID, lfdPID, lbdPID, rbdPID, 10, 0.5);
+                telemetry.addLine("Current phase: 3");
+                if (finished) {
+                    cfg.setPhase3Check(false);
+                    cfg.setPhase4Check(true);
+                }
+                cfg.setHappenedCycle(true);
+            }
+
+            if (cfg.isPhase4Check() && !cfg.isHappenedCycle()) {
+                boolean finished = turnRight(100, rfdPID, lfdPID, lbdPID, rbdPID, 10, 0.5);
+                telemetry.addLine("Current phase: 4");
+                if (finished) {
+                    cfg.setPhase4Check(false);
+                    cfg.setPhase5Check(true);
+                }
+                cfg.setHappenedCycle(true);
+            }
+
+            if (cfg.isPhase5Check() && !cfg.isHappenedCycle()) {
+                // ARM ACTION
+                boolean finished = strafeLeft(300, rfdPID, lfdPID, lbdPID, rbdPID, 10, 0.5);
+                telemetry.addLine("Current phase: 5");
+                if (finished) {
+                    cfg.setPhase5Check(false);
+                    cfg.setPhase6Check(true);
+                }
+                cfg.setHappenedCycle(true);
+            } */
+
+            // ID AUTON ONLY
+
+            // MOVE FROM WALL
+            moveForwardBackward(200, rfdPID, lfdPID, lbdPID, rbdPID, 10, 0.5);
+
+            // ID 1
+            if (cfg.isPhase1Check() && !cfg.isHappenedCycle()) {
+                boolean finished = strafeLeft(800, rfdPID, lfdPID, lbdPID, rbdPID, 10, 0.5);
+                telemetry.addLine("Current phase: 1");
+                if (finished) {
+                    cfg.setPhase1Check(false);
+                    cfg.setPhase2Check(true);
+                }
+                cfg.setHappenedCycle(true);
+            }
+
+            if (cfg.isPhase2Check() && !cfg.isHappenedCycle()) {
+                boolean finished = moveForwardBackward(300, rfdPID, lfdPID, lbdPID, rbdPID, 10, 0.5);
+                telemetry.addLine("Current phase: 2");
+                if (finished) {
+                    cfg.setPhase2Check(false);
+                }
+                cfg.setHappenedCycle(true);
+            }
+
+            // ID 2
+            if (cfg.isPhase3Check() && !cfg.isHappenedCycle()) {
+                boolean finished = moveForwardBackward(500, rfdPID, lfdPID, lbdPID, rbdPID, 10, 0.5);
+                telemetry.addLine("Current phase: 3");
+                if (finished) {
+                    cfg.setPhase3Check(false);
+                }
+                cfg.setHappenedCycle(true);
+            }
+
+            // ID 3
+            if (cfg.isPhase4Check() && !cfg.isHappenedCycle()) {
+                boolean finished = strafeRight(800, rfdPID, lfdPID, lbdPID, rbdPID, 10, 0.5);
+                telemetry.addLine("Current phase: 4");
+                if (finished) {
+                    cfg.setPhase4Check(false);
+                    cfg.setPhase5Check(true);
+                }
+                cfg.setHappenedCycle(true);
+            }
+
+            if (cfg.isPhase5Check() && !cfg.isHappenedCycle()) {
+                boolean finished = moveForwardBackward(300, rfdPID, lfdPID, lbdPID, rbdPID, 10, 0.5);
+                telemetry.addLine("Current phase: 5");
+                if (finished) {
+                    cfg.setPhase5Check(false);
+                }
+                cfg.setHappenedCycle(true);
+            }
         }
     }
 
@@ -119,7 +221,7 @@ public class redAutoV1 extends LinearOpMode {
 
 
     // Reps = Repetitions | Power1 - Starting power | Power2 - End Power | IF POWER1 HIGHER THEN DESCENDING
-    public double gradualPower(int reps, double power1, double power2) {
+    /*public double gradualPower(int reps, double power1, double power2) {
         if (power1 < power2) {
             return (power2 - power1) / reps;
         } else if (power1 > power2) {
@@ -127,8 +229,11 @@ public class redAutoV1 extends LinearOpMode {
         }
         return power1;
     }
+    NEXT COMPETITION
+    */
 
 
+    /*
     public boolean moveForwardBackward(int position, int reps, PID rfd, PID lfd, PID lbd, PID rbd, int deadZone) { // 1 sec is about 9ft
         telemetry.addData("Motor positions (RFD, LFD, RBD, LBD)", "%d,%d,%d,%d", cfg.getRfD().getCurrentPosition(),cfg.getLfD().getCurrentPosition(), cfg.getRbD().getCurrentPosition(), cfg.getLbD().getCurrentPosition());
         telemetry.addData("Motor target positions (RFD, LFD, RBD, LBD)", "%d,%d,%d,%d", cfg.getTargetPosRFD(),cfg.getTargetPosLFD(), cfg.getTargetPosRBD(), cfg.getTargetPosLBD());
@@ -170,6 +275,176 @@ public class redAutoV1 extends LinearOpMode {
 
                 cfg.setSetStartPosForwardBackward(false);
 
+                cfg.setAtPos(true);
+                return true;
+
+            }
+        }
+        return false;
+    }*/
+
+    public boolean moveForwardBackward(int position, PID rfd, PID lfd, PID lbd, PID rbd, int deadZone, double speed) { // 1 sec is about 9ft
+        telemetry.addData("Motor positions (RFD, LFD, RBD, LBD)", "%d,%d,%d,%d", cfg.getRfD().getCurrentPosition(),cfg.getLfD().getCurrentPosition(), cfg.getRbD().getCurrentPosition(), cfg.getLbD().getCurrentPosition());
+
+        updateTele("Going forward to " + position + " pulses", 0);
+        if (!cfg.isSetStartPosForwardBackward()) {
+            lfdTarget = cfg.getLfD().getCurrentPosition() + position;
+            rfdTarget = cfg.getRfD().getCurrentPosition() + position;
+            lbdTarget = cfg.getLbD().getCurrentPosition() + position;
+            rbdTarget = cfg.getRbD().getCurrentPosition() + position;
+
+            cfg.setAtPos(false);
+            cfg.setSetStartPosForwardBackward(true);
+
+        }
+        if (!cfg.isAtPos()) {
+            cfg.getRfD().setPower(rfd.getOutputFromError(rfdTarget, cfg.getRfD().getCurrentPosition()) * speed);
+            cfg.getLfD().setPower(lfd.getOutputFromError(lfdTarget, cfg.getLfD().getCurrentPosition()) * speed);
+            cfg.getLbD().setPower(lbd.getOutputFromError(lbdTarget, cfg.getLbD().getCurrentPosition()) * speed);
+            cfg.getRbD().setPower(rbd.getOutputFromError(rbdTarget, cfg.getRbD().getCurrentPosition()) * speed);
+
+            if (isAtPos(cfg.getRfD().getCurrentPosition(), rfdTarget, deadZone) && isAtPos(cfg.getLfD().getCurrentPosition(), lfdTarget, deadZone) && isAtPos(cfg.getLbD().getCurrentPosition(), lbdTarget, deadZone) && isAtPos(cfg.getRbD().getCurrentPosition(), rbdTarget, deadZone)) {
+
+                cfg.getRfD().setPower(0);
+                cfg.getLfD().setPower(0);
+                cfg.getLbD().setPower(0);
+                cfg.getRbD().setPower(0);
+
+                cfg.setSetStartPosForwardBackward(false);
+                cfg.setAtPos(true);
+                return true;
+
+            }
+        }
+        return false;
+    }
+
+    public boolean strafeLeft(int position, PID rfd, PID lfd, PID lbd, PID rbd, int deadZone, double speed) { // 1 sec is about 9ft
+        telemetry.addData("Motor positions (RFD, LFD, RBD, LBD)", "%d,%d,%d,%d", cfg.getRfD().getCurrentPosition(),cfg.getLfD().getCurrentPosition(), cfg.getRbD().getCurrentPosition(), cfg.getLbD().getCurrentPosition());
+        updateTele("Strafing left to " + position + " pulses", 0);
+        if (!cfg.isInitStrafeLeft()) {
+
+            lfdTarget = cfg.getLfD().getCurrentPosition() - position;
+            rfdTarget = cfg.getRfD().getCurrentPosition() + position;
+            lbdTarget = cfg.getLbD().getCurrentPosition() - position;
+            rbdTarget = cfg.getRbD().getCurrentPosition() + position;
+
+            cfg.setAtPos(false);
+            cfg.setInitStrafeLeft(true);
+        }
+        if (!cfg.isAtPos()) {
+            cfg.getRfD().setPower(rfd.getOutputFromError(rfdTarget, cfg.getRfD().getCurrentPosition()) * speed);
+            cfg.getLfD().setPower(lfd.getOutputFromError(lfdTarget, cfg.getLfD().getCurrentPosition()) * -speed);
+            cfg.getLbD().setPower(lbd.getOutputFromError(lbdTarget, cfg.getLbD().getCurrentPosition()) * speed);
+            cfg.getRbD().setPower(rbd.getOutputFromError(rbdTarget, cfg.getRbD().getCurrentPosition()) * -speed);
+
+            if (isAtPos(cfg.getRfD().getCurrentPosition(), rfdTarget, deadZone) && isAtPos(cfg.getLfD().getCurrentPosition(), lfdTarget, deadZone) && isAtPos(cfg.getLbD().getCurrentPosition(), lbdTarget, deadZone) && isAtPos(cfg.getRbD().getCurrentPosition(), rbdTarget, deadZone)) {
+                cfg.getRfD().setPower(0);
+                cfg.getLfD().setPower(0);
+                cfg.getLbD().setPower(0);
+                cfg.getRbD().setPower(0);
+
+                cfg.setInitStrafeLeft(true); //(false);
+                cfg.setAtPos(true);
+                return true;
+
+            }
+        }
+        return false;
+    }
+
+    public boolean strafeRight(int position, PID rfd, PID lfd, PID lbd, PID rbd, int deadZone, double speed) { // 1 sec is about 9ft
+        telemetry.addData("Motor positions (RFD, LFD, RBD, LBD)", "%d,%d,%d,%d", cfg.getRfD().getCurrentPosition(),cfg.getLfD().getCurrentPosition(), cfg.getRbD().getCurrentPosition(), cfg.getLbD().getCurrentPosition());
+        updateTele("Strafing right to " + position + " pulses", 0);
+        if (!cfg.isInitStrafeRight()) {
+
+            lfdTarget = cfg.getLfD().getCurrentPosition() + position;
+            rfdTarget = cfg.getRfD().getCurrentPosition() - position;
+            lbdTarget = cfg.getLbD().getCurrentPosition() - position;
+            rbdTarget = cfg.getRbD().getCurrentPosition() + position;
+
+            cfg.setAtPos(false);
+            cfg.setInitStrafeRight(true);
+        }
+        if (!cfg.isAtPos()) {
+            cfg.getRfD().setPower(rfd.getOutputFromError(rfdTarget, cfg.getRfD().getCurrentPosition()) * -speed);
+            cfg.getLfD().setPower(lfd.getOutputFromError(lfdTarget, cfg.getLfD().getCurrentPosition()) * speed);
+            cfg.getLbD().setPower(lbd.getOutputFromError(lbdTarget, cfg.getLbD().getCurrentPosition()) * -speed);
+            cfg.getRbD().setPower(rbd.getOutputFromError(rbdTarget, cfg.getRbD().getCurrentPosition()) * speed);
+
+            if (isAtPos(cfg.getRfD().getCurrentPosition(), rfdTarget, deadZone) && isAtPos(cfg.getLfD().getCurrentPosition(), lfdTarget, deadZone) && isAtPos(cfg.getLbD().getCurrentPosition(), lbdTarget, deadZone) && isAtPos(cfg.getRbD().getCurrentPosition(), rbdTarget, deadZone)) {
+                cfg.getRfD().setPower(0);
+                cfg.getLfD().setPower(0);
+                cfg.getLbD().setPower(0);
+                cfg.getRbD().setPower(0);
+
+                cfg.setInitStrafeRight(false);
+                cfg.setAtPos(true);
+                return true;
+
+            }
+        }
+        return false;
+    }
+
+    public boolean turnleft(int position, PID rfd, PID lfd, PID lbd, PID rbd, int deadZone, double speed) { // 1 sec is about 9ft
+
+        telemetry.addData("Motor positions (RFD, LFD, RBD, LBD)", "%d,%d,%d,%d", cfg.getRfD().getCurrentPosition(),cfg.getLfD().getCurrentPosition(), cfg.getRbD().getCurrentPosition(), cfg.getLbD().getCurrentPosition());
+        updateTele("Going left to " + position + " pulses", 0);
+        if (!cfg.isInitTurnLeft()) {
+
+            rfdTarget = cfg.getRfD().getCurrentPosition() + position;
+            rbdTarget = cfg.getRbD().getCurrentPosition() + position;
+
+            cfg.setAtPos(false);
+            cfg.setInitTurnLeft(true);
+
+        }
+        if (!cfg.isAtPos()) {
+            cfg.getRfD().setPower(rfd.getOutputFromError(rfdTarget, cfg.getRfD().getCurrentPosition()) * speed);
+            cfg.getRbD().setPower(rbd.getOutputFromError(rbdTarget, cfg.getRbD().getCurrentPosition()) * speed);
+
+            if (isAtPos(cfg.getRfD().getCurrentPosition(), rfdTarget, deadZone) && isAtPos(cfg.getRbD().getCurrentPosition(), rbdTarget, deadZone)) {
+
+                cfg.getRfD().setPower(0);
+                cfg.getLfD().setPower(0);
+                cfg.getLbD().setPower(0);
+                cfg.getRbD().setPower(0);
+
+                cfg.setInitTurnLeft(false);
+                cfg.setAtPos(true);
+                return true;
+
+            }
+        }
+        return false;
+    }
+
+    public boolean turnRight(int position, PID rfd, PID lfd, PID lbd, PID rbd, int deadZone, double speed) { // 1 sec is about 9ft
+        telemetry.addData("Motor positions (RFD, LFD, RBD, LBD)", "%d,%d,%d,%d", cfg.getRfD().getCurrentPosition(),cfg.getLfD().getCurrentPosition(), cfg.getRbD().getCurrentPosition(), cfg.getLbD().getCurrentPosition());
+
+        updateTele("Turning right to " + position + " pulses", 0);
+        if (!cfg.isInitTurnRight()) {
+
+            lfdTarget = cfg.getLfD().getCurrentPosition() + position;
+            lbdTarget = cfg.getLbD().getCurrentPosition() + position;
+
+            cfg.setAtPos(false);
+            cfg.setInitTurnRight(true);
+
+        }
+        if (!cfg.isAtPos()) {
+            cfg.getLfD().setPower(lfd.getOutputFromError(lfdTarget, cfg.getLfD().getCurrentPosition()) * speed);
+            cfg.getLbD().setPower(lbd.getOutputFromError(lbdTarget, cfg.getLbD().getCurrentPosition()) * speed);
+
+            if (isAtPos(cfg.getLfD().getCurrentPosition(), lfdTarget, deadZone) && isAtPos(cfg.getLbD().getCurrentPosition(), lbdTarget, deadZone)) {
+
+                cfg.getRfD().setPower(0);
+                cfg.getLfD().setPower(0);
+                cfg.getLbD().setPower(0);
+                cfg.getRbD().setPower(0);
+
+                cfg.setInitTurnRight(false);
                 cfg.setAtPos(true);
                 return true;
 
@@ -248,22 +523,11 @@ public class redAutoV1 extends LinearOpMode {
 
     public void waitForArmMotor() {
         int deathZone = 10;
-        while (deathZone == 10) {
-            if (cfg.getArm().getCurrentPosition() < cfg.getArmTargetPos() + deathZone && cfg.getArmTargetPos() > cfg.getArmTargetPos() - deathZone) {
-                break;
-            }
 
-        }
     }
 
     public void waitForElbowMotor() {
         int deathZone = 10;
-        while (deathZone == 10) {
-            if (cfg.getElbow().getCurrentPosition() < cfg.getElbowTargetPos() + deathZone && cfg.getElbow().getCurrentPosition() > cfg.getElbowTargetPos() - deathZone) {
-                break;
-            }
-
-        }
     }
 
     // advanced drive

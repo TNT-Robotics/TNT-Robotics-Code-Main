@@ -223,33 +223,33 @@ public class MainDrive extends LinearOpMode {
                 armNewPos = -687;
                 elbowNewPos = -997;
 
-                cfg.setArmPos(-687);
-                cfg.setElbowTargetPos(-997);
+                cfg.setArmPos(armNewPos);
+                cfg.setElbowTargetPos(elbowNewPos);
             }
             if (gamepad2.dpad_right) {
                 armNewPos = -485;
                 elbowNewPos = -649;
 
-                cfg.setArmPos(-485);
-                cfg.setElbowTargetPos(-649);
+                cfg.setArmPos(armNewPos);
+                cfg.setElbowTargetPos(elbowNewPos);
             }
             if (gamepad2.dpad_left) {
                 armNewPos = -192;
                 elbowNewPos = -254;
 
-                cfg.setArmPos(-192);
-                cfg.setElbowTargetPos(-254);
+                cfg.setArmPos(armNewPos);
+                cfg.setElbowTargetPos(elbowNewPos);
             }
             if (gamepad2.dpad_down) {
                 armNewPos = -253;
-                elbowNewPos = -1200;
+                elbowNewPos = -1000;
 
                 if (cfg.getA3().getPosition() > 0.25) {
                     cfg.getA3().setPosition(.20);
                 }
 
-                cfg.setArmPos(-253);
-                cfg.setElbowTargetPos(-1000);
+                cfg.setArmPos(armNewPos);
+                cfg.setElbowTargetPos(elbowNewPos);
             }
 
             double currentArmPID = armPID.getOutputFromError(armNewPos, cfg.getArm().getCurrentPosition());
@@ -267,9 +267,11 @@ public class MainDrive extends LinearOpMode {
             // END OF MOTORS
             // START OF SERVOS
 
+            /* IDK maybe works
             cfg.getA1().setPosition(cfg.getA1().getPosition());
             cfg.getA2().setPosition(cfg.getA2().getPosition());
             cfg.getA3().setPosition(cfg.getA3().getPosition());
+            */
 
             if (gamepad2.square) {
                 if (cfg.getA1().getPosition() >= .53) {

@@ -10,7 +10,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 public class config {
     int teamColor = 1; // 0 - Blue | 1 - Red
     // Phases
-    boolean phase1Check = true;
+    boolean phase1Check = false; // WHEN USING FULL STATE CHANGE TO TRUE
     boolean phase2Check = false;
     boolean phase3Check = false;
     boolean phase4Check = false;
@@ -23,20 +23,13 @@ public class config {
 
     boolean happenedCycle = false;
 
-    boolean setStartPosForwardBackward = false;
-    boolean setStartPosTurn = false;
-    boolean setStartPosStrafe = false;
+    boolean initForwardBackward = false;
+    boolean initTurnRight = false;
+    boolean initTurnLeft = false;
+    boolean initStrafeLeft = false;
+    boolean initStrafeRight = false;
 
     boolean atPos = false;
-    boolean goUp = false;
-    int currentRep = 0;
-
-    int targetPosRFD = 0;
-    int targetPosLFD = 0;
-    int targetPosLBD = 0;
-    int targetPosRBD = 0;
-
-
 
     // Motors
     DcMotor lfD = null;
@@ -281,37 +274,6 @@ public class config {
         this.elbowTargetPos = elbowTargetPos;
     }
 
-    public int getLfdTargetPos() {
-        return lfdTargetPos;
-    }
-
-    public void setLfdTargetPos(int lfdTargetPos) {
-        this.lfdTargetPos = lfdTargetPos;
-    }
-
-    public int getLbdTargetPos() {
-        return lbdTargetPos;
-    }
-
-    public void setLbdTargetPos(int lbdTargetPos) {
-        this.lbdTargetPos = lbdTargetPos;
-    }
-
-    public int getRfdTargetPos() {
-        return rfdTargetPos;
-    }
-
-    public void setRfdTargetPos(int rfdTargetPos) {
-        this.rfdTargetPos = rfdTargetPos;
-    }
-
-    public int getRbdTargetPos() {
-        return rbdTargetPos;
-    }
-
-    public void setRbdTargetPos(int rbdTargetPos) {
-        this.rbdTargetPos = rbdTargetPos;
-    }
 
     public void setPhase1Check(boolean phase1Check) {
         this.phase1Check = phase1Check;
@@ -402,82 +364,91 @@ public class config {
     }
 
     public void setSetStartPosForwardBackward(boolean setStartPosForwardBackward) {
-        this.setStartPosForwardBackward = setStartPosForwardBackward;
+        this.initForwardBackward = setStartPosForwardBackward;
     }
-
-    public void setSetStartPosTurn(boolean setStartPosTurn) {
-        this.setStartPosTurn = setStartPosTurn;
-    }
-
-    public void setSetStartPosStrafe(boolean setStartPosStrafe) {
-        this.setStartPosStrafe = setStartPosStrafe;
-    }
-
     public boolean isSetStartPosForwardBackward() {
-        return setStartPosForwardBackward;
+        return initForwardBackward;
     }
 
-    public boolean isSetStartPosTurn() {
-        return setStartPosTurn;
-    }
-
-    public boolean isSetStartPosStrafe() {
-        return setStartPosStrafe;
-    }
 
     public void setAtPos(boolean atPos) {
         this.atPos = atPos;
     }
 
-    public void setGoUp(boolean goUp) {
-        this.goUp = goUp;
-    }
-
-    public void setCurrentRep(int currentRep) {
-        this.currentRep = currentRep;
-    }
 
     public boolean isAtPos() {
         return atPos;
     }
 
-    public boolean isGoUp() {
-        return goUp;
+    public boolean isInitForwardBackward() {
+        return initForwardBackward;
     }
 
-    public int getCurrentRep() {
-        return currentRep;
+    public boolean isInitTurnRight() {
+        return initTurnRight;
     }
 
-    public void setTargetPosRFD(int targetPosRFD) {
-        this.targetPosRFD = targetPosRFD;
+    public boolean isInitTurnLeft() {
+        return initTurnLeft;
     }
 
-    public void setTargetPosLFD(int targetPosLFD) {
-        this.targetPosLFD = targetPosLFD;
+    public boolean isInitStrafeLeft() {
+        return initStrafeLeft;
     }
 
-    public void setTargetPosLBD(int targetPosLBD) {
-        this.targetPosLBD = targetPosLBD;
+    public boolean isInitStrafeRight() {
+        return initStrafeRight;
     }
 
-    public void setTargetPosRBD(int targetPosRBD) {
-        this.targetPosRBD = targetPosRBD;
+    public int getLfdTargetPos() {
+        return lfdTargetPos;
     }
 
-    public int getTargetPosRFD() {
-        return targetPosRFD;
+    public int getLbdTargetPos() {
+        return lbdTargetPos;
     }
 
-    public int getTargetPosLFD() {
-        return targetPosLFD;
+    public int getRfdTargetPos() {
+        return rfdTargetPos;
     }
 
-    public int getTargetPosLBD() {
-        return targetPosLBD;
+    public int getRbdTargetPos() {
+        return rbdTargetPos;
     }
 
-    public int getTargetPosRBD() {
-        return targetPosRBD;
+    public void setInitForwardBackward(boolean initForwardBackward) {
+        this.initForwardBackward = initForwardBackward;
+    }
+
+    public void setInitTurnRight(boolean initTurnRight) {
+        this.initTurnRight = initTurnRight;
+    }
+
+    public void setInitTurnLeft(boolean initTurnLeft) {
+        this.initTurnLeft = initTurnLeft;
+    }
+
+    public void setInitStrafeLeft(boolean initStrafeLeft) {
+        this.initStrafeLeft = initStrafeLeft;
+    }
+
+    public void setInitStrafeRight(boolean initStrafeRight) {
+        this.initStrafeRight = initStrafeRight;
+    }
+
+    public void setLfdTargetPos(int lfdTargetPos) {
+        this.lfdTargetPos = lfdTargetPos;
+    }
+
+    public void setLbdTargetPos(int lbdTargetPos) {
+        this.lbdTargetPos = lbdTargetPos;
+    }
+
+    public void setRfdTargetPos(int rfdTargetPos) {
+        this.rfdTargetPos = rfdTargetPos;
+    }
+
+    public void setRbdTargetPos(int rbdTargetPos) {
+        this.rbdTargetPos = rbdTargetPos;
     }
 }
