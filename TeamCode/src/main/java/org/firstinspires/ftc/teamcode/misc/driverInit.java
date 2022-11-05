@@ -56,6 +56,10 @@ public class driverInit {
         arm2 = hwMap.get(Servo.class, "arm2");
         arm3 = hwMap.get(Servo.class, "arm3");
 
+        arm1.setPosition(0.75);
+        arm2.setPosition(0);
+        arm3.setPosition(1);
+
 
         // DRIVE MOTOR DIRECTION
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);

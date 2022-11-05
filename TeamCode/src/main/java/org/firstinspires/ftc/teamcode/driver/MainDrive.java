@@ -142,8 +142,8 @@ public class MainDrive extends LinearOpMode {
             double rightBackPower = axial + lateral - yaw;
 
             // arm variable for power level
-            double armPower = -gamepad2.left_stick_y * 5;
-            double elbowPower = -gamepad2.right_stick_y * 5;
+            double armPower = -gamepad2.right_stick_y * 5;
+            double elbowPower = -gamepad2.left_stick_y * 5;
 
 
             // Normalize the values so no wheel power exceeds 100%
@@ -205,18 +205,59 @@ public class MainDrive extends LinearOpMode {
             if (gamepad2.circle) {
                 cfg.setArmElbowSpdMult(.25);
             }
-
-
            // Set adjust position.
-            int armNewPos = (int) (cfg.getArmPos() + armPower);
-            int elbowNewPos = (int) (cfg.getElbowPos() + elbowPower);
+            int armNewPos = cfg.getArmPos();
+            int elbowNewPos = cfg.getElbowPos();
+
+            /*
+            if (armPower != 0) {
+                armNewPos = (int) (cfg.getArmPos() + armPower);
+            } */
+            if (elbowPower != 0) {
+                elbowNewPos = (int) (cfg.getElbowPos() + elbowPower);
+            }
+
+
+            // set positions
+            if (gamepad2.dpad_up) {
+                armNewPos = -687;
+                elbowNewPos = -997;
+
+                cfg.setArmPos(-687);
+                cfg.setElbowTargetPos(-997);
+            }
+            if (gamepad2.dpad_right) {
+                armNewPos = -485;
+                elbowNewPos = -649;
+
+                cfg.setArmPos(-485);
+                cfg.setElbowTargetPos(-649);
+            }
+            if (gamepad2.dpad_left) {
+                armNewPos = -192;
+                elbowNewPos = -254;
+
+                cfg.setArmPos(-192);
+                cfg.setElbowTargetPos(-254);
+            }
+            if (gamepad2.dpad_down) {
+                armNewPos = -253;
+                elbowNewPos = -1200;
+
+                if (cfg.getA3().getPosition() > 0.25) {
+                    cfg.getA3().setPosition(.20);
+                }
+
+                cfg.setArmPos(-253);
+                cfg.setElbowTargetPos(-1000);
+            }
 
             double currentArmPID = armPID.getOutputFromError(armNewPos, cfg.getArm().getCurrentPosition());
             double currentElbowPID = elbowPID.getOutputFromError(elbowNewPos, cfg.getElbow().getCurrentPosition());
 
 
-            cfg.getElbow().setPower(currentElbowPID);
-            cfg.getArm().setPower(currentArmPID);
+            cfg.getElbow().setPower(currentElbowPID * .6);
+            cfg.getArm().setPower(currentArmPID * .6);
 
             cfg.setArmPos(armNewPos);
             cfg.setElbowPos(elbowNewPos);
@@ -225,40 +266,73 @@ public class MainDrive extends LinearOpMode {
 
             // END OF MOTORS
             // START OF SERVOS
-            // START OF CLAW 1 (Claw grab)
-            if (gamepad2.left_bumper) {
+
+            cfg.getA1().setPosition(cfg.getA1().getPosition());
+            cfg.getA2().setPosition(cfg.getA2().getPosition());
+            cfg.getA3().setPosition(cfg.getA3().getPosition());
+
+            if (gamepad2.square) {
                 if (cfg.getA1().getPosition() >= .53) {
-                    cfg.getA1().setPosition(.53);
+                        cfg.getA1().setPosition(.53);
                 } else {
                     cfg.getA1().setPosition(cfg.getA1().getPosition() + cfg.getINCREMENT());
                 }
             }
-            if (gamepad2.right_bumper) {
+
+            if (gamepad2.x) {
                 if (cfg.getA1().getPosition() <= .13) {
                     cfg.getA1().setPosition(.13);
                 } else {
                     cfg.getA1().setPosition(cfg.getA1().getPosition() - cfg.getINCREMENT());
                 }
             }
-            // END OF CLAW 1
 
-            // START OF CLAW 2 (180 turn around)
-            if (gamepad2.left_trigger != 0) {
-                if (cfg.getA2().getPosition() >= cfg.getMAX_POS()) {
-                    cfg.getA2().setPosition(cfg.getMAX_POS());
+            if (gamepad2.circle) {
+                if (cfg.getA3().getPosition() >= cfg.getMAX_POS()) {
+                    cfg.getA3().setPosition(cfg.getMAX_POS());
                 } else {
-                    cfg.getA2().setPosition(cfg.getA2().getPosition() + cfg.getINCREMENT());
+                    cfg.getA3().setPosition(cfg.getA3().getPosition() + cfg.getINCREMENT());
                 }
             }
-            if (gamepad2.right_trigger != 0) {
+
+            if (gamepad2.triangle) {
                 if (cfg.getA2().getPosition() <= cfg.getMIN_POS()) {
                     cfg.getA2().setPosition(cfg.getMIN_POS());
                 } else {
                     cfg.getA2().setPosition(cfg.getA2().getPosition() - cfg.getINCREMENT());
                 }
             }
-            // END OF CLAW 2
 
+            if (gamepad2.right_stick_y != 0) {
+                if (cfg.getA3().getPosition() + gamepad2.right_stick_y / 10 >= cfg.getMAX_POS()) {
+                    cfg.getA3().setPosition(cfg.getMAX_POS());
+                } else if (cfg.getA3().getPosition() - gamepad2.right_stick_y / 10 <= cfg.getMIN_POS()) {
+                    cfg.getA3().setPosition(cfg.getMIN_POS());
+                } else {
+                    cfg.getA3().setPosition(cfg.getA3().getPosition() + gamepad2.right_stick_y / 10);
+                }
+            }
+
+
+
+            // START OF CLAW 1 (Claw grab)
+            if (gamepad2.left_bumper) {
+                cfg.getA1().setPosition(.53);
+            }
+            if (gamepad2.right_bumper) {
+                cfg.getA1().setPosition(.13);
+            }
+            // END OF CLAW 1
+
+            // START OF CLAW 2 (180 turn around)
+            if (gamepad2.left_trigger != 0) {
+                cfg.getA2().setPosition(cfg.getMAX_POS());
+            }
+            if (gamepad2.right_trigger != 0) {
+                cfg.getA2().setPosition(cfg.getMIN_POS());
+            }
+            // END OF CLAW 2
+/*
             // START OF CLAW 3 (pivot)
             if (gamepad2.dpad_up) {
                 if (cfg.getA3().getPosition() >= cfg.getMAX_POS()) {
@@ -275,7 +349,7 @@ public class MainDrive extends LinearOpMode {
                 }
             }
             // END OF CLAW 3
-
+*/
             // END OF SERVOS
 
             // telemetry

@@ -9,6 +9,34 @@ import org.openftc.easyopencv.OpenCvCamera;
 
 public class config {
     int teamColor = 1; // 0 - Blue | 1 - Red
+    // Phases
+    boolean phase1Check = true;
+    boolean phase2Check = false;
+    boolean phase3Check = false;
+    boolean phase4Check = false;
+    boolean phase5Check = false;
+    boolean phase6Check = false;
+    boolean phase7Check = false;
+    boolean phase8Check = false;
+    boolean phase9Check = false;
+    boolean phase10Check = false;
+
+    boolean happenedCycle = false;
+
+    boolean setStartPosForwardBackward = false;
+    boolean setStartPosTurn = false;
+    boolean setStartPosStrafe = false;
+
+    boolean atPos = false;
+    boolean goUp = false;
+    int currentRep = 0;
+
+    int targetPosRFD = 0;
+    int targetPosLFD = 0;
+    int targetPosLBD = 0;
+    int targetPosRBD = 0;
+
+
 
     // Motors
     DcMotor lfD = null;
@@ -60,6 +88,7 @@ public class config {
     int rbdTargetPos = 0;
 
     // SETTERS AND GETTERS
+
 
     public DcMotor getLfD() {
         return lfD;
@@ -282,5 +311,173 @@ public class config {
 
     public void setRbdTargetPos(int rbdTargetPos) {
         this.rbdTargetPos = rbdTargetPos;
+    }
+
+    public void setPhase1Check(boolean phase1Check) {
+        this.phase1Check = phase1Check;
+    }
+
+    public void setPhase2Check(boolean phase2Check) {
+        this.phase2Check = phase2Check;
+    }
+
+    public void setPhase3Check(boolean phase3Check) {
+        this.phase3Check = phase3Check;
+    }
+
+    public void setPhase4Check(boolean phase4Check) {
+        this.phase4Check = phase4Check;
+    }
+
+    public void setPhase5Check(boolean phase5Check) {
+        this.phase5Check = phase5Check;
+    }
+
+    public void setPhase6Check(boolean phase6Check) {
+        this.phase6Check = phase6Check;
+    }
+
+    public void setPhase7Check(boolean phase7Check) {
+        this.phase7Check = phase7Check;
+    }
+
+    public void setPhase8Check(boolean phase8Check) {
+        this.phase8Check = phase8Check;
+    }
+
+    public void setPhase9Check(boolean phase9Check) {
+        this.phase9Check = phase9Check;
+    }
+
+    public void setPhase10Check(boolean phase10Check) {
+        this.phase10Check = phase10Check;
+    }
+
+    public void setHappenedCycle(boolean happenedCycle) {
+        this.happenedCycle = happenedCycle;
+    }
+
+    public boolean isPhase1Check() {
+        return phase1Check;
+    }
+
+    public boolean isPhase2Check() {
+        return phase2Check;
+    }
+
+    public boolean isPhase3Check() {
+        return phase3Check;
+    }
+
+    public boolean isPhase4Check() {
+        return phase4Check;
+    }
+
+    public boolean isPhase5Check() {
+        return phase5Check;
+    }
+
+    public boolean isPhase6Check() {
+        return phase6Check;
+    }
+
+    public boolean isPhase7Check() {
+        return phase7Check;
+    }
+
+    public boolean isPhase8Check() {
+        return phase8Check;
+    }
+
+    public boolean isPhase9Check() {
+        return phase9Check;
+    }
+
+    public boolean isPhase10Check() {
+        return phase10Check;
+    }
+
+    public boolean isHappenedCycle() {
+        return happenedCycle;
+    }
+
+    public void setSetStartPosForwardBackward(boolean setStartPosForwardBackward) {
+        this.setStartPosForwardBackward = setStartPosForwardBackward;
+    }
+
+    public void setSetStartPosTurn(boolean setStartPosTurn) {
+        this.setStartPosTurn = setStartPosTurn;
+    }
+
+    public void setSetStartPosStrafe(boolean setStartPosStrafe) {
+        this.setStartPosStrafe = setStartPosStrafe;
+    }
+
+    public boolean isSetStartPosForwardBackward() {
+        return setStartPosForwardBackward;
+    }
+
+    public boolean isSetStartPosTurn() {
+        return setStartPosTurn;
+    }
+
+    public boolean isSetStartPosStrafe() {
+        return setStartPosStrafe;
+    }
+
+    public void setAtPos(boolean atPos) {
+        this.atPos = atPos;
+    }
+
+    public void setGoUp(boolean goUp) {
+        this.goUp = goUp;
+    }
+
+    public void setCurrentRep(int currentRep) {
+        this.currentRep = currentRep;
+    }
+
+    public boolean isAtPos() {
+        return atPos;
+    }
+
+    public boolean isGoUp() {
+        return goUp;
+    }
+
+    public int getCurrentRep() {
+        return currentRep;
+    }
+
+    public void setTargetPosRFD(int targetPosRFD) {
+        this.targetPosRFD = targetPosRFD;
+    }
+
+    public void setTargetPosLFD(int targetPosLFD) {
+        this.targetPosLFD = targetPosLFD;
+    }
+
+    public void setTargetPosLBD(int targetPosLBD) {
+        this.targetPosLBD = targetPosLBD;
+    }
+
+    public void setTargetPosRBD(int targetPosRBD) {
+        this.targetPosRBD = targetPosRBD;
+    }
+
+    public int getTargetPosRFD() {
+        return targetPosRFD;
+    }
+
+    public int getTargetPosLFD() {
+        return targetPosLFD;
+    }
+
+    public int getTargetPosLBD() {
+        return targetPosLBD;
+    }
+
+    public int getTargetPosRBD() {
+        return targetPosRBD;
     }
 }
