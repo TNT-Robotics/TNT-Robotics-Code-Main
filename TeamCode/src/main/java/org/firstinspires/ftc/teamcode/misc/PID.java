@@ -53,10 +53,10 @@ public class PID {
         for (double numericalValue : numericalValues) {
             sum += numericalValue;
         }
-        if (sum > 1.2) {
-            sum = 1.2;
-        } else if (sum < -1.2) {
-            sum = -1.2;
+        if (sum > 1) {
+            sum = 1;
+        } else if (sum < -1) {
+            sum = -1;
         }
         return sum;
     }

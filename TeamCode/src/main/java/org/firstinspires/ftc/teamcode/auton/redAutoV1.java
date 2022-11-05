@@ -41,10 +41,24 @@ How much time before end in milliseconds - < WRITE THE TIME HERE
 public class redAutoV1 extends LinearOpMode {
 
     config cfg = new config();
+    public boolean happenedCycle = false;
+
+    public boolean phase1Check = false; // WHEN USING FULL STATE CHANGE TO TRUE
+    public boolean phase2Check = false;
+    public boolean phase3Check = false;
+    public boolean phase4Check = false;
+    public boolean phase5Check = false;
+    boolean phase6Check = false;
+    boolean phase7Check = false;
+    boolean phase8Check = false;
+    boolean phase9Check = false;
+    boolean phase10Check = false;
+
     int lfdTarget = 0;
     int rfdTarget = 0;
     int lbdTarget = 0;
     int rbdTarget = 0;
+    int firstRun = 1;
     @Override
     public void runOpMode() {
 
@@ -65,46 +79,48 @@ public class redAutoV1 extends LinearOpMode {
             cfg.getVision().initCamera(cfg.getCamera());
             telemetry.addData("Status", "Initialized");
             telemetry.update();
-
+while(!opModeIsActive() && !isStopRequested()){
+    //loop detection here
+}
             waitForStart();
             cfg.getrTime().reset();
 
         while (opModeIsActive()) {
-            cfg.setHappenedCycle(false);
-
+            happenedCycle = false;
             // if nothing detected for 1.5s move a bit forward until 5s then stop searching
             // for cone id
-
-            while (cfg.getrTime().milliseconds() < 5000 && opModeIsActive()) {
+            if(cfg.getrTime().time() < 5 && cfg.getConeId() == 0) {
                 cfg.getVision().updateTags(cfg);
 
                 if (cfg.getVision().idGetter() != 0) {
                     // ID Found
+                    int cConeId = cfg.getVision().idGetter();
                     cfg.setConeId(cfg.getVision().idGetter());
                     cfg.setPosition(cfg.getVision().position());
                     cfg.setRotation(cfg.getVision().rotation());
 
-                    if (cfg.getVision().idGetter() == 440) {
-                        cfg.setPhase1Check(true);
-                    } else if (cfg.getVision().idGetter() == 373) {
+                    firstRun = 0;
+                    if (cConeId == 440) {
+                        phase1Check = true;
+                    } else if (cConeId == 373) {
+                        phase3Check = true;
 
-                    } else if (cfg.getVision().idGetter() == 182) {
+                    } else if (cConeId == 182) {
+                        phase4Check = true;
 
                     }
-
                     updateTele("Found ID " + cfg.getConeId(), 0);
-                    break;
                 }
-                if (cfg.getrTime().milliseconds() > 1500) {
-                    moveForwardBackward(50, rfdPID, lfdPID, lbdPID, rbdPID, 10, 0.2);
-                    dontMove(50);
-                    cfg.setCamCounter(cfg.getCamCounter()+1);
+                if (cfg.getrTime().time() > 1.5 && cfg.getConeId() == 0) {
+                    //moveForwardBackward(50, rfdPID, lfdPID, lbdPID, rbdPID, 10, 0.2);
+                    //dontMove(50);
+                    //cfg.setCamCounter(cfg.getCamCounter()+1);
                 } else {
-                    sleep(50);
+                    //sleep(50);
                 }
             }
-            if (cfg.getCamCounter() > 0) {
-                moveForwardBackward(cfg.getCamCounter() * -50, rfdPID, lfdPID, lbdPID, rbdPID, 10, 0.4);
+            if (cfg.getCamCounter() > 0 && cfg.getConeId() != 0 || cfg.getCamCounter() > 0 && cfg.getrTime().milliseconds() > 5000) {
+                //moveForwardBackward(cfg.getCamCounter() * -50, rfdPID, lfdPID, lbdPID, rbdPID, 10, 0.4);
             }
             /* FULL AUTON
             if (cfg.isPhase1Check() && !cfg.isHappenedCycle()) {
@@ -159,59 +175,64 @@ public class redAutoV1 extends LinearOpMode {
             } */
 
             // ID AUTON ONLY
-
+            telemetry.update();
             // MOVE FROM WALL
-            moveForwardBackward(200, rfdPID, lfdPID, lbdPID, rbdPID, 10, 0.5);
-
-            // ID 1
-            if (cfg.isPhase1Check() && !cfg.isHappenedCycle()) {
-                boolean finished = strafeLeft(800, rfdPID, lfdPID, lbdPID, rbdPID, 10, 0.5);
-                telemetry.addLine("Current phase: 1");
-                if (finished) {
-                    cfg.setPhase1Check(false);
-                    cfg.setPhase2Check(true);
-                }
-                cfg.setHappenedCycle(true);
+            if (firstRun == 0) {
+                moveForwardBackward(200, rfdPID, lfdPID, lbdPID, rbdPID, 10, 0.5);
+                firstRun++;
             }
 
-            if (cfg.isPhase2Check() && !cfg.isHappenedCycle()) {
-                boolean finished = moveForwardBackward(300, rfdPID, lfdPID, lbdPID, rbdPID, 10, 0.5);
-                telemetry.addLine("Current phase: 2");
+            // ID 1
+            if (phase1Check) {
+                boolean finished = strafeLeft(800, rfdPID, lfdPID, lbdPID, rbdPID, 10, 0.5);
+                telemetry.addData("Current phase:", "%d", 1);
                 if (finished) {
-                    cfg.setPhase2Check(false);
+                    phase1Check = false;
+                    phase2Check = true;
                 }
-                cfg.setHappenedCycle(true);
+                happenedCycle = true;
+            }
+
+            if (phase2Check) {
+                boolean finished = moveForwardBackward(300, rfdPID, lfdPID, lbdPID, rbdPID, 10, 0.5);
+                telemetry.addData("Current phase:", "%d", 2);
+                if (finished) {
+                    phase2Check = false;
+                }
+                happenedCycle = true;
             }
 
             // ID 2
-            if (cfg.isPhase3Check() && !cfg.isHappenedCycle()) {
+            if (phase3Check) {
                 boolean finished = moveForwardBackward(500, rfdPID, lfdPID, lbdPID, rbdPID, 10, 0.5);
-                telemetry.addLine("Current phase: 3");
+                telemetry.addData("Current phase:", "%d", 3);
                 if (finished) {
-                    cfg.setPhase3Check(false);
+                    phase3Check = false;
                 }
-                cfg.setHappenedCycle(true);
+                happenedCycle = true;
             }
 
             // ID 3
-            if (cfg.isPhase4Check() && !cfg.isHappenedCycle()) {
+            if (phase4Check) {
                 boolean finished = strafeRight(800, rfdPID, lfdPID, lbdPID, rbdPID, 10, 0.5);
-                telemetry.addLine("Current phase: 4");
+                telemetry.addData("Current phase:", "%d", 4);
                 if (finished) {
-                    cfg.setPhase4Check(false);
-                    cfg.setPhase5Check(true);
+                    phase4Check = false;
+                    phase5Check = true;
                 }
-                cfg.setHappenedCycle(true);
+                happenedCycle = false;
             }
 
-            if (cfg.isPhase5Check() && !cfg.isHappenedCycle()) {
+            if (phase5Check) {
                 boolean finished = moveForwardBackward(300, rfdPID, lfdPID, lbdPID, rbdPID, 10, 0.5);
-                telemetry.addLine("Current phase: 5");
+                telemetry.addData("Current phase:", "%d", 5);
                 if (finished) {
-                    cfg.setPhase5Check(false);
+                    phase5Check = false;
                 }
-                cfg.setHappenedCycle(true);
+                happenedCycle = true;
             }
+            telemetry.addData("Phases", "%b,%b,%b,%b,%b", cfg.isPhase1Check(), cfg.isPhase2Check(), cfg.isPhase3Check(), cfg.isPhase4Check(), cfg.isPhase5Check());
+            telemetry.update();
         }
     }
 
