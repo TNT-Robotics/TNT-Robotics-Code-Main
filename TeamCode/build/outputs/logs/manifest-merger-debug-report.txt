@@ -5,6 +5,7 @@ INJECTED from C:\Users\corsairit\Desktop\TNT-Robotics-Code-Main\TeamCode\src\mai
 INJECTED from C:\Users\corsairit\Desktop\TNT-Robotics-Code-Main\TeamCode\src\main\AndroidManifest.xml:8:1-11:12
 INJECTED from C:\Users\corsairit\Desktop\TNT-Robotics-Code-Main\TeamCode\src\main\AndroidManifest.xml:8:1-11:12
 MERGED from [:FtcRobotController] C:\Users\corsairit\Desktop\TNT-Robotics-Code-Main\FtcRobotController\build\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-80:12
+MERGED from [com.acmerobotics.dashboard:dashboard:0.4.6] C:\Users\corsairit\.gradle\caches\transforms-3\37425bb89aad837251dc463e3a3d921e\transformed\jetified-dashboard-0.4.6\AndroidManifest.xml:2:1-9:12
 MERGED from [org.firstinspires.ftc:OnBotJava:8.0.0] C:\Users\corsairit\.gradle\caches\transforms-3\75012684d57b7cf9c544acebf0424218\transformed\jetified-OnBotJava-8.0.0\AndroidManifest.xml:34:1-43:12
 MERGED from [org.firstinspires.ftc:Blocks:8.0.0] C:\Users\corsairit\.gradle\caches\transforms-3\a62bbd933d9b9f140cd9f65f0aaedcbf\transformed\jetified-Blocks-8.0.0\AndroidManifest.xml:2:1-26:12
 MERGED from [org.firstinspires.ftc:FtcCommon:8.0.0] C:\Users\corsairit\.gradle\caches\transforms-3\c0dee37f3cc9e78eaac377c9227d0854\transformed\jetified-FtcCommon-8.0.0\AndroidManifest.xml:3:1-174:12
@@ -30,10 +31,6 @@ MERGED from [androidx.core:core-ktx:1.9.0] C:\Users\corsairit\.gradle\caches\tra
 MERGED from [org.openftc:easyopencv:1.5.2] C:\Users\corsairit\.gradle\caches\transforms-3\cf8030cc656e308b057074efbc8c7191\transformed\jetified-easyopencv-1.5.2\AndroidManifest.xml:2:1-11:12
 MERGED from [org.openftc:apriltag:1.1.0] C:\Users\corsairit\.gradle\caches\transforms-3\0c04a9fe936077ce197bb0dd6be6a5b3\transformed\jetified-apriltag-1.1.0\AndroidManifest.xml:2:1-11:12
 MERGED from [androidx.annotation:annotation-experimental:1.3.0] C:\Users\corsairit\.gradle\caches\transforms-3\76dbe74a24c967fdd325881f8190c5ff\transformed\jetified-annotation-experimental-1.3.0\AndroidManifest.xml:17:1-22:12
-MERGED from [com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\corsairit\.gradle\caches\transforms-3\f7123ab530310d43aac4c4b1dff65858\transformed\jetified-zxing-android-embedded-4.3.0\AndroidManifest.xml:17:1-56:12
-MERGED from [com.jakewharton.threetenabp:threetenabp:1.3.1] C:\Users\corsairit\.gradle\caches\transforms-3\8baff4c13bdfd8f26a4b8c90024cf71c\transformed\jetified-threetenabp-1.3.1\AndroidManifest.xml:2:1-9:12
-MERGED from [org.tensorflow:tensorflow-lite-task-base:0.2.0] C:\Users\corsairit\.gradle\caches\transforms-3\8401325eb123e697c1391e01f02dd765\transformed\jetified-tensorflow-lite-task-base-0.2.0\AndroidManifest.xml:2:1-6:12
-MERGED from [org.tensorflow:tensorflow-lite-support:0.2.0] C:\Users\corsairit\.gradle\caches\transforms-3\9dfe5bb53d550e5f8ff13da16c9e81c6\transformed\jetified-tensorflow-lite-support-0.2.0\AndroidManifest.xml:2:1-5:12
 MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\corsairit\.gradle\caches\transforms-3\ee646b129d3f9f5d44066a0c822a0bb7\transformed\cursoradapter-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\corsairit\.gradle\caches\transforms-3\9ac79725a8a634c2f0d54444b05154c9\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:17:1-27:12
 MERGED from [androidx.lifecycle:lifecycle-runtime:2.3.1] C:\Users\corsairit\.gradle\caches\transforms-3\799be9c531e9f11e5a3fc1677b52fc5e\transformed\lifecycle-runtime-2.3.1\AndroidManifest.xml:17:1-24:12
@@ -43,6 +40,10 @@ MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\corsairit\.gradl
 MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\Users\corsairit\.gradle\caches\transforms-3\f0a6571a2aecbf64d7863fa6b58d0665\transformed\lifecycle-livedata-2.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\Users\corsairit\.gradle\caches\transforms-3\f3484df3bb8ab4be99efbb1cc416be60\transformed\lifecycle-livedata-core-2.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.arch.core:core-runtime:2.1.0] C:\Users\corsairit\.gradle\caches\transforms-3\3eedb47c08acd4cb6d42e2366a95c309\transformed\core-runtime-2.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\corsairit\.gradle\caches\transforms-3\f7123ab530310d43aac4c4b1dff65858\transformed\jetified-zxing-android-embedded-4.3.0\AndroidManifest.xml:17:1-56:12
+MERGED from [com.jakewharton.threetenabp:threetenabp:1.3.1] C:\Users\corsairit\.gradle\caches\transforms-3\8baff4c13bdfd8f26a4b8c90024cf71c\transformed\jetified-threetenabp-1.3.1\AndroidManifest.xml:2:1-9:12
+MERGED from [org.tensorflow:tensorflow-lite-task-base:0.2.0] C:\Users\corsairit\.gradle\caches\transforms-3\8401325eb123e697c1391e01f02dd765\transformed\jetified-tensorflow-lite-task-base-0.2.0\AndroidManifest.xml:2:1-6:12
+MERGED from [org.tensorflow:tensorflow-lite-support:0.2.0] C:\Users\corsairit\.gradle\caches\transforms-3\9dfe5bb53d550e5f8ff13da16c9e81c6\transformed\jetified-tensorflow-lite-support-0.2.0\AndroidManifest.xml:2:1-5:12
 MERGED from [org.openftc:opencv-repackaged:4.5.3-B] C:\Users\corsairit\.gradle\caches\transforms-3\31f0ccc5bbfe0a27b2ddf1f73e1e9e6d\transformed\jetified-opencv-repackaged-4.5.3-B\AndroidManifest.xml:2:1-11:12
 MERGED from [org.tensorflow:tensorflow-lite:2.4.0] C:\Users\corsairit\.gradle\caches\transforms-3\bef19584e34e7b0ca4cfd7c5e9789212\transformed\jetified-tensorflow-lite-2.4.0\AndroidManifest.xml:2:1-12:12
 INJECTED from C:\Users\corsairit\Desktop\TNT-Robotics-Code-Main\TeamCode\src\main\AndroidManifest.xml:8:1-11:12
@@ -76,14 +77,14 @@ MERGED from [org.firstinspires.ftc:RobotCore:8.0.0] C:\Users\corsairit\.gradle\c
 MERGED from [org.firstinspires.ftc:RobotCore:8.0.0] C:\Users\corsairit\.gradle\caches\transforms-3\9d166cb2639e23f81f23aa15c79b7faf\transformed\jetified-RobotCore-8.0.0\AndroidManifest.xml:87:5-129:19
 MERGED from [androidx.core:core:1.9.0] C:\Users\corsairit\.gradle\caches\transforms-3\78446bb7c1bc5f913255a6808a9f9007\transformed\core-1.9.0\AndroidManifest.xml:28:5-89
 MERGED from [androidx.core:core:1.9.0] C:\Users\corsairit\.gradle\caches\transforms-3\78446bb7c1bc5f913255a6808a9f9007\transformed\core-1.9.0\AndroidManifest.xml:28:5-89
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\corsairit\.gradle\caches\transforms-3\9ac79725a8a634c2f0d54444b05154c9\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:24:5-25:19
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\corsairit\.gradle\caches\transforms-3\9ac79725a8a634c2f0d54444b05154c9\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:24:5-25:19
 MERGED from [com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\corsairit\.gradle\caches\transforms-3\f7123ab530310d43aac4c4b1dff65858\transformed\jetified-zxing-android-embedded-4.3.0\AndroidManifest.xml:46:5-54:19
 MERGED from [com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\corsairit\.gradle\caches\transforms-3\f7123ab530310d43aac4c4b1dff65858\transformed\jetified-zxing-android-embedded-4.3.0\AndroidManifest.xml:46:5-54:19
 MERGED from [com.jakewharton.threetenabp:threetenabp:1.3.1] C:\Users\corsairit\.gradle\caches\transforms-3\8baff4c13bdfd8f26a4b8c90024cf71c\transformed\jetified-threetenabp-1.3.1\AndroidManifest.xml:7:5-20
 MERGED from [com.jakewharton.threetenabp:threetenabp:1.3.1] C:\Users\corsairit\.gradle\caches\transforms-3\8baff4c13bdfd8f26a4b8c90024cf71c\transformed\jetified-threetenabp-1.3.1\AndroidManifest.xml:7:5-20
 MERGED from [org.tensorflow:tensorflow-lite-task-base:0.2.0] C:\Users\corsairit\.gradle\caches\transforms-3\8401325eb123e697c1391e01f02dd765\transformed\jetified-tensorflow-lite-task-base-0.2.0\AndroidManifest.xml:4:4-5:18
 MERGED from [org.tensorflow:tensorflow-lite-task-base:0.2.0] C:\Users\corsairit\.gradle\caches\transforms-3\8401325eb123e697c1391e01f02dd765\transformed\jetified-tensorflow-lite-task-base-0.2.0\AndroidManifest.xml:4:4-5:18
-MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\corsairit\.gradle\caches\transforms-3\9ac79725a8a634c2f0d54444b05154c9\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:24:5-25:19
-MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\corsairit\.gradle\caches\transforms-3\9ac79725a8a634c2f0d54444b05154c9\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:24:5-25:19
 MERGED from [org.tensorflow:tensorflow-lite:2.4.0] C:\Users\corsairit\.gradle\caches\transforms-3\bef19584e34e7b0ca4cfd7c5e9789212\transformed\jetified-tensorflow-lite-2.4.0\AndroidManifest.xml:10:5-20
 MERGED from [org.tensorflow:tensorflow-lite:2.4.0] C:\Users\corsairit\.gradle\caches\transforms-3\bef19584e34e7b0ca4cfd7c5e9789212\transformed\jetified-tensorflow-lite-2.4.0\AndroidManifest.xml:10:5-20
 	android:appComponentFactory
@@ -108,6 +109,8 @@ INJECTED from C:\Users\corsairit\Desktop\TNT-Robotics-Code-Main\TeamCode\src\mai
 INJECTED from C:\Users\corsairit\Desktop\TNT-Robotics-Code-Main\TeamCode\src\main\AndroidManifest.xml
 MERGED from [:FtcRobotController] C:\Users\corsairit\Desktop\TNT-Robotics-Code-Main\FtcRobotController\build\intermediates\merged_manifest\debug\AndroidManifest.xml:8:5-10:41
 MERGED from [:FtcRobotController] C:\Users\corsairit\Desktop\TNT-Robotics-Code-Main\FtcRobotController\build\intermediates\merged_manifest\debug\AndroidManifest.xml:8:5-10:41
+MERGED from [com.acmerobotics.dashboard:dashboard:0.4.6] C:\Users\corsairit\.gradle\caches\transforms-3\37425bb89aad837251dc463e3a3d921e\transformed\jetified-dashboard-0.4.6\AndroidManifest.xml:5:5-7:41
+MERGED from [com.acmerobotics.dashboard:dashboard:0.4.6] C:\Users\corsairit\.gradle\caches\transforms-3\37425bb89aad837251dc463e3a3d921e\transformed\jetified-dashboard-0.4.6\AndroidManifest.xml:5:5-7:41
 MERGED from [org.firstinspires.ftc:OnBotJava:8.0.0] C:\Users\corsairit\.gradle\caches\transforms-3\75012684d57b7cf9c544acebf0424218\transformed\jetified-OnBotJava-8.0.0\AndroidManifest.xml:39:5-41:41
 MERGED from [org.firstinspires.ftc:OnBotJava:8.0.0] C:\Users\corsairit\.gradle\caches\transforms-3\75012684d57b7cf9c544acebf0424218\transformed\jetified-OnBotJava-8.0.0\AndroidManifest.xml:39:5-41:41
 MERGED from [org.firstinspires.ftc:Blocks:8.0.0] C:\Users\corsairit\.gradle\caches\transforms-3\a62bbd933d9b9f140cd9f65f0aaedcbf\transformed\jetified-Blocks-8.0.0\AndroidManifest.xml:7:5-9:41
@@ -158,12 +161,6 @@ MERGED from [org.openftc:apriltag:1.1.0] C:\Users\corsairit\.gradle\caches\trans
 MERGED from [org.openftc:apriltag:1.1.0] C:\Users\corsairit\.gradle\caches\transforms-3\0c04a9fe936077ce197bb0dd6be6a5b3\transformed\jetified-apriltag-1.1.0\AndroidManifest.xml:7:5-9:41
 MERGED from [androidx.annotation:annotation-experimental:1.3.0] C:\Users\corsairit\.gradle\caches\transforms-3\76dbe74a24c967fdd325881f8190c5ff\transformed\jetified-annotation-experimental-1.3.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.annotation:annotation-experimental:1.3.0] C:\Users\corsairit\.gradle\caches\transforms-3\76dbe74a24c967fdd325881f8190c5ff\transformed\jetified-annotation-experimental-1.3.0\AndroidManifest.xml:20:5-44
-MERGED from [com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\corsairit\.gradle\caches\transforms-3\f7123ab530310d43aac4c4b1dff65858\transformed\jetified-zxing-android-embedded-4.3.0\AndroidManifest.xml:20:5-44
-MERGED from [com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\corsairit\.gradle\caches\transforms-3\f7123ab530310d43aac4c4b1dff65858\transformed\jetified-zxing-android-embedded-4.3.0\AndroidManifest.xml:20:5-44
-MERGED from [com.jakewharton.threetenabp:threetenabp:1.3.1] C:\Users\corsairit\.gradle\caches\transforms-3\8baff4c13bdfd8f26a4b8c90024cf71c\transformed\jetified-threetenabp-1.3.1\AndroidManifest.xml:5:5-44
-MERGED from [com.jakewharton.threetenabp:threetenabp:1.3.1] C:\Users\corsairit\.gradle\caches\transforms-3\8baff4c13bdfd8f26a4b8c90024cf71c\transformed\jetified-threetenabp-1.3.1\AndroidManifest.xml:5:5-44
-MERGED from [org.tensorflow:tensorflow-lite-support:0.2.0] C:\Users\corsairit\.gradle\caches\transforms-3\9dfe5bb53d550e5f8ff13da16c9e81c6\transformed\jetified-tensorflow-lite-support-0.2.0\AndroidManifest.xml:4:3-71
-MERGED from [org.tensorflow:tensorflow-lite-support:0.2.0] C:\Users\corsairit\.gradle\caches\transforms-3\9dfe5bb53d550e5f8ff13da16c9e81c6\transformed\jetified-tensorflow-lite-support-0.2.0\AndroidManifest.xml:4:3-71
 MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\corsairit\.gradle\caches\transforms-3\ee646b129d3f9f5d44066a0c822a0bb7\transformed\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\corsairit\.gradle\caches\transforms-3\ee646b129d3f9f5d44066a0c822a0bb7\transformed\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\corsairit\.gradle\caches\transforms-3\9ac79725a8a634c2f0d54444b05154c9\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:20:5-22:41
@@ -182,6 +179,12 @@ MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\Users\corsairi
 MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\Users\corsairit\.gradle\caches\transforms-3\f3484df3bb8ab4be99efbb1cc416be60\transformed\lifecycle-livedata-core-2.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.arch.core:core-runtime:2.1.0] C:\Users\corsairit\.gradle\caches\transforms-3\3eedb47c08acd4cb6d42e2366a95c309\transformed\core-runtime-2.1.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.arch.core:core-runtime:2.1.0] C:\Users\corsairit\.gradle\caches\transforms-3\3eedb47c08acd4cb6d42e2366a95c309\transformed\core-runtime-2.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\corsairit\.gradle\caches\transforms-3\f7123ab530310d43aac4c4b1dff65858\transformed\jetified-zxing-android-embedded-4.3.0\AndroidManifest.xml:20:5-44
+MERGED from [com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\corsairit\.gradle\caches\transforms-3\f7123ab530310d43aac4c4b1dff65858\transformed\jetified-zxing-android-embedded-4.3.0\AndroidManifest.xml:20:5-44
+MERGED from [com.jakewharton.threetenabp:threetenabp:1.3.1] C:\Users\corsairit\.gradle\caches\transforms-3\8baff4c13bdfd8f26a4b8c90024cf71c\transformed\jetified-threetenabp-1.3.1\AndroidManifest.xml:5:5-44
+MERGED from [com.jakewharton.threetenabp:threetenabp:1.3.1] C:\Users\corsairit\.gradle\caches\transforms-3\8baff4c13bdfd8f26a4b8c90024cf71c\transformed\jetified-threetenabp-1.3.1\AndroidManifest.xml:5:5-44
+MERGED from [org.tensorflow:tensorflow-lite-support:0.2.0] C:\Users\corsairit\.gradle\caches\transforms-3\9dfe5bb53d550e5f8ff13da16c9e81c6\transformed\jetified-tensorflow-lite-support-0.2.0\AndroidManifest.xml:4:3-71
+MERGED from [org.tensorflow:tensorflow-lite-support:0.2.0] C:\Users\corsairit\.gradle\caches\transforms-3\9dfe5bb53d550e5f8ff13da16c9e81c6\transformed\jetified-tensorflow-lite-support-0.2.0\AndroidManifest.xml:4:3-71
 MERGED from [org.openftc:opencv-repackaged:4.5.3-B] C:\Users\corsairit\.gradle\caches\transforms-3\31f0ccc5bbfe0a27b2ddf1f73e1e9e6d\transformed\jetified-opencv-repackaged-4.5.3-B\AndroidManifest.xml:7:5-9:41
 MERGED from [org.openftc:opencv-repackaged:4.5.3-B] C:\Users\corsairit\.gradle\caches\transforms-3\31f0ccc5bbfe0a27b2ddf1f73e1e9e6d\transformed\jetified-opencv-repackaged-4.5.3-B\AndroidManifest.xml:7:5-9:41
 MERGED from [org.tensorflow:tensorflow-lite:2.4.0] C:\Users\corsairit\.gradle\caches\transforms-3\bef19584e34e7b0ca4cfd7c5e9789212\transformed\jetified-tensorflow-lite-2.4.0\AndroidManifest.xml:7:5-8:41
