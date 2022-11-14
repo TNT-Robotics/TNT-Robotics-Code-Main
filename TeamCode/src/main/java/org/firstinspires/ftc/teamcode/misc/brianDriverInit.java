@@ -23,7 +23,8 @@ public class brianDriverInit {
         DcMotor rightFrontDrive = null;
         DcMotor rightBackDrive = null;
 
-        DcMotor armMotor = null;
+        DcMotor slide1Motor = null;
+        DcMotor slide2Motor = null;
         //private DcMotor slideMotor = null;
 
         Servo arm1;
@@ -32,8 +33,6 @@ public class brianDriverInit {
 
         double speedMultiplier = 1;
         double armElbowSpeedMultiplier = .5;
-
-        int armCurrentPos = 0;
 
         //double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
         // ASSIGN DRIVE MOTORS
@@ -44,7 +43,8 @@ public class brianDriverInit {
 
 
         // ASSIGN LINEAR SLIDE / ARM MOTOR
-        armMotor = hwMap.get(DcMotor.class, "armMotor");//slideMotor = hardwareMap.get(DcMotor.class, "slideMotor");
+        slide1Motor = hwMap.get(DcMotor.class, "s1");//slideMotor = hardwareMap.get(DcMotor.class, "slideMotor");
+        slide2Motor = hwMap.get(DcMotor.class, "s2");//slideMotor = hardwareMap.get(DcMotor.class, "slideMotor");
 
 
         // ASSIGN SERVOS
@@ -60,7 +60,9 @@ public class brianDriverInit {
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
         // ARM MOTOR DIRECTION
-        armMotor.setDirection(DcMotorSimple.Direction.REVERSE); // TEST FORWARD OR BACKWARDS
+        slide1Motor.setDirection(DcMotorSimple.Direction.FORWARD); // TEST FORWARD OR BACKWARDS
+        slide2Motor.setDirection(DcMotorSimple.Direction.FORWARD); // TEST FORWARD OR BACKWARDS
+
         //slideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         /*
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -70,12 +72,12 @@ public class brianDriverInit {
         elbowMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         */
 
-        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slide1Motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slide2Motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        slide1Motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        slide2Motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-
-        cfg.setArmPos(armMotor.getCurrentPosition());
         // Setters
 
         //Speed
@@ -84,8 +86,6 @@ public class brianDriverInit {
         // Runtime
         cfg.setrTime(runtime);
 
-        // Positions
-        cfg.setArmPos(armCurrentPos);
 
         // Motors
         cfg.setLfD(leftFrontDrive);
@@ -93,7 +93,8 @@ public class brianDriverInit {
         cfg.setRfD(rightFrontDrive);
         cfg.setRbD(rightBackDrive);
 
-        cfg.setArm(armMotor);
+        cfg.setArm(slide1Motor);
+        cfg.setElbow(slide2Motor);
 
         // Servos
         cfg.setA1(arm1);

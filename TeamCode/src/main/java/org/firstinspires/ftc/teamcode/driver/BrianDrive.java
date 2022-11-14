@@ -103,7 +103,10 @@ public class BrianDrive extends LinearOpMode {
     public void runOpMode() {
         config cfg = new config();
         brianDriverInit init = new brianDriverInit(cfg);
-        PID armPID = new PID(.02,.0,.02,0);
+
+
+        PID armPID = new PID(.02,.0,.02,.008);
+
         armPID.getOutputFromError(0,0);
 
         // INIT
@@ -196,11 +199,6 @@ public class BrianDrive extends LinearOpMode {
                 cfg.setArmElbowSpdMult(.25);
             }
 
-
-            if (gamepad2.dpad_left) {
-
-            }
-
            // Set adjust position
             // Set adjust position
             int armNewPos = (int) (cfg.getArmPos() + armPower);
@@ -211,19 +209,26 @@ public class BrianDrive extends LinearOpMode {
 
             cfg.setArmPos(armNewPos);
 
+            if (gamepad2.dpad_up) {
+                armNewPos = 450;
+            }
             if (gamepad2.dpad_left) {
                 armNewPos = 300;
-                cfg.getA2().setPosition(1);
-                cfg.getA3().setPosition(1);
             }
             if (gamepad2.dpad_right) {
                 armNewPos = 150;
-                cfg.getA2().setPosition(1);
-                cfg.getA3().setPosition(1);
+            }
+            if (gamepad2.dpad_down) {
+                armNewPos = 0;
             }
 
-
-            cfg.getArm().setPower(currentArmPID);
+            if (armNewPos == 0) {
+                cfg.getArm().setPower(0);
+                cfg.getElbow().setPower(0);
+            } else {
+                cfg.getArm().setPower(currentArmPID);
+                cfg.getElbow().setPower(currentArmPID);
+            }
 
             cfg.setArmPos(armNewPos);
 
@@ -265,22 +270,35 @@ public class BrianDrive extends LinearOpMode {
             }
             // END OF CLAW 2
 
-            // START OF CLAW 3 (pivot)
-            if (gamepad2.dpad_up) {
-                if (cfg.getA1().getPosition() >= cfg.getMAX_POS()) {
-                    cfg.getA1().setPosition(cfg.getMAX_POS());
-                } else {
-                    cfg.getA1().setPosition(cfg.getA3().getPosition() + cfg.getINCREMENT());
-                }
-            }
-            if (gamepad2.dpad_down) {
-                if (cfg.getA1().getPosition() <= cfg.getMIN_POS()) {
-                    cfg.getA1().setPosition(cfg.getMIN_POS());
-                } else {
-                    cfg.getA1().setPosition(cfg.getA3().getPosition() - cfg.getINCREMENT());
-                }
-            }
+            // START CLAW 3
             // END OF CLAW 3
+
+            // IDK THE RIGHT FOUR SHAPES
+            if (gamepad2.cross) {
+                cfg.getA1().setPosition(.13);
+                sleep(500);
+                cfg.getA2().setPosition(.5);
+            }
+
+            if (gamepad2.circle) {
+                cfg.getA2().setPosition(1);
+                sleep(500);
+                cfg.getA3().setPosition(1);
+            }
+
+            if (gamepad2.square) {
+                cfg.getA2().setPosition(0);
+                cfg.getA3().setPosition(0);
+                cfg.getA1().setPosition(.53);
+            }
+
+            if (gamepad2.triangle) {
+                if (cfg.getA1().getPosition() > .13) {
+                    cfg.getA1().setPosition(.13);
+                } else {
+                    cfg.getA1().setPosition(.53);
+                }
+            }
 
             // END OF SERVOS
 
