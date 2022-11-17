@@ -46,15 +46,15 @@ public class autonInit {
 
         //double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
         // ASSIGN DRIVE MOTORS
-        leftFrontDrive = hwMap.get(DcMotor.class, "fl");
-        leftBackDrive = hwMap.get(DcMotor.class, "bl");
-        rightFrontDrive = hwMap.get(DcMotor.class, "fr");
-        rightBackDrive = hwMap.get(DcMotor.class, "br");
+        leftFrontDrive = (hwMap.get(DcMotor.class, "leftFront"));
+        leftBackDrive = hwMap.get(DcMotor.class, "leftRear");
+        rightFrontDrive = hwMap.get(DcMotor.class, "rightFront");
+        rightBackDrive = hwMap.get(DcMotor.class, "rightRear");
 
 
         // ASSIGN LINEAR SLIDE / ARM MOTOR
-        armMotor = hwMap.get(DcMotor.class, "armMotor");
-        elbowMotor = hwMap.get(DcMotor.class, "elbowMotor");
+        armMotor = hwMap.get(DcMotor.class, "s1");
+        elbowMotor = hwMap.get(DcMotor.class, "s2");
         //slideMotor = hardwareMap.get(DcMotor.class, "slideMotor");
 
 
@@ -63,9 +63,9 @@ public class autonInit {
         arm2 = hwMap.get(Servo.class, "arm2");
         arm3 = hwMap.get(Servo.class, "arm3");
 
-        arm1.setPosition(0.5);
+        arm1.setPosition(0.53);
         arm2.setPosition(0);
-        arm3.setPosition(1);
+        arm3.setPosition(0);
 
 
         // DRIVE MOTOR DIRECTION
