@@ -64,42 +64,42 @@ import org.firstinspires.ftc.teamcode.misc.brianDriverInit;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="BrianDrive", group="Driving")
+@TeleOp(name="PhilipDrive", group="Driving")
 
-public class BrianDrive extends LinearOpMode {
-/*
-    // Declare OpMode members for each of the 4 motors.
-    private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftFrontDrive = null;
-    private DcMotor leftBackDrive = null;
-    private DcMotor rightFrontDrive = null;
-    private DcMotor rightBackDrive = null;
+public class PhilipDrive extends LinearOpMode {
+    /*
+        // Declare OpMode members for each of the 4 motors.
+        private ElapsedTime runtime = new ElapsedTime();
+        private DcMotor leftFrontDrive = null;
+        private DcMotor leftBackDrive = null;
+        private DcMotor rightFrontDrive = null;
+        private DcMotor rightBackDrive = null;
 
-    private DcMotor armMotor = null;
-    private DcMotor elbowMotor = null;
-    //private DcMotor slideMotor = null;
+        private DcMotor armMotor = null;
+        private DcMotor elbowMotor = null;
+        //private DcMotor slideMotor = null;
 
-    private double speedMultiplier = 1;
-    private double armElbowSpeedMultiplier = .5;
+        private double speedMultiplier = 1;
+        private double armElbowSpeedMultiplier = .5;
 
-    boolean armBool = false;
-    boolean elbowBool = false;
+        boolean armBool = false;
+        boolean elbowBool = false;
 
-    int armCurrentPos = 0;
-    int elbowCurrentPos = 0;
+        int armCurrentPos = 0;
+        int elbowCurrentPos = 0;
 
-    static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
-    static final int    CYCLE_MS    =   50;     // period of each cycle
-    static final double MAX_POS     =  1;     // Maximum rotational position
-    static final double MIN_POS     =  0;     // Minimum rotational position
+        static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
+        static final int    CYCLE_MS    =   50;     // period of each cycle
+        static final double MAX_POS     =  1;     // Maximum rotational position
+        static final double MIN_POS     =  0;     // Minimum rotational position
 
 
-    Servo arm1;
-    Servo arm2;
-    Servo arm3;
-    //double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
+        Servo arm1;
+        Servo arm2;
+        Servo arm3;
+        //double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
 
- */
+     */
     public void runOpMode() {
         config cfg = new config();
         brianDriverInit init = new brianDriverInit(cfg);
@@ -131,9 +131,9 @@ public class BrianDrive extends LinearOpMode {
             double max;
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-            double axial = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
-            double lateral = gamepad1.left_stick_x;
-            double yaw = gamepad1.right_stick_x;
+            double axial = -gamepad1.right_stick_y;  // Note: pushing stick forward gives negative value
+            double lateral = gamepad1.right_stick_x;
+            double yaw = gamepad1.left_stick_x;
 
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
@@ -203,7 +203,7 @@ public class BrianDrive extends LinearOpMode {
                 cfg.setArmElbowSpdMult(.25);
             }
 
-           // Set adjust position
+            // Set adjust position
             // Set adjust position
             int armNewPos = (int) (cfg.getArmPos() + armPower);
 
