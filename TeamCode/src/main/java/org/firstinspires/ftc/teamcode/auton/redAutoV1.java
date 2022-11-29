@@ -97,7 +97,7 @@ public class redAutoV1 extends LinearOpMode {
         cfg.getrTime().reset();
 
         while (opModeIsActive()) {
-            happenedCycle = false;
+            //
         }
     }
     public boolean isAtPos(int currentPos, int targetPos, int deathZone) {

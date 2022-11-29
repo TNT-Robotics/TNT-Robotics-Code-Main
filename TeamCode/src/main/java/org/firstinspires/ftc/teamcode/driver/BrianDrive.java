@@ -111,7 +111,8 @@ public class BrianDrive extends LinearOpMode {
         armPID.getOutputFromError(0,0);
         //elbowPID.getOutputFromError(0,0);
 
-        boolean clawOpen = true;
+        double turnInit = 0;
+        double turnInit2 = 0;
 
         // INIT
         init.initDrive(hardwareMap);
@@ -207,6 +208,13 @@ public class BrianDrive extends LinearOpMode {
             // Set adjust position
             int armNewPos = (int) (cfg.getArmPos() + armPower);
 
+            if (armNewPos < -4610) {
+                armNewPos = -4610;
+            }
+            if (armNewPos > 0) {
+                armNewPos = 0;
+            }
+
             double currentArmPID = armPID.getOutputFromError(armNewPos, cfg.getArm().getCurrentPosition());
 
             if (gamepad2.dpad_up) {
@@ -248,7 +256,7 @@ public class BrianDrive extends LinearOpMode {
                 } else {
                     cfg.getA3().setPosition(cfg.getA3().getPosition() + cfg.getINCREMENT());
                 }*/
-                cfg.getA3().setPosition(1);
+                cfg.getA1().setPosition(1);
             }
             if (gamepad2.right_bumper) {
                 /*
@@ -257,7 +265,7 @@ public class BrianDrive extends LinearOpMode {
                 } else {
                     cfg.getA3().setPosition(cfg.getA3().getPosition() - cfg.getINCREMENT());
                 }*/
-                cfg.getA3().setPosition(0);
+                cfg.getA1().setPosition(0);
             }
             // END OF CLAW 1
 
@@ -283,49 +291,37 @@ public class BrianDrive extends LinearOpMode {
 
             // IDK THE RIGHT FOUR SHAPES
             if (gamepad2.cross) {
-                cfg.getA1().setPosition(.13);
-                sleep(500);
-                cfg.getA2().setPosition(.5);
+                cfg.getA3().setPosition(0);
+                cfg.getA2().setPosition(0);
+
+                if (turnInit2 == 0) {
+                    turnInit2 = cfg.getrTime().milliseconds();
+                }
             }
 
+
             if (gamepad2.circle) {
-                /*
-                cfg.getA2().setPosition(1);
-                sleep(500);
-                cfg.getA3().setPosition(1);*/
                 cfg.getA1().setPosition(1);
+                cfg.getA3().setPosition(.8);
+                cfg.getA2().setPosition(1);
+                if(turnInit == 0) {
+                    turnInit = cfg.getrTime().milliseconds();
+                }
             }
 
             if (gamepad2.square) {
-                cfg.getA2().setPosition(0);
-                cfg.getA3().setPosition(0);
-                cfg.getA1().setPosition(.53);
+                cfg.getA1().setPosition(1);
+                cfg.getA3().setPosition(.5);
             }
 
-            if (gamepad2.triangle) {
+
+            if (cfg.getrTime().milliseconds() >= turnInit2 + 1000 && turnInit2 != 0) {
+                turnInit2 = 0;
                 cfg.getA1().setPosition(0);
-                /*
-
-                if (clawOpen == true) {
-                    cfg.getA1().setPosition(0);
-                    sleep(50);
-                    clawOpen = false;
-                } else {
-                    clawOpen = true;
-                    sleep(50);
-                    cfg.getA1().setPosition(1);
-                }*/
             }
 
-            if (gamepad2.left_bumper) {
-                /*if (cfg.getA3().getPosition() >= .53) {
-                    cfg.getA3().setPosition(.53);
-                } else {
-                    cfg.getA3().setPosition(cfg.getA3().getPosition() + cfg.getINCREMENT());
-                }*/
-                cfg.getA3().setPosition(1);
-            }
-            if (gamepad2.right_bumper) {
+            if (cfg.getrTime().milliseconds() >= turnInit + 500 && turnInit != 0) {
+                turnInit = 0;
                 cfg.getA3().setPosition(0);
             }
 
@@ -342,6 +338,7 @@ public class BrianDrive extends LinearOpMode {
             telemetry.addData("Arm", "%d, %d", cfg.getArm().getCurrentPosition(), cfg.getArmTargetPos());
             telemetry.addData("Elbow", "%d, %d", cfg.getElbow().getCurrentPosition(), cfg.getElbowTargetPos());
             telemetry.addData("Arm Power", "%4.2f", cfg.getArm().getPower());
+            telemetry.addData("Timers", "%4.2f, %4.2f", turnInit, turnInit2);
             telemetry.update();
         }
     }
