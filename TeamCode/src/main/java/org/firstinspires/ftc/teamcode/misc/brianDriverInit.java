@@ -53,8 +53,8 @@ public class brianDriverInit {
         arm3 = hwMap.get(Servo.class, "arm3");
 
         arm1.setPosition(0);
-        arm2.setPosition(0);
-        arm3.setPosition(1);
+        arm2.setPosition(1);
+        arm3.setPosition(0);
 
 
         // DRIVE MOTOR DIRECTION

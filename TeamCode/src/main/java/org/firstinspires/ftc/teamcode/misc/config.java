@@ -31,7 +31,7 @@ public class config {
 
     boolean atPos = false;
 
-    // Motors
+    // Motors (left front drive, left back drive, right front drive, right back drive)
     DcMotor lfD = null;
     DcMotor lbD = null;
     DcMotor rfD = null;
@@ -51,7 +51,7 @@ public class config {
     int armPos = 0;
     int elbowPos = 0;
 
-    // Claw
+    // Claw (A1 - Claw, A2 - 180 turn, A3 - Pivot turn)
     Servo a1;
     Servo a2;
     Servo a3;

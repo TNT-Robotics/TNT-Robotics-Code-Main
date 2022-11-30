@@ -111,8 +111,12 @@ public class BrianDrive extends LinearOpMode {
         armPID.getOutputFromError(0,0);
         //elbowPID.getOutputFromError(0,0);
 
+        double loopTime = 0;
         double turnInit = 0;
         double turnInit2 = 0;
+        double lastPing = 0;
+
+        boolean closeClaw = false;
 
         // INIT
         init.initDrive(hardwareMap);
@@ -191,6 +195,7 @@ public class BrianDrive extends LinearOpMode {
 
             // gamepad2 speed mutliplier
             // Change state
+            /*
             if (gamepad2.cross) {
                 cfg.setArmElbowSpdMult(1);
             }
@@ -202,7 +207,7 @@ public class BrianDrive extends LinearOpMode {
             }
             if (gamepad2.circle) {
                 cfg.setArmElbowSpdMult(.25);
-            }
+            }*/
 
            // Set adjust position
             // Set adjust position
@@ -257,6 +262,7 @@ public class BrianDrive extends LinearOpMode {
                     cfg.getA3().setPosition(cfg.getA3().getPosition() + cfg.getINCREMENT());
                 }*/
                 cfg.getA1().setPosition(1);
+                closeClaw = true;
             }
             if (gamepad2.right_bumper) {
                 /*
@@ -266,6 +272,8 @@ public class BrianDrive extends LinearOpMode {
                     cfg.getA3().setPosition(cfg.getA3().getPosition() - cfg.getINCREMENT());
                 }*/
                 cfg.getA1().setPosition(0);
+                closeClaw = false;
+
             }
             // END OF CLAW 1
 
@@ -290,9 +298,11 @@ public class BrianDrive extends LinearOpMode {
             // END OF CLAW 3
 
             // IDK THE RIGHT FOUR SHAPES
+
+            // Pickup
             if (gamepad2.cross) {
-                cfg.getA3().setPosition(0);
-                cfg.getA2().setPosition(0);
+                cfg.getA3().setPosition(0.05);
+                cfg.getA2().setPosition(1);
 
                 if (turnInit2 == 0) {
                     turnInit2 = cfg.getrTime().milliseconds();
@@ -300,10 +310,16 @@ public class BrianDrive extends LinearOpMode {
             }
 
 
+            // Placedown (put on cone)
             if (gamepad2.circle) {
                 cfg.getA1().setPosition(1);
-                cfg.getA3().setPosition(.8);
-                cfg.getA2().setPosition(1);
+                closeClaw = true;
+
+                if (cfg.getA3().getPosition() < .5) {
+                    cfg.getA3().setPosition(.15);
+                }
+
+                cfg.getA2().setPosition(0);
                 if(turnInit == 0) {
                     turnInit = cfg.getrTime().milliseconds();
                 }
@@ -311,18 +327,29 @@ public class BrianDrive extends LinearOpMode {
 
             if (gamepad2.square) {
                 cfg.getA1().setPosition(1);
+                closeClaw = true;
                 cfg.getA3().setPosition(.5);
             }
 
 
             if (cfg.getrTime().milliseconds() >= turnInit2 + 1000 && turnInit2 != 0) {
                 turnInit2 = 0;
+
+                closeClaw = false;
                 cfg.getA1().setPosition(0);
             }
 
-            if (cfg.getrTime().milliseconds() >= turnInit + 500 && turnInit != 0) {
+            if (cfg.getrTime().milliseconds() >= turnInit + 750 && turnInit != 0) {
                 turnInit = 0;
-                cfg.getA3().setPosition(0);
+                cfg.getA3().setPosition(1);
+            }
+            if (cfg.getrTime().milliseconds() >= lastPing + 3000) {
+                lastPing = cfg.getrTime().milliseconds();
+                if (closeClaw) {
+                    cfg.getA1().setPosition(1);
+                } else {
+                    cfg.getA1().setPosition(0);
+                }
             }
 
             // END OF SERVOS
@@ -338,8 +365,11 @@ public class BrianDrive extends LinearOpMode {
             telemetry.addData("Arm", "%d, %d", cfg.getArm().getCurrentPosition(), cfg.getArmTargetPos());
             telemetry.addData("Elbow", "%d, %d", cfg.getElbow().getCurrentPosition(), cfg.getElbowTargetPos());
             telemetry.addData("Arm Power", "%4.2f", cfg.getArm().getPower());
-            telemetry.addData("Timers", "%4.2f, %4.2f", turnInit, turnInit2);
+            telemetry.addData("Timers", "%4.2f, %4.2f, %4.2f", turnInit, turnInit2, lastPing/1000);
+            telemetry.addData("Loop timer", "%4.2f", cfg.getrTime().milliseconds() - loopTime);
             telemetry.update();
+
+            loopTime = cfg.getrTime().milliseconds();
         }
     }
     public void grabCone() {
