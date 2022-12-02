@@ -9,27 +9,6 @@ import org.openftc.easyopencv.OpenCvCamera;
 
 public class config {
     int teamColor = 1; // 0 - Blue | 1 - Red
-    // Phases
-    boolean phase1Check = false; // WHEN USING FULL STATE CHANGE TO TRUE
-    boolean phase2Check = false;
-    boolean phase3Check = false;
-    boolean phase4Check = false;
-    boolean phase5Check = false;
-    boolean phase6Check = false;
-    boolean phase7Check = false;
-    boolean phase8Check = false;
-    boolean phase9Check = false;
-    boolean phase10Check = false;
-
-    boolean happenedCycle = false;
-
-    boolean initForwardBackward = false;
-    boolean initTurnRight = false;
-    boolean initTurnLeft = false;
-    boolean initStrafeLeft = false;
-    boolean initStrafeRight = false;
-
-    boolean atPos = false;
 
     // Motors (left front drive, left back drive, right front drive, right back drive)
     DcMotor lfD = null;
@@ -37,43 +16,36 @@ public class config {
     DcMotor rfD = null;
     DcMotor rbD = null;
 
-    DcMotor arm = null;
-    DcMotor elbow = null;
+    DcMotor slide1Motor = null;
+    DcMotor slide2Motor = null;
 
     // Runtime
     ElapsedTime rTime = new ElapsedTime();
 
     // Speed
-    double spdMult = 1.0;
-    double armElbowSpdMult = 1.0;
+    double speedMultiplier = 1.0;
 
 
-    int armPos = 0;
-    int elbowPos = 0;
+    int slide1Position = 0;
+    int slide2Position = 0;
 
     // Claw (A1 - Claw, A2 - 180 turn, A3 - Pivot turn)
-    Servo a1;
-    Servo a2;
-    Servo a3;
+    Servo clawServo;
+    Servo rotateServo;
+    Servo pivotServo;
 
-    // Vision
-    int camCounter = 0;
     OpenCvCamera camera;
 
     AprilTagDemo vision = new AprilTagDemo();
     int coneId = 0;
 
-    double[] position = { 0, 0, 0 }; // X,Y,Z
-    double[] rotation = { 0, 0, 0 }; // YAW, PITCH, ROLL
 
     // Servos Misc
     final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
-    final double MAX_POS     =  1;     // Maximum rotational position
-    final double MIN_POS     =  0;     // Minimum rotational position
 
     // targetPos
-    int armTargetPos = 0;
-    int elbowTargetPos = 0;
+    int slide1MotorTargetPosition = 0;
+    int slide2MotorTargetPosition = 0;
 
     int lfdTargetPos = 0;
     int lbdTargetPos = 0;
@@ -82,6 +54,14 @@ public class config {
 
     // SETTERS AND GETTERS
 
+
+    public int getTeamColor() {
+        return teamColor;
+    }
+
+    public void setTeamColor(int teamColor) {
+        this.teamColor = teamColor;
+    }
 
     public DcMotor getLfD() {
         return lfD;
@@ -115,20 +95,20 @@ public class config {
         this.rbD = rbD;
     }
 
-    public DcMotor getArm() {
-        return arm;
+    public DcMotor getSlide1Motor() {
+        return slide1Motor;
     }
 
-    public void setArm(DcMotor arm) {
-        this.arm = arm;
+    public void setSlide1Motor(DcMotor slide1Motor) {
+        this.slide1Motor = slide1Motor;
     }
 
-    public DcMotor getElbow() {
-        return elbow;
+    public DcMotor getSlide2Motor() {
+        return slide2Motor;
     }
 
-    public void setElbow(DcMotor elbow) {
-        this.elbow = elbow;
+    public void setSlide2Motor(DcMotor slide2Motor) {
+        this.slide2Motor = slide2Motor;
     }
 
     public ElapsedTime getrTime() {
@@ -139,87 +119,52 @@ public class config {
         this.rTime = rTime;
     }
 
-    public double getSpdMult() {
-        return spdMult;
+    public double getSpeedMultiplier() {
+        return speedMultiplier;
     }
 
-    public void setSpdMult(double spdMult) {
-        this.spdMult = spdMult;
+    public void setSpeedMultiplier(double speedMultiplier) {
+        this.speedMultiplier = speedMultiplier;
     }
 
-    public double getArmElbowSpdMult() {
-        return armElbowSpdMult;
+    public int getSlide1Position() {
+        return slide1Position;
     }
 
-    public void setArmElbowSpdMult(double armElbowSpdMult) {
-        this.armElbowSpdMult = armElbowSpdMult;
-    }
-    public int getArmPos() {
-        return armPos;
+    public void setSlide1Position(int slide1Position) {
+        this.slide1Position = slide1Position;
     }
 
-    public void setArmPos(int armPos) {
-        this.armPos = armPos;
+    public int getSlide2Position() {
+        return slide2Position;
     }
 
-    public int getElbowPos() {
-        return elbowPos;
+    public void setSlide2Position(int slide2Position) {
+        this.slide2Position = slide2Position;
     }
 
-    public void setElbowPos(int elbowPos) {
-        this.elbowPos = elbowPos;
+    public Servo getClawServo() {
+        return clawServo;
     }
 
-    public Servo getA1() {
-        return a1;
+    public void setClawServo(Servo clawServo) {
+        this.clawServo = clawServo;
     }
 
-    public void setA1(Servo a1) {
-        this.a1 = a1;
+    public Servo getRotateServo() {
+        return rotateServo;
     }
 
-    public Servo getA2() {
-        return a2;
+    public void setRotateServo(Servo rotateServo) {
+        this.rotateServo = rotateServo;
     }
 
-    public void setA2(Servo a2) {
-        this.a2 = a2;
+    public Servo getPivotServo() {
+        return pivotServo;
     }
 
-    public Servo getA3() {
-        return a3;
-    }
-
-    public void setA3(Servo a3) {
-        this.a3 = a3;
-    }
-
-    public double getINCREMENT() {
-        return INCREMENT;
-    }
-
-    public double getMAX_POS() {
-        return MAX_POS;
-    }
-
-    public double getMIN_POS() {
-        return MIN_POS;
-    }
-
-    public int getTeamColor() {
-        return teamColor;
-    }
-
-    public void setTeamColor(int teamColor) {
-        this.teamColor = teamColor;
-    }
-
-    public int getCamCounter() {
-        return camCounter;
-    }
-
-    public void setCamCounter(int camCounter) {
-        this.camCounter = camCounter;
+    public void setPivotServo(Servo pivotServo) {
+        this.pivotServo = pivotServo;
     }
 
     public OpenCvCamera getCamera() {
@@ -230,6 +175,10 @@ public class config {
         this.camera = camera;
     }
 
+    public AprilTagDemo getVision() {
+        return vision;
+    }
+
     public int getConeId() {
         return coneId;
     }
@@ -238,214 +187,52 @@ public class config {
         this.coneId = coneId;
     }
 
-    public double[] getPosition() {
-        return position;
+    public double getINCREMENT() {
+        return INCREMENT;
     }
 
-    public void setPosition(double[] position) {
-        this.position = position;
+    public int getSlide1MotorTargetPosition() {
+        return slide1MotorTargetPosition;
     }
 
-    public double[] getRotation() {
-        return rotation;
+    public void setSlide1MotorTargetPosition(int slide1MotorTargetPosition) {
+        this.slide1MotorTargetPosition = slide1MotorTargetPosition;
     }
 
-    public void setRotation(double[] rotation) {
-        this.rotation = rotation;
+    public int getSlide2MotorTargetPosition() {
+        return slide2MotorTargetPosition;
     }
 
-    public AprilTagDemo getVision() {
-        return vision;
-    }
-
-    public int getArmTargetPos() {
-        return armTargetPos;
-    }
-
-    public void setArmTargetPos(int armTargetPos) {
-        this.armTargetPos = armTargetPos;
-    }
-
-    public int getElbowTargetPos() {
-        return elbowTargetPos;
-    }
-
-    public void setElbowTargetPos(int elbowTargetPos) {
-        this.elbowTargetPos = elbowTargetPos;
-    }
-
-
-    public void setPhase1Check(boolean phase1Check) {
-        this.phase1Check = phase1Check;
-    }
-
-    public void setPhase2Check(boolean phase2Check) {
-        this.phase2Check = phase2Check;
-    }
-
-    public void setPhase3Check(boolean phase3Check) {
-        this.phase3Check = phase3Check;
-    }
-
-    public void setPhase4Check(boolean phase4Check) {
-        this.phase4Check = phase4Check;
-    }
-
-    public void setPhase5Check(boolean phase5Check) {
-        this.phase5Check = phase5Check;
-    }
-
-    public void setPhase6Check(boolean phase6Check) {
-        this.phase6Check = phase6Check;
-    }
-
-    public void setPhase7Check(boolean phase7Check) {
-        this.phase7Check = phase7Check;
-    }
-
-    public void setPhase8Check(boolean phase8Check) {
-        this.phase8Check = phase8Check;
-    }
-
-    public void setPhase9Check(boolean phase9Check) {
-        this.phase9Check = phase9Check;
-    }
-
-    public void setPhase10Check(boolean phase10Check) {
-        this.phase10Check = phase10Check;
-    }
-
-    public void setHappenedCycle(boolean happenedCycle) {
-        this.happenedCycle = happenedCycle;
-    }
-
-    public boolean isPhase1Check() {
-        return phase1Check;
-    }
-
-    public boolean isPhase2Check() {
-        return phase2Check;
-    }
-
-    public boolean isPhase3Check() {
-        return phase3Check;
-    }
-
-    public boolean isPhase4Check() {
-        return phase4Check;
-    }
-
-    public boolean isPhase5Check() {
-        return phase5Check;
-    }
-
-    public boolean isPhase6Check() {
-        return phase6Check;
-    }
-
-    public boolean isPhase7Check() {
-        return phase7Check;
-    }
-
-    public boolean isPhase8Check() {
-        return phase8Check;
-    }
-
-    public boolean isPhase9Check() {
-        return phase9Check;
-    }
-
-    public boolean isPhase10Check() {
-        return phase10Check;
-    }
-
-    public boolean isHappenedCycle() {
-        return happenedCycle;
-    }
-
-    public void setSetStartPosForwardBackward(boolean setStartPosForwardBackward) {
-        this.initForwardBackward = setStartPosForwardBackward;
-    }
-    public boolean isSetStartPosForwardBackward() {
-        return initForwardBackward;
-    }
-
-
-    public void setAtPos(boolean atPos) {
-        this.atPos = atPos;
-    }
-
-
-    public boolean isAtPos() {
-        return atPos;
-    }
-
-    public boolean isInitForwardBackward() {
-        return initForwardBackward;
-    }
-
-    public boolean isInitTurnRight() {
-        return initTurnRight;
-    }
-
-    public boolean isInitTurnLeft() {
-        return initTurnLeft;
-    }
-
-    public boolean isInitStrafeLeft() {
-        return initStrafeLeft;
-    }
-
-    public boolean isInitStrafeRight() {
-        return initStrafeRight;
+    public void setSlide2MotorTargetPosition(int slide2MotorTargetPosition) {
+        this.slide2MotorTargetPosition = slide2MotorTargetPosition;
     }
 
     public int getLfdTargetPos() {
         return lfdTargetPos;
     }
 
-    public int getLbdTargetPos() {
-        return lbdTargetPos;
-    }
-
-    public int getRfdTargetPos() {
-        return rfdTargetPos;
-    }
-
-    public int getRbdTargetPos() {
-        return rbdTargetPos;
-    }
-
-    public void setInitForwardBackward(boolean initForwardBackward) {
-        this.initForwardBackward = initForwardBackward;
-    }
-
-    public void setInitTurnRight(boolean initTurnRight) {
-        this.initTurnRight = initTurnRight;
-    }
-
-    public void setInitTurnLeft(boolean initTurnLeft) {
-        this.initTurnLeft = initTurnLeft;
-    }
-
-    public void setInitStrafeLeft(boolean initStrafeLeft) {
-        this.initStrafeLeft = initStrafeLeft;
-    }
-
-    public void setInitStrafeRight(boolean initStrafeRight) {
-        this.initStrafeRight = initStrafeRight;
-    }
-
     public void setLfdTargetPos(int lfdTargetPos) {
         this.lfdTargetPos = lfdTargetPos;
+    }
+
+    public int getLbdTargetPos() {
+        return lbdTargetPos;
     }
 
     public void setLbdTargetPos(int lbdTargetPos) {
         this.lbdTargetPos = lbdTargetPos;
     }
 
+    public int getRfdTargetPos() {
+        return rfdTargetPos;
+    }
+
     public void setRfdTargetPos(int rfdTargetPos) {
         this.rfdTargetPos = rfdTargetPos;
+    }
+
+    public int getRbdTargetPos() {
+        return rbdTargetPos;
     }
 
     public void setRbdTargetPos(int rbdTargetPos) {
