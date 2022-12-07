@@ -36,6 +36,8 @@ import org.firstinspires.ftc.teamcode.misc.PID;
 import org.firstinspires.ftc.teamcode.misc.config;
 import org.firstinspires.ftc.teamcode.misc.driveInit;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
+
 /**
  * This file contains an example of a Linear "OpMode".
  * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
@@ -103,7 +105,9 @@ public class drive extends LinearOpMode {
     public void runOpMode() {
         config cfg = new config();
         driveInit init = new driveInit(cfg);
+        ColorSensor color;
 
+        color = hardwareMap.get(ColorSensor.class, "Color");
 
         PID slidesPID = new PID(.02,.0,.02,.008);
         //PID elbowPID = new PID(.02,.0,.02,.008);
