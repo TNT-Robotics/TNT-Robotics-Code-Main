@@ -8,7 +8,7 @@ INJECTED from C:\Users\corsairit\Desktop\TNT-Robotics-Code-Main\FtcRobotControll
 		ADDED from C:\Users\corsairit\Desktop\TNT-Robotics-Code-Main\FtcRobotController\src\main\AndroidManifest.xml:2:1-79:12
 		INJECTED from C:\Users\corsairit\Desktop\TNT-Robotics-Code-Main\FtcRobotController\src\main\AndroidManifest.xml
 	android:versionName
-		ADDED from C:\Users\corsairit\Desktop\TNT-Robotics-Code-Main\FtcRobotController\src\main\AndroidManifest.xml:5:11-36
+		ADDED from C:\Users\corsairit\Desktop\TNT-Robotics-Code-Main\FtcRobotController\src\main\AndroidManifest.xml:5:11-38
 	xmlns:tools
 		ADDED from C:\Users\corsairit\Desktop\TNT-Robotics-Code-Main\FtcRobotController\src\main\AndroidManifest.xml:3:11-57
 	xmlns:android
