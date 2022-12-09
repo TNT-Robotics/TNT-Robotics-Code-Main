@@ -35,6 +35,9 @@ public class auton1 extends LinearOpMode {
     boolean closeClaw = true;
     double movedDuringAlignmentBy = 0.0;
     Pose2d startPose = new Pose2d(0, 0, 0);
+    double msTimeMarker = 0;
+    boolean ranFirstTime = false;
+    boolean startLift = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -98,21 +101,70 @@ public class auton1 extends LinearOpMode {
          */
 
         // PRELOAD
-        Trajectory driveWithPreloadOption1P1 = drive.trajectoryBuilder(new Pose2d())
+        Trajectory getFromWall = drive.trajectoryBuilder(new Pose2d())
+                .forward(.2)
+                .addDisplacementMarker(() -> {
+                    updateClawServo(clawServo);
+                })
+                .build();
+
+        Trajectory driveWithPreloadOption1P1 = drive.trajectoryBuilder(getFromWall.end())
                 .strafeRight(33.5)
+                .addDisplacementMarker(() -> {
+                    updateClawServo(clawServo);
+                })
                 .build();
         Trajectory driveWithPreloadOption1P2 = drive.trajectoryBuilder(driveWithPreloadOption1P1.end())
                 .forward(27)
+
+                .addDisplacementMarker(10, () -> {
+                    startLift = true;
+                })
+                .addDisplacementMarker(() -> {
+                    updateClawServo(clawServo);
+                    if (startLift) {
+                        updateMotors(-4610, slide1Motor, slide2Motor);
+                        if (closeEnough(slide1Motor.getCurrentPosition(), -4610, 10)) {
+                            if (!ranFirstTime) {
+                                pivotServo.setPosition(.15);
+                                rotateServo.setPosition(0);
+                            }
+                            if (msTimeMarker == 0) {
+                                msTimeMarker = runtime.milliseconds();
+                            }
+                            if (runtime.milliseconds() > msTimeMarker + 750) {
+                                pivotServo.setPosition(1);
+                            }
+                        }
+                    }
+                })
                 .build();
         Trajectory drivePreload2 = drive.trajectoryBuilder(driveWithPreloadOption1P2.end())
                 .back(27)
+                .addDisplacementMarker(() -> {
+                    updateClawServo(clawServo);
+                    updateMotors(0, slide1Motor, slide2Motor);
+                    if (closeEnough(slide1Motor.getCurrentPosition(), 0, 10)) {
+                        if (!ranFirstTime) {
+                            pivotServo.setPosition(0.05);
+                            rotateServo.setPosition(1);
+                        }
+                        if (msTimeMarker == 0) {
+                            msTimeMarker = runtime.milliseconds();
+                        }
+                        if (runtime.milliseconds() > msTimeMarker + 750) {
+                            closeClaw = false;
+                            clawServo.setPosition(0);
+                        }
+                    }
+                })
                 .build();
 
         // CYCLE
         Trajectory driveToPole1 = drive.trajectoryBuilder(drivePreload2.end())
                 .forward(27)
                 .addDisplacementMarker(10, () -> {
-                    placeOnPole(3);
+                    placeOnPole(3, slide1Motor, slide2Motor, clawServo, pivotServo, rotateServo);
                 })
                 .build();
         Trajectory driveToCone1 = drive.trajectoryBuilder(drivePreload2.end())
@@ -135,15 +187,18 @@ public class auton1 extends LinearOpMode {
         clawServo.setPosition(0);
         closeClaw = false;
 
-        if (isStopRequested())
-            return;
-
-        driveWithCone();
+        driveWithCone(clawServo, pivotServo);
         telemetryUpdate("Starting to follow trajectory with preload");
+        drive.followTrajectory(getFromWall);
         drive.followTrajectory(driveWithPreloadOption1P1);
         drive.followTrajectory(driveWithPreloadOption1P2);
-        drive.followTrajectory(driveToPole1);
-        prepareForGrab();
+
+        msTimeMarker = 0;
+        startLift = false;
+        ranFirstTime = false;
+
+        dropCone(clawServo);
+        drive.followTrajectory(drivePreload2);
         /*
          * if (movedDuringAlignmentBy > 0) {
          * drive.followTrajectory(restartAdjustBackward);
@@ -151,27 +206,28 @@ public class auton1 extends LinearOpMode {
          * drive.followTrajectory(restartAdjustForward);
          * }
          */
-        drive.followTrajectory(drivePreload2);
+        grabCone(clawServo);
+        drive.followTrajectory(driveToPole1);
         cycleRun();
 
     }
 
     // METHODS
-    void placeOnPole(int level) {
+    void placeOnPole(int level, DcMotor slide1Motor, DcMotor slide2Motor, Servo clawServo, Servo pivotServo, Servo rotateServo) {
         if (level == 0) {
-            placeOnPoleHandler(-150);
+            placeOnPoleHandler(-150, slide1Motor, slide2Motor, clawServo, pivotServo, rotateServo);
             return;
         }
         if (level == 1) {
-            placeOnPoleHandler(-2179);
+            placeOnPoleHandler(-2179, slide1Motor, slide2Motor, clawServo, pivotServo, rotateServo);
             return;
         }
         if (level == 2) {
-            placeOnPoleHandler(-3440);
+            placeOnPoleHandler(-3440, slide1Motor, slide2Motor, clawServo, pivotServo, rotateServo);
             return;
         }
         if (level == 3) {
-            placeOnPoleHandler(-4610);
+            placeOnPoleHandler(-4610, slide1Motor, slide2Motor, clawServo, pivotServo, rotateServo);
             return;
         }
     }
@@ -187,17 +243,17 @@ public class auton1 extends LinearOpMode {
         return false;
     }
 
-    void updateMotors(int targetState) {
+    void updateMotors(int targetState, DcMotor slide1Motor, DcMotor slide2Motor) {
         double currentArmPID = slidesPID.getOutputFromError(targetState, slide1Motor.getCurrentPosition());
         slide1Motor.setPower(currentArmPID);
         slide2Motor.setPower(currentArmPID);
     }
 
-    void placeOnPoleHandler(int targetPos) {
+    void placeOnPoleHandler(int targetPos, DcMotor slide1Motor, DcMotor slide2Motor, Servo clawServo, Servo pivotServo, Servo rotateServo) {
 
         while (closeEnough(slide1Motor.getCurrentPosition(), targetPos, 10) == false) {
-            updateMotors(targetPos);
-            updateClawServo();
+            updateMotors(targetPos, slide1Motor, slide2Motor);
+            updateClawServo(clawServo);
         }
 
         clawServo.setPosition(1);
@@ -208,25 +264,25 @@ public class auton1 extends LinearOpMode {
 
         double currentMsTime = runtime.milliseconds();
         while (runtime.milliseconds() < currentMsTime + 750) {
-            updateMotors(targetPos);
-            updateClawServo();
+            updateMotors(targetPos, slide1Motor, slide2Motor);
+            updateClawServo(clawServo);
         }
         pivotServo.setPosition(1);
         currentMsTime = runtime.milliseconds();
         while (runtime.milliseconds() < currentMsTime + 750) {
-            updateMotors(targetPos);
-            updateClawServo();
+            updateMotors(targetPos, slide1Motor, slide2Motor);
+            updateClawServo(clawServo);
         }
     }
 
-    void driveWithCone() {
+    void driveWithCone(Servo clawServo, Servo pivotServo) {
         clawServo.setPosition(1);
-        updateClawServo();
+        updateClawServo(clawServo);
         closeClaw = true;
         pivotServo.setPosition(.5);
     }
 
-    void updateClawServo() {
+    void updateClawServo(Servo clawServo) {
         if (runtime.milliseconds() >= lastPing + 3000) {
             lastPing = runtime.milliseconds();
             if (closeClaw) {
@@ -239,14 +295,14 @@ public class auton1 extends LinearOpMode {
         }
     }
 
-    void prepareForGrab() {
+    void prepareForGrab(DcMotor slide1Motor, DcMotor slide2Motor, Servo clawServo, Servo pivotServo, Servo rotateServo) {
         pivotServo.setPosition(0.05);
         rotateServo.setPosition(1);
         double currentMsTime = runtime.milliseconds();
         boolean servoTurned = false;
         while (closeEnough(slide1Motor.getCurrentPosition(), 0, 20) == false) {
-            updateMotors(0);
-            updateClawServo();
+            updateMotors(0, slide1Motor, slide2Motor);
+            updateClawServo(clawServo);
             if (runtime.milliseconds() < currentMsTime + 750) {
                 servoTurned = true;
                 closeClaw = false;
@@ -259,13 +315,17 @@ public class auton1 extends LinearOpMode {
         }
     }
 
-    void grabCone() {
+    void grabCone(Servo clawServo) {
         closeClaw = true;
         clawServo.setPosition(1);
     }
+    void dropCone(Servo clawServo) {
+        closeClaw = false;
+        clawServo.setPosition(0);
+    }
 
-    void checkPolePosition(double desiredDistance) {
-        updateClawServo();
+    void checkPolePosition(double desiredDistance, Servo clawServo) {
+        updateClawServo(clawServo);
         telemetry.addLine("Pole alignment");
         telemetry.addData("Distance from pole in mm (actual, target)", "%4.2f, %4.2f",
                 poleDistanceSensor.getDistance(DistanceUnit.MM), desiredDistance);
@@ -278,22 +338,22 @@ public class auton1 extends LinearOpMode {
 
     }
 
-    void telemetryUpdate(string message) {
+    void telemetryUpdate(String message) {
         telemetry.addLine(message);
         telemetry.update();
     }
 
-    void telemetryUpdate(string message, double value) {
+    void telemetryUpdate(String message, double value) {
         telemetry.addData(message, "%4.2f", value);
         telemetry.update();
     }
 
-    void telemetryUpdate(string message, int value) {
+    void telemetryUpdate(String message, int value) {
         telemetry.addData(message, "%d", value);
         telemetry.update();
     }
 
-    void telemetryUpdate(string message, boolean value) {
+    void telemetryUpdate(String message, boolean value) {
         telemetry.addData(message, "%b", value);
         telemetry.update();
     }

@@ -65,7 +65,7 @@ public class DriveConstants {
      * values should be
      * empirically tuned.
      */
-    public static double kV = .0245;
+    public static double kV = .017;
     public static double kA = 0.004;
     public static double kStatic = 0.003;
 
@@ -80,8 +80,8 @@ public class DriveConstants {
      * distance units are
      * inches.
      */
-    public static double MAX_VEL = 30;
-    public static double MAX_ACCEL = 30;
+    public static double MAX_VEL = 50;
+    public static double MAX_ACCEL = 50;
     public static double MAX_ANG_VEL = Math.toRadians(180);
     public static double MAX_ANG_ACCEL = Math.toRadians(180);
 
