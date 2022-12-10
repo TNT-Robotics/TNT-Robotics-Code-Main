@@ -34,7 +34,7 @@ public class auton1 extends LinearOpMode {
     double lastPing = 0;
     boolean closeClaw = true;
     double movedDuringAlignmentBy = 0.0;
-    Pose2d startPose = new Pose2d(0, 0, 0);
+    Pose2d startPose = new Pose2d(65.00, -39.00, 180);
     double msTimeMarker = 0;
     boolean ranFirstTime = false;
     boolean startLift = false;
@@ -101,28 +101,100 @@ public class auton1 extends LinearOpMode {
          */
 
         // PRELOAD
-        Trajectory getFromWall = drive.trajectoryBuilder(new Pose2d())
-                .forward(.2)
+        Trajectory getFromWall = drive.trajectoryBuilder(drive.getPoseEstimate())
+                .forward(2)
                 .addDisplacementMarker(() -> {
                     updateClawServo(clawServo);
                 })
                 .build();
 
-        Trajectory driveWithPreloadOption1P1 = drive.trajectoryBuilder(getFromWall.end())
-                .strafeRight(33.5)
+        Trajectory drive1 = drive.trajectoryBuilder(getFromWall.end())
+                .strafeLeft(23)
                 .addDisplacementMarker(() -> {
                     updateClawServo(clawServo);
                 })
                 .build();
-        Trajectory driveWithPreloadOption1P2 = drive.trajectoryBuilder(driveWithPreloadOption1P1.end())
-                .forward(27)
 
-                .addDisplacementMarker(10, () -> {
+        Trajectory drive2 = drive.trajectoryBuilder(drive1.end())
+                .forward(39)
+                .addDisplacementMarker(2, () -> {
                     startLift = true;
                 })
                 .addDisplacementMarker(() -> {
                     updateClawServo(clawServo);
-                    if (startLift) {
+                    /*if (startLift) {
+                        updateMotors(-2179, slide1Motor, slide2Motor);
+                        if (closeEnough(slide1Motor.getCurrentPosition(), -2179, 10)) {
+                            if (!ranFirstTime) {
+                                pivotServo.setPosition(.15);
+                                rotateServo.setPosition(0);
+                            }
+                            if (msTimeMarker == 0) {
+                                msTimeMarker = runtime.milliseconds();
+                            }
+                            if (runtime.milliseconds() > msTimeMarker + 750) {
+                                pivotServo.setPosition(1);
+                            }
+                        }
+                    }*/
+                })
+                .build();
+
+        Trajectory drive3 = drive.trajectoryBuilder(drive2.end())
+                .back(6)
+                .addDisplacementMarker(() -> {
+                    updateClawServo(clawServo);
+                })
+                .build();
+
+        Trajectory drive4 = drive.trajectoryBuilder(drive3.end())
+                .forward(6)
+                .addDisplacementMarker(() -> {
+                    updateClawServo(clawServo);
+                    /*updateMotors(0, slide1Motor, slide2Motor);
+                    if (closeEnough(slide1Motor.getCurrentPosition(), 0, 10)) {
+                        if (!ranFirstTime) {
+                            pivotServo.setPosition(0.05);
+                            rotateServo.setPosition(1);
+                        }
+                        if (msTimeMarker == 0) {
+                            msTimeMarker = runtime.milliseconds();
+                        }
+                        if (runtime.milliseconds() > msTimeMarker + 750) {
+                            closeClaw = false;
+                            clawServo.setPosition(0);
+                        }
+                    }*/
+                })
+                .build();
+
+        Trajectory drive5 = drive.trajectoryBuilder(drive4.end())
+                .strafeRight(12)
+                .addDisplacementMarker(() -> {
+                    updateClawServo(clawServo);
+                    if (runtime.milliseconds() > msTimeMarker + 750) {
+                        closeClaw = false;
+                        clawServo.setPosition(0);
+                    }
+                })
+                .build();
+
+        // CYCLE START
+        Trajectory drive6 = drive.trajectoryBuilder(drive5.end())
+                .forward(3)
+                .addDisplacementMarker(() -> {
+                    updateClawServo(clawServo);
+                })
+                .build();
+
+        Trajectory drive7 = drive.trajectoryBuilder(drive6.end())
+                .back(27)
+                .addDisplacementMarker(2, () -> {
+                    startLift = true;
+                })
+                .addDisplacementMarker(() -> {
+                    updateClawServo(clawServo);
+                    /*if (startLift) {
                         updateMotors(-4610, slide1Motor, slide2Motor);
                         if (closeEnough(slide1Motor.getCurrentPosition(), -4610, 10)) {
                             if (!ranFirstTime) {
@@ -136,14 +208,34 @@ public class auton1 extends LinearOpMode {
                                 pivotServo.setPosition(1);
                             }
                         }
-                    }
+                    }*/
                 })
                 .build();
-        Trajectory drivePreload2 = drive.trajectoryBuilder(driveWithPreloadOption1P2.end())
-                .back(27)
+
+        Trajectory drive8 = drive.trajectoryBuilder(drive7.end())
+                .strafeRight(12)
                 .addDisplacementMarker(() -> {
                     updateClawServo(clawServo);
-                    updateMotors(0, slide1Motor, slide2Motor);
+                    if (runtime.milliseconds() > msTimeMarker + 750) {
+                        pivotServo.setPosition(1);
+                        msTimeMarker = 0;
+                    }
+                })
+
+                .build();
+
+        Trajectory drive9 = drive.trajectoryBuilder(drive8.end())
+                .back(4)
+                .addDisplacementMarker(() -> {
+                    updateClawServo(clawServo);
+                })
+                .build();
+
+        Trajectory drive10 = drive.trajectoryBuilder(drive9.end())
+                .forward(4)
+                .addDisplacementMarker(() -> {
+                    updateClawServo(clawServo);
+                    /*updateMotors(0, slide1Motor, slide2Motor);
                     if (closeEnough(slide1Motor.getCurrentPosition(), 0, 10)) {
                         if (!ranFirstTime) {
                             pivotServo.setPosition(0.05);
@@ -156,21 +248,29 @@ public class auton1 extends LinearOpMode {
                             closeClaw = false;
                             clawServo.setPosition(0);
                         }
+                    }*/
+                })
+                .build();
+
+        Trajectory drive11 = drive.trajectoryBuilder(drive10.end())
+                .strafeLeft(12)
+                .addDisplacementMarker(() -> {
+                    updateClawServo(clawServo);
+                    if (runtime.milliseconds() > msTimeMarker + 750) {
+                        closeClaw = false;
+                        clawServo.setPosition(0);
                     }
                 })
                 .build();
 
-        // CYCLE
-        Trajectory driveToPole1 = drive.trajectoryBuilder(drivePreload2.end())
+        Trajectory drive12 = drive.trajectoryBuilder(drive11.end())
                 .forward(27)
-                .addDisplacementMarker(10, () -> {
-                    placeOnPole(3, slide1Motor, slide2Motor, clawServo, pivotServo, rotateServo);
+                .addDisplacementMarker(() -> {
+                    updateClawServo(clawServo);
                 })
                 .build();
-        Trajectory driveToCone1 = drive.trajectoryBuilder(drivePreload2.end())
-                .back(27)
-                .build();
-
+        // CYCLE END
+/*
         while (!opModeIsActive() && !isStopRequested()) {
             // loop detection here
             cfg.getVision().updateTags(cfg);
@@ -182,7 +282,7 @@ public class auton1 extends LinearOpMode {
                 telemetry.addData("Cone id", "%d", cConeId);
                 telemetry.update();
             }
-        }
+        }*/
         waitForStart();
         clawServo.setPosition(0);
         closeClaw = false;
@@ -190,15 +290,43 @@ public class auton1 extends LinearOpMode {
         driveWithCone(clawServo, pivotServo);
         telemetryUpdate("Starting to follow trajectory with preload");
         drive.followTrajectory(getFromWall);
-        drive.followTrajectory(driveWithPreloadOption1P1);
-        drive.followTrajectory(driveWithPreloadOption1P2);
-
+        drive.followTrajectory(drive1);
+        drive.followTrajectory(drive2);
+        /*
+        while (!closeEnough(slide1Motor.getCurrentPosition(), -2179, 10)) {
+            updateClawServo(clawServo);
+            updateMotors(-2179, slide1Motor, slide2Motor);
+            if (runtime.milliseconds() > msTimeMarker + 750) {
+                pivotServo.setPosition(1);
+            }
+        }*/
+        ranFirstTime = false;
+        msTimeMarker = 0;
+        startLift = false;
+        //drive.turn(Math.toRadians(90));
+        //drive.followTrajectory(drive3);
+        //dropCone(clawServo);
+        //drive.followTrajectory(drive4);
+        drive.followTrajectory(drive5);
+        /*msTimeMarker = 0;
+        startLift = false;
+        ranFirstTime = false;
+        drive.followTrajectory(drive6);
+        grabCone(clawServo);
+        drive.followTrajectory(drive7);
+        drive.followTrajectory(drive8);
         msTimeMarker = 0;
         startLift = false;
         ranFirstTime = false;
-
+        drive.followTrajectory(drive9);
         dropCone(clawServo);
-        drive.followTrajectory(drivePreload2);
+        drive.followTrajectory(drive10);
+        drive.followTrajectory(drive11);
+        msTimeMarker = 0;
+        startLift = false;
+        ranFirstTime = false;
+        drive.followTrajectory(drive12);*/
+
         /*
          * if (movedDuringAlignmentBy > 0) {
          * drive.followTrajectory(restartAdjustBackward);
@@ -206,9 +334,6 @@ public class auton1 extends LinearOpMode {
          * drive.followTrajectory(restartAdjustForward);
          * }
          */
-        grabCone(clawServo);
-        drive.followTrajectory(driveToPole1);
-        cycleRun();
 
     }
 
