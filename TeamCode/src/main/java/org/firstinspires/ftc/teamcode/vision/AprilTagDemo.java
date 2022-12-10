@@ -72,7 +72,7 @@ public class AprilTagDemo {
         });
     }
 
-    public void updateTags(config cfg) {
+    public void updateTags() {
         // Calling getDetectionsUpdate() will only return an object if there was a new frame
         // processed since the last time we called it. Otherwise, it will return null. This
         // enables us to only run logic when there has been a new frame, as opposed to the
@@ -120,7 +120,6 @@ public class AprilTagDemo {
                     for (int id : ID_TAG_OF_INTEREST) {
                         if (id == tag.id) {
                             tagOfInterest = tag;
-                            cfg.setConeId(tag.id);
                             this.getterId = tag.id;
                             this.xGetter = tag.pose.x;
                             this.yGetter = tag.pose.y;

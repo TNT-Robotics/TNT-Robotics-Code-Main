@@ -108,12 +108,12 @@ public class drive extends LinearOpMode {
     public void runOpMode() {
         config cfg = new config();
         driveInit init = new driveInit(cfg);
-
+/*
         ColorRangeSensor coneSensor;
         DistanceSensor chassisSensor;
 
         coneSensor = hardwareMap.get(ColorRangeSensor.class, "claw");
-        chassisSensor = hardwareMap.get(DistanceSensor.class, "chassis");
+        chassisSensor = hardwareMap.get(DistanceSensor.class, "chassis");*/
 
         PID slidesPID = new PID(.02,.0,.02,.008);
         //PID elbowPID = new PID(.02,.0,.02,.008);
@@ -135,7 +135,6 @@ public class drive extends LinearOpMode {
         telemetry.update();
 
 
-        gamepad1.rumble(5, 5, 100);
         waitForStart();
         cfg.getrTime().reset();
 
@@ -334,10 +333,11 @@ public class drive extends LinearOpMode {
             // END OF SERVOS
 
             // sensors
+            /*
             if (chassisSensor.getDistance(DistanceUnit.CM) < 14.5 && chassisSensor.getDistance(DistanceUnit.CM) > 11.5) {
-                gamepad2.rumble(0.5,0.5,20);
+                gamepad2.rumble(0.5,0.5,200);
                 telemetry.addLine("Rumbling");
-            }
+            }*/
             // telemetry
             telemetry.addData("Status", "Run Time: " + cfg.getrTime().toString());
             telemetry.addLine("Motors");
@@ -351,7 +351,7 @@ public class drive extends LinearOpMode {
             telemetry.addData("Arm Power", "%4.2f", cfg.getSlide1Motor().getPower());
             telemetry.addData("Timers", "%4.2f, %4.2f, %4.2f", turnInit, turnInit2, lastPing/1000);
             telemetry.addData("Loop timer", "%4.2f", cfg.getrTime().milliseconds() - loopTime);
-            telemetry.addData("Sensors (Chassis, Claw) cm", "%4.2f, %4.2f", chassisSensor.getDistance(DistanceUnit.CM), coneSensor.getDistance(DistanceUnit.CM));
+            //telemetry.addData("Sensors (Chassis, Claw) cm", "%4.2f, %4.2f", chassisSensor.getDistance(DistanceUnit.CM), coneSensor.getDistance(DistanceUnit.CM));
             telemetry.update();
 
             loopTime = cfg.getrTime().milliseconds();

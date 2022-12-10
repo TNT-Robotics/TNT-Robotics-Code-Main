@@ -7,22 +7,17 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.hardware.ColorRangeSensor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
 import org.firstinspires.ftc.teamcode.misc.PID;
 import org.firstinspires.ftc.teamcode.misc.config;
-
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.vision.AprilTagDemo;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 
 @Autonomous(group = "Autonomous")
-public class auton1 extends LinearOpMode {
+public class RightAutoDrive extends LinearOpMode {
 
     ElapsedTime runtime = new ElapsedTime();
     config cfg = new config();
@@ -117,8 +112,27 @@ public class auton1 extends LinearOpMode {
                 })
                 .build();
 
+        Trajectory partial1 = drive.trajectoryBuilder(getFromWall.end())
+                .strafeRight(11)
+                .addDisplacementMarker(() -> {
+                    updateClawServo(clawServo);
+                })
+                .build();
+        Trajectory partial2 = drive.trajectoryBuilder(partial1.end())
+                .forward(6.8)
+                .addDisplacementMarker(() -> {
+                    updateClawServo(clawServo);
+                })
+                .build();
+        Trajectory partial3 = drive.trajectoryBuilder(partial2.end())
+                .back(6.8)
+                .addDisplacementMarker(() -> {
+                    updateClawServo(clawServo);
+                })
+                .build();
+
         Trajectory drive1 = drive.trajectoryBuilder(getFromWall.end())
-                .strafeLeft(23.2)
+                .strafeRight(13.2)
                 .addDisplacementMarker(() -> {
                     updateClawServo(clawServo);
                 })
@@ -149,7 +163,7 @@ public class auton1 extends LinearOpMode {
                 })
                 .build();
 
-        Trajectory drive3 = drive.trajectoryBuilder(drive2.end().plus(new Pose2d(0, 0, Math.toRadians(90))))
+        Trajectory drive3 = drive.trajectoryBuilder(drive2.end().plus(new Pose2d(0, 0, Math.toRadians(-90))))
                 .back(6)
                 .addDisplacementMarker(() -> {
                     updateClawServo(clawServo);
@@ -179,7 +193,7 @@ public class auton1 extends LinearOpMode {
                 .build();
 
         Trajectory drive5 = drive.trajectoryBuilder(drive4.end())
-                .strafeRight(16)
+                .strafeLeft(16)
 
                 .addDisplacementMarker(5, () -> {
                     driveWithCone(clawServo, pivotServo);
@@ -235,7 +249,7 @@ public class auton1 extends LinearOpMode {
                 .build();
 
         Trajectory drive8 = drive.trajectoryBuilder(drive7.end())
-                .strafeRight(13)
+                .strafeLeft(13)
                 .addDisplacementMarker(() -> {
                     updateClawServo(clawServo);
                     if (runtime.milliseconds() > msTimeMarker + 750) {
@@ -276,7 +290,7 @@ public class auton1 extends LinearOpMode {
                 .build();
 
         Trajectory drive11 = drive.trajectoryBuilder(drive10.end())
-                .strafeLeft(12)
+                .strafeRight(12)
                 .addDisplacementMarker(() -> {
                     updateClawServo(clawServo);
                     if (runtime.milliseconds() > msTimeMarker + 750) {
@@ -289,13 +303,13 @@ public class auton1 extends LinearOpMode {
         // CYCLE END
 
         Trajectory parkNumber1 = drive.trajectoryBuilder(drive11.end())
-                .forward(24)
+                .back(24)
                 .addDisplacementMarker(() -> {
                     updateClawServo(clawServo);
                 })
                 .build();
         Trajectory parkNumber3 = drive.trajectoryBuilder(drive11.end())
-                .back(24)
+                .forward(24)
                 .addDisplacementMarker(() -> {
                     updateClawServo(clawServo);
                 })
@@ -318,6 +332,12 @@ public class auton1 extends LinearOpMode {
         driveWithCone(clawServo, pivotServo);
         telemetryUpdate("Starting to follow trajectory with preload");
         drive.followTrajectory(getFromWall);
+        drive.followTrajectory(partial1);
+        pivotServo.setPosition(0.05);
+        drive.followTrajectory(partial2);
+        clawServo.setPosition(0);
+        closeClaw = false;
+        drive.followTrajectory(partial3);
         drive.followTrajectory(drive1);
         drive.followTrajectory(drive2);
  /*
@@ -331,7 +351,7 @@ public class auton1 extends LinearOpMode {
         ranFirstTime = false;
         msTimeMarker = 0;
         startLift = false;
-        drive.turn(Math.toRadians(90));
+        drive.turn(Math.toRadians(-90));
         drive.followTrajectory(drive3);
         dropCone(clawServo);
         drive.followTrajectory(drive4);
