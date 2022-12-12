@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.misc.PID;
-import org.firstinspires.ftc.teamcode.misc.config;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.vision.AprilTagDemo;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -20,7 +19,6 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 public class LeftAutoDrive extends LinearOpMode {
 
     ElapsedTime runtime = new ElapsedTime();
-    config cfg = new config();
 
     PID slidesPID = new PID(.02, 0, .02, .008);
 
@@ -216,14 +214,14 @@ public class LeftAutoDrive extends LinearOpMode {
                 .build();
         // CYCLE START
         Trajectory drive6 = drive.trajectoryBuilder(idk1.end())
-                .forward(11.3)
+                .forward(0.1)
                 .addDisplacementMarker(() -> {
                     updateClawServo(clawServo);
                 })
                 .build();
 
         Trajectory drive7 = drive.trajectoryBuilder(drive6.end())
-                .back(27)
+                .back(15.7)
                 .addDisplacementMarker(2, () -> {
                     startLift = true;
                 })
@@ -302,13 +300,13 @@ public class LeftAutoDrive extends LinearOpMode {
         // CYCLE END
 
         Trajectory parkNumber1 = drive.trajectoryBuilder(drive11.end())
-                .forward(24)
+                .forward(25)
                 .addDisplacementMarker(() -> {
                     updateClawServo(clawServo);
                 })
                 .build();
         Trajectory parkNumber3 = drive.trajectoryBuilder(drive11.end())
-                .back(24)
+                .back(25)
                 .addDisplacementMarker(() -> {
                     updateClawServo(clawServo);
                 })
@@ -337,6 +335,7 @@ public class LeftAutoDrive extends LinearOpMode {
         clawServo.setPosition(0);
         closeClaw = false;
         drive.followTrajectory(partial3);
+        driveWithCone(clawServo,pivotServo);
         drive.followTrajectory(drive1);
         drive.followTrajectory(drive2);
  /*
@@ -352,7 +351,7 @@ public class LeftAutoDrive extends LinearOpMode {
         startLift = false;
         drive.turn(Math.toRadians(90));
         drive.followTrajectory(drive3);
-        dropCone(clawServo);
+        //dropCone(clawServo);
         drive.followTrajectory(drive4);
         drive.followTrajectory(drive5);
         clawServo.setPosition(0);
@@ -362,7 +361,7 @@ public class LeftAutoDrive extends LinearOpMode {
         ranFirstTime = false;
         drive.followTrajectory(idk1);
         drive.followTrajectory(drive6);
-        grabCone(clawServo);
+        //grabCone(clawServo);
         driveWithCone(clawServo, pivotServo);
         drive.followTrajectory(drive7);
         drive.followTrajectory(drive8);
@@ -370,9 +369,10 @@ public class LeftAutoDrive extends LinearOpMode {
         startLift = false;
         ranFirstTime = false;
         drive.followTrajectory(drive9);
-        dropCone(clawServo);
+        //dropCone(clawServo);
         drive.followTrajectory(drive10);
         drive.followTrajectory(drive11);
+
         msTimeMarker = 0;
         startLift = false;
         ranFirstTime = false;

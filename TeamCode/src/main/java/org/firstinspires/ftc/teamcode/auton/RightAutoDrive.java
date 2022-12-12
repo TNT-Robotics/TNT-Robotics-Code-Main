@@ -131,7 +131,7 @@ public class RightAutoDrive extends LinearOpMode {
                 })
                 .build();
 
-        Trajectory drive1 = drive.trajectoryBuilder(getFromWall.end())
+        Trajectory drive1 = drive.trajectoryBuilder(partial3.end())
                 .strafeRight(13.2)
                 .addDisplacementMarker(() -> {
                     updateClawServo(clawServo);
@@ -217,14 +217,14 @@ public class RightAutoDrive extends LinearOpMode {
                 .build();
         // CYCLE START
         Trajectory drive6 = drive.trajectoryBuilder(idk1.end())
-                .forward(11.3)
+                .back(0.1)
                 .addDisplacementMarker(() -> {
                     updateClawServo(clawServo);
                 })
                 .build();
 
         Trajectory drive7 = drive.trajectoryBuilder(drive6.end())
-                .back(27)
+                .back(15.7)
                 .addDisplacementMarker(2, () -> {
                     startLift = true;
                 })
@@ -249,7 +249,7 @@ public class RightAutoDrive extends LinearOpMode {
                 .build();
 
         Trajectory drive8 = drive.trajectoryBuilder(drive7.end())
-                .strafeLeft(13)
+                .strafeRight(13)
                 .addDisplacementMarker(() -> {
                     updateClawServo(clawServo);
                     if (runtime.milliseconds() > msTimeMarker + 750) {
@@ -290,7 +290,7 @@ public class RightAutoDrive extends LinearOpMode {
                 .build();
 
         Trajectory drive11 = drive.trajectoryBuilder(drive10.end())
-                .strafeRight(12)
+                .strafeLeft(12)
                 .addDisplacementMarker(() -> {
                     updateClawServo(clawServo);
                     if (runtime.milliseconds() > msTimeMarker + 750) {
@@ -303,13 +303,13 @@ public class RightAutoDrive extends LinearOpMode {
         // CYCLE END
 
         Trajectory parkNumber1 = drive.trajectoryBuilder(drive11.end())
-                .back(24)
+                .back(25)
                 .addDisplacementMarker(() -> {
                     updateClawServo(clawServo);
                 })
                 .build();
         Trajectory parkNumber3 = drive.trajectoryBuilder(drive11.end())
-                .forward(24)
+                .forward(25)
                 .addDisplacementMarker(() -> {
                     updateClawServo(clawServo);
                 })
@@ -353,7 +353,7 @@ public class RightAutoDrive extends LinearOpMode {
         startLift = false;
         drive.turn(Math.toRadians(-90));
         drive.followTrajectory(drive3);
-        dropCone(clawServo);
+        //dropCone(clawServo);
         drive.followTrajectory(drive4);
         drive.followTrajectory(drive5);
         clawServo.setPosition(0);
@@ -363,15 +363,15 @@ public class RightAutoDrive extends LinearOpMode {
         ranFirstTime = false;
         drive.followTrajectory(idk1);
         drive.followTrajectory(drive6);
-        grabCone(clawServo);
-        driveWithCone(clawServo, pivotServo);
+        //grabCone(clawServo);
+        //driveWithCone(clawServo, pivotServo);
         drive.followTrajectory(drive7);
         drive.followTrajectory(drive8);
         msTimeMarker = 0;
         startLift = false;
         ranFirstTime = false;
         drive.followTrajectory(drive9);
-        dropCone(clawServo);
+        //dropCone(clawServo);
         drive.followTrajectory(drive10);
         drive.followTrajectory(drive11);
         msTimeMarker = 0;

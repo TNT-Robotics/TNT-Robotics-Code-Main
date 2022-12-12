@@ -32,14 +32,9 @@ package org.firstinspires.ftc.teamcode.driver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.misc.PID;
 import org.firstinspires.ftc.teamcode.misc.config;
 import org.firstinspires.ftc.teamcode.misc.driveInit;
-
-import com.qualcomm.robotcore.hardware.ColorRangeSensor;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 /**
  * This file contains an example of a Linear "OpMode".
@@ -72,58 +67,18 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 @TeleOp(name="Drive", group="Driving")
 
 public class drive extends LinearOpMode {
-/*
-    // Declare OpMode members for each of the 4 motors.
-    private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftFrontDrive = null;
-    private DcMotor leftBackDrive = null;
-    private DcMotor rightFrontDrive = null;
-    private DcMotor rightBackDrive = null;
-
-    private DcMotor armMotor = null;
-    private DcMotor elbowMotor = null;
-    //private DcMotor slideMotor = null;
-
-    private double speedMultiplier = 1;
-    private double armElbowSpeedMultiplier = .5;
-
-    boolean armBool = false;
-    boolean elbowBool = false;
-
-    int armCurrentPos = 0;
-    int elbowCurrentPos = 0;
-
-    static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
-    static final int    CYCLE_MS    =   50;     // period of each cycle
-    static final double MAX_POS     =  1;     // Maximum rotational position
-    static final double MIN_POS     =  0;     // Minimum rotational position
-
-
-    Servo arm1;
-    Servo arm2;
-    Servo arm3;
-    //double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
-
- */
     public void runOpMode() {
         config cfg = new config();
         driveInit init = new driveInit(cfg);
-/*
-        ColorRangeSensor coneSensor;
-        DistanceSensor chassisSensor;
-
-        coneSensor = hardwareMap.get(ColorRangeSensor.class, "claw");
-        chassisSensor = hardwareMap.get(DistanceSensor.class, "chassis");*/
 
         PID slidesPID = new PID(.02,.0,.02,.008);
-        //PID elbowPID = new PID(.02,.0,.02,.008);
 
         slidesPID.getOutputFromError(0,0);
-        //elbowPID.getOutputFromError(0,0);
 
         double loopTime = 0;
         double turnInit = 0;
         double turnInit2 = 0;
+        double turnInit3 = 0;
         double lastPing = 0;
 
         boolean closeClaw = false;
@@ -147,8 +102,8 @@ public class drive extends LinearOpMode {
             double max;
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-            double axial = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
-            double lateral = gamepad1.left_stick_x;
+            double axial = gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
+            double lateral = -gamepad1.left_stick_x;
             double yaw = gamepad1.right_stick_x;
 
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
@@ -207,8 +162,8 @@ public class drive extends LinearOpMode {
             // Set adjust position
             int armNewPos = (int) (cfg.getSlide1Position() + slidesPower);
 
-            if (armNewPos < -4610) {
-                armNewPos = -4610;
+            if (armNewPos < -4600) {
+                armNewPos = -4600;
             }
             if (armNewPos > 0) {
                 armNewPos = 0;
@@ -217,13 +172,13 @@ public class drive extends LinearOpMode {
             double currentArmPID = slidesPID.getOutputFromError(armNewPos, cfg.getSlide1Motor().getCurrentPosition());
 
             if (gamepad2.dpad_up) {
-                armNewPos = -4610;
+                armNewPos = -4114;
             }
             if (gamepad2.dpad_left) {
-                armNewPos = -3440;
+                armNewPos = -3023;
             }
             if (gamepad2.dpad_right) {
-                armNewPos = -2179;
+                armNewPos = -1755;
             }
             if (gamepad2.dpad_down) {
                 armNewPos = 0;
@@ -271,11 +226,13 @@ public class drive extends LinearOpMode {
 
             // Pickup
             if (gamepad2.cross) {
-                cfg.getPivotServo().setPosition(0.05);
+                cfg.getPivotServo().setPosition(0);
                 cfg.getRotateServo().setPosition(1);
 
                 if (turnInit2 == 0) {
                     turnInit2 = cfg.getrTime().milliseconds();
+                    turnInit = 0;
+                    turnInit3 = 0;
                 }
             }
 
@@ -284,14 +241,12 @@ public class drive extends LinearOpMode {
             if (gamepad2.circle) {
                 cfg.getClawServo().setPosition(1);
                 closeClaw = true;
+                cfg.getPivotServo().setPosition(.9);
 
-                if (cfg.getPivotServo().getPosition() < .5) {
-                    cfg.getPivotServo().setPosition(.15);
-                }
-
-                cfg.getRotateServo().setPosition(0);
                 if(turnInit == 0) {
                     turnInit = cfg.getrTime().milliseconds();
+                    turnInit2 = 0;
+                    turnInit3 = 0;
                 }
             }
 
@@ -309,8 +264,13 @@ public class drive extends LinearOpMode {
                 cfg.getClawServo().setPosition(0);
             }
 
-            if (cfg.getrTime().milliseconds() >= turnInit + 750 && turnInit != 0) {
+            if (cfg.getrTime().milliseconds() >= turnInit + 1000 && turnInit != 0) {
                 turnInit = 0;
+                cfg.getRotateServo().setPosition(0);
+                turnInit3 = cfg.getrTime().milliseconds();
+            }
+            if (cfg.getrTime().milliseconds() >= turnInit3 + 1000 && turnInit3 != 0) {
+                turnInit3 = 0;
                 cfg.getPivotServo().setPosition(1);
             }
             if (cfg.getrTime().milliseconds() >= lastPing + 3000) {
@@ -321,23 +281,17 @@ public class drive extends LinearOpMode {
                     } else {
                         cfg.getClawServo().setPosition(1);
                     }
-                } else {
+                } /*else {
                     if (cfg.getClawServo().getPosition() == 0) {
                         cfg.getClawServo().setPosition(0.05);
                     } else {
                         cfg.getClawServo().setPosition(0);
                     }
-                }
+                }*/
             }
 
             // END OF SERVOS
 
-            // sensors
-            /*
-            if (chassisSensor.getDistance(DistanceUnit.CM) < 14.5 && chassisSensor.getDistance(DistanceUnit.CM) > 11.5) {
-                gamepad2.rumble(0.5,0.5,200);
-                telemetry.addLine("Rumbling");
-            }*/
             // telemetry
             telemetry.addData("Status", "Run Time: " + cfg.getrTime().toString());
             telemetry.addLine("Motors");

@@ -4,11 +4,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.vision.AprilTagDemo;
-import org.openftc.easyopencv.OpenCvCamera;
 
 public class config {
-    int teamColor = 1; // 0 - Blue | 1 - Red
 
     // Motors (left front drive, left back drive, right front drive, right back drive)
     DcMotor lfD = null;
@@ -27,17 +24,11 @@ public class config {
 
 
     int slide1Position = 0;
-    int slide2Position = 0;
-
     // Claw (A1 - Claw, A2 - 180 turn, A3 - Pivot turn)
     Servo clawServo;
     Servo rotateServo;
     Servo pivotServo;
 
-    OpenCvCamera camera;
-
-    AprilTagDemo vision = new AprilTagDemo();
-    int coneId = 0;
 
 
     // Servos Misc
@@ -47,21 +38,7 @@ public class config {
     int slide1MotorTargetPosition = 0;
     int slide2MotorTargetPosition = 0;
 
-    int lfdTargetPos = 0;
-    int lbdTargetPos = 0;
-    int rfdTargetPos = 0;
-    int rbdTargetPos = 0;
-
     // SETTERS AND GETTERS
-
-
-    public int getTeamColor() {
-        return teamColor;
-    }
-
-    public void setTeamColor(int teamColor) {
-        this.teamColor = teamColor;
-    }
 
     public DcMotor getLfD() {
         return lfD;
@@ -135,14 +112,6 @@ public class config {
         this.slide1Position = slide1Position;
     }
 
-    public int getSlide2Position() {
-        return slide2Position;
-    }
-
-    public void setSlide2Position(int slide2Position) {
-        this.slide2Position = slide2Position;
-    }
-
     public Servo getClawServo() {
         return clawServo;
     }
@@ -167,25 +136,6 @@ public class config {
         this.pivotServo = pivotServo;
     }
 
-    public OpenCvCamera getCamera() {
-        return camera;
-    }
-
-    public void setCamera(OpenCvCamera camera) {
-        this.camera = camera;
-    }
-
-    public AprilTagDemo getVision() {
-        return vision;
-    }
-
-    public int getConeId() {
-        return coneId;
-    }
-
-    public void setConeId(int coneId) {
-        this.coneId = coneId;
-    }
 
     public double getINCREMENT() {
         return INCREMENT;
@@ -195,47 +145,8 @@ public class config {
         return slide1MotorTargetPosition;
     }
 
-    public void setSlide1MotorTargetPosition(int slide1MotorTargetPosition) {
-        this.slide1MotorTargetPosition = slide1MotorTargetPosition;
-    }
 
     public int getSlide2MotorTargetPosition() {
         return slide2MotorTargetPosition;
-    }
-
-    public void setSlide2MotorTargetPosition(int slide2MotorTargetPosition) {
-        this.slide2MotorTargetPosition = slide2MotorTargetPosition;
-    }
-
-    public int getLfdTargetPos() {
-        return lfdTargetPos;
-    }
-
-    public void setLfdTargetPos(int lfdTargetPos) {
-        this.lfdTargetPos = lfdTargetPos;
-    }
-
-    public int getLbdTargetPos() {
-        return lbdTargetPos;
-    }
-
-    public void setLbdTargetPos(int lbdTargetPos) {
-        this.lbdTargetPos = lbdTargetPos;
-    }
-
-    public int getRfdTargetPos() {
-        return rfdTargetPos;
-    }
-
-    public void setRfdTargetPos(int rfdTargetPos) {
-        this.rfdTargetPos = rfdTargetPos;
-    }
-
-    public int getRbdTargetPos() {
-        return rbdTargetPos;
-    }
-
-    public void setRbdTargetPos(int rbdTargetPos) {
-        this.rbdTargetPos = rbdTargetPos;
     }
 }

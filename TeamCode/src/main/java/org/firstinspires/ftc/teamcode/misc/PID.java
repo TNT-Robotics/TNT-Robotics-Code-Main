@@ -2,10 +2,10 @@ package org.firstinspires.ftc.teamcode.misc;
 
 public class PID {
 
-    double kP = 0;
-    double kI = 0;
-    double kD = 0;
-    double kF = 0;
+    double kP;
+    double kI;
+    double kD;
+    double kF;
 
     double integralCounter = 0;
 
@@ -26,7 +26,7 @@ public class PID {
 
         // Safe Division
         long deltaTime = this.lastUpdateTime == -1 ? 0 : System.currentTimeMillis() - lastUpdateTime;
-        double changeInError = this.lastUpdateError == -1 ? 0 : currentUpdateError - this.lastUpdateError;;
+        double changeInError = this.lastUpdateError == -1 ? 0 : currentUpdateError - this.lastUpdateError;
 
         // Calculate PID Terms
         double proportion = currentUpdateError * kP;
