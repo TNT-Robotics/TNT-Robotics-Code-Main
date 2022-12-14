@@ -109,54 +109,18 @@ public class LeftAutoDrive extends LinearOpMode {
                     updateClawServo(clawServo);
                 })
                 .build();
-
-        Trajectory partial1 = drive.trajectoryBuilder(getFromWall.end())
-                .strafeLeft(11)
-                .addDisplacementMarker(() -> {
-                    updateClawServo(clawServo);
-                })
-                .build();
-        Trajectory partial2 = drive.trajectoryBuilder(partial1.end())
-                .forward(6.8)
-                .addDisplacementMarker(() -> {
-                    updateClawServo(clawServo);
-                })
-                .build();
-        Trajectory partial3 = drive.trajectoryBuilder(partial2.end())
-                .back(6.8)
-                .addDisplacementMarker(() -> {
-                    updateClawServo(clawServo);
-                })
-                .build();
-        Trajectory drive1 = drive.trajectoryBuilder(partial3.end())
-                .strafeLeft(13.2)
+        Trajectory drive1 = drive.trajectoryBuilder(getFromWall.end())
+                .strafeLeft(27)
                 .addDisplacementMarker(() -> {
                     updateClawServo(clawServo);
                 })
                 .build();
 
         Trajectory drive2 = drive.trajectoryBuilder(drive1.end())
-                .forward(39.5)
-                .addDisplacementMarker(2, () -> {
-                    startLift = true;
-                })
+                .splineToSplineHeading(new Pose2d(40, 40, Math.toRadians(90)), Math.toRadians(0))
                 .addDisplacementMarker(() -> {
                     updateClawServo(clawServo);
-                    /*if (startLift) {
-                        updateMotors(-1000, slide1Motor, slide2Motor);
-                        if (closeEnough(slide1Motor.getCurrentPosition(), -1000, 50)) {
-                            if (!ranFirstTime) {
-                                pivotServo.setPosition(.15);
-                                rotateServo.setPosition(0);
-                            }
-                            if (msTimeMarker == 0) {
-                                msTimeMarker = runtime.milliseconds();
-                            }
-                            if (runtime.milliseconds() > msTimeMarker + 750) {
-                                pivotServo.setPosition(1);
-                            }
-                        }
-                    }*/
+
                 })
                 .build();
 
@@ -329,12 +293,6 @@ public class LeftAutoDrive extends LinearOpMode {
         driveWithCone(clawServo, pivotServo);
         telemetryUpdate("Starting to follow trajectory with preload");
         drive.followTrajectory(getFromWall);
-        drive.followTrajectory(partial1);
-        pivotServo.setPosition(0.05);
-        drive.followTrajectory(partial2);
-        clawServo.setPosition(0);
-        closeClaw = false;
-        drive.followTrajectory(partial3);
         driveWithCone(clawServo,pivotServo);
         drive.followTrajectory(drive1);
         drive.followTrajectory(drive2);
