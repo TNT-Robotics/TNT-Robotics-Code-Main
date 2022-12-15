@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.auton;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
@@ -17,6 +19,8 @@ import org.firstinspires.ftc.teamcode.vision.AprilTagDemo;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 @Autonomous(group = "Autonomous")
 public class LeftAutoDrive extends LinearOpMode {
 
@@ -24,22 +28,16 @@ public class LeftAutoDrive extends LinearOpMode {
 
     PID slidesPID = new PID(.02, 0, .02, .008);
 
-    double totalTimeOfCycles = 0;
-    int numberOfCycles = 0;
-    double averageTimePerCycle = 0;
-
-    int coneStackValue = 5;
     double lastPing = 0;
     boolean closeClaw = true;
-    Pose2d startPose = new Pose2d(-39, -60.5, Math.toRadians(90));
-    double msTimeMarker = 0;
-    boolean ranFirstTime = false;
-    boolean startLift = false;
+
+    Pose2d startPose = new Pose2d(-39, -70, Math.toRadians(90));
     double loopTime = 0.0;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         AprilTagDemo vision = new AprilTagDemo();
         OpenCvCamera camera;
 
@@ -51,23 +49,49 @@ public class LeftAutoDrive extends LinearOpMode {
         DcMotor slide1Motor = hardwareMap.get(DcMotor.class, "s1");
         DcMotor slide2Motor = hardwareMap.get(DcMotor.class, "s2");
 
+        slide1Motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slide2Motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        slide1Motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        slide2Motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         // ASSIGN SERVOS
         Servo clawServo = hardwareMap.get(Servo.class, "clawServo");
         Servo rotateServo = hardwareMap.get(Servo.class, "rotateServo");
         Servo pivotServo = hardwareMap.get(Servo.class, "pivotServo");
 
+
+        pivotServo.setPosition(.5);
+
+
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         int id = 0;
+        AtomicInteger targetPos = new AtomicInteger();
 
         slidesPID.getOutputFromError(0, 0);
 
         drive.setPoseEstimate(startPose);
 
         TrajectorySequence botTrajectory = drive.trajectorySequenceBuilder(startPose)
+
+                .forward(4)
+
                 .lineToLinearHeading(new Pose2d(-58, -60, Math.toRadians(0)))
-                //.splineToSplineHeading(new Pose2d(-58, -24, Math.toRadians(180)), Math.toRadians(0))
+
                 .lineTo(new Vector2d(-58,-24))
+
+                /* example of raising slide
+                .addDisplacementMarker(() -> {
+                    targetPos.set(-1500);
+                })*/
+
+                /* example of moving pivot servo
+                .addDisplacementMarker(() -> {
+                    rotateServo.setPosition(.5);
+                })*/
+
                 .forward(3)
+
                 // Drop Cone
                 .back(2)
                 // Turn claw the other way
@@ -88,41 +112,28 @@ public class LeftAutoDrive extends LinearOpMode {
                 // drop cone
                 .forward(3)
 
-                // Vision 1
-
-                /* .lineTo(new Vector2d(-59,-12))
-                 .lineTo(new Vector2d(-59,-20))*/
-                // Vision 2
-/*
-                                .lineTo(new Vector2d(-36,-12))
-                                .lineTo(new Vector2d(-36,-20))*/
-
-                // Vision 3
-                .lineTo(new Vector2d(-12,-12))
-                .lineTo(new Vector2d(-12,-20))
 
                 .build();
 
-        Trajectory drive5 = drive.trajectoryBuilder(startPose)
-                .strafeRight(16)
+        TrajectorySequence parkNumber1 = drive.trajectorySequenceBuilder(botTrajectory.end())
+                .lineTo(new Vector2d(-59,-12))
+                .lineTo(new Vector2d(-59,-20))
+                .build();
 
-                .addDisplacementMarker(5, () -> {
-                    driveWithCone(clawServo, pivotServo);
-                })
-                .addDisplacementMarker(() -> {
-                    updateClawServo(clawServo);
-                    updateMotors(-1500, slide1Motor, slide2Motor);
-                    telemetry.addData("Loop time", "ms", runtime.milliseconds() - loopTime);
-                    loopTime = runtime.milliseconds();
-                    telemetry.update();
-                })
+        TrajectorySequence parkNumber2 = drive.trajectorySequenceBuilder(botTrajectory.end())
+                .lineTo(new Vector2d(-36,-12))
+                .lineTo(new Vector2d(-36,-20))
+                .build();
+        TrajectorySequence parkNumber3 = drive.trajectorySequenceBuilder(botTrajectory.end())
+                .lineTo(new Vector2d(-12,-12))
+                .lineTo(new Vector2d(-12,-20))
                 .build();
 
         while (!opModeIsActive() && !isStopRequested()) {
             // loop detection here
             vision.updateTags();
 
-            if (vision.idGetter() != 0) {;
+            if (vision.idGetter() != 0) {
                 id = vision.idGetter();
                 telemetry.addData("Cone id", "%d", id);
                 telemetry.update();
@@ -135,29 +146,31 @@ public class LeftAutoDrive extends LinearOpMode {
         driveWithCone(clawServo, pivotServo);
         telemetryUpdate("Starting to follow trajectory with preload");
 
-        drive.followTrajectorySequence(botTrajectory);
+        drive.followTrajectorySequenceAsync(botTrajectory);
         if (id == 440) { // Number 1
-            //drive.followTrajectory(parkNumber1);
+            drive.followTrajectorySequence(parkNumber1);
         } else if (id == 373) { // Number 2
+            drive.followTrajectorySequence(parkNumber2);
 
         } else if (id == 182) { // Number 3
-            //drive.followTrajectory(parkNumber3);
+            drive.followTrajectorySequence(parkNumber3);
         }
 
-        /*
-         * if (movedDuringAlignmentBy > 0) {
-         * drive.followTrajectory(restartAdjustBackward);
-         * } else if (movedDuringAlignmentBy < 0) {
-         * drive.followTrajectory(restartAdjustForward);
-         * }
-         */
-
+        while (opModeIsActive()) {
+            drive.update();
+            updateMotors(targetPos.get(), slide1Motor, slide2Motor);
+            updateClawServo(clawServo);
+        }
     }
 
     void updateMotors(int targetState, DcMotor slide1Motor, DcMotor slide2Motor) {
         double currentArmPID = slidesPID.getOutputFromError(targetState, slide1Motor.getCurrentPosition());
         slide1Motor.setPower(currentArmPID);
         slide2Motor.setPower(currentArmPID);
+        telemetry.addData("PID Power", currentArmPID);
+        telemetry.addData("Position (current vs target)", String.valueOf(slide1Motor.getCurrentPosition()), targetState);
+        telemetry.update();
+
     }
 
     void driveWithCone(Servo clawServo, Servo pivotServo) {
