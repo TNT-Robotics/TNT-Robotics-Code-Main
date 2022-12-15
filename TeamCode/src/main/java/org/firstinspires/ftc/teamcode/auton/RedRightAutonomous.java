@@ -17,7 +17,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 
 @Autonomous(group = "Autonomous")
-public class RightAutoDrive extends LinearOpMode {
+public class RedRightAutonomous extends LinearOpMode {
 
     ElapsedTime runtime = new ElapsedTime();
     config cfg = new config();

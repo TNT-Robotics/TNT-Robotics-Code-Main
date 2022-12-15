@@ -4,7 +4,6 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -21,8 +20,37 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-@Autonomous(group = "Autonomous")
-public class LeftAutoDrive extends LinearOpMode {
+
+
+/* TODO:
+- Adjust the values for driving in autonomous (including park, the code is written just double check the values are accurate if not adjust)
+- Write code for servos to turn claw/rotate/pivot so pickup/drive/drop off works properly
+- Tune linear slide PID to not vibrate when to certain position (the PID value are in the "slidesPID" variable)
+- Write code for linear slides to go to required heights
+- Double check it is reliable at least 5-10x in a row
+- Replicate for 4 classes (RedLeftAutonomous; RedRightAutonomous; BlueLeftAutonomous; BlueRightAutonomous), you will probably only need to mirror (multiply by -1) most of the global position values.
+
+FIXME:
+- Write here whatever you need to be fixed that's not working, I will try to do my best and see whats the issue but do not rely on this.
+ */
+
+/*
+
+------------- General tips & tricks -------------
+1. Upload to GitHub everyday for me to see what's going on as well as if something goes wrong we can version control save it.
+2.
+
+------------- Get into FTC Dashboard instructions -------------
+1. Connect to the bot wifi with the computer
+2. Open browser and connect to this url - http://192.168.43.1:8080/dash
+3. Top right click the "Default" and switch to "Field"
+4. To start a program use the dropdown on the left side under "OpMode". Click on "INIT" to initialize and then press "START" to begin. To turn off press the "STOP"!
+
+ */
+@Autonomous(group = "Red")
+public class RedLeftAutonomous extends LinearOpMode {
+
+
 
     ElapsedTime runtime = new ElapsedTime();
 
