@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.misc.PID;
+import org.firstinspires.ftc.teamcode.misc.DriveClarityHandler;
 import org.firstinspires.ftc.teamcode.misc.config;
 import org.firstinspires.ftc.teamcode.misc.driveInit;
 
@@ -70,6 +71,7 @@ public class drive extends LinearOpMode {
     public void runOpMode() {
         config cfg = new config();
         driveInit init = new driveInit(cfg);
+        DriveClarityHandler driveClarityHandler = new DriveClarityHandler();
 
         PID slidesPID = new PID(.02,.0,.02,.008);
 
@@ -96,219 +98,49 @@ public class drive extends LinearOpMode {
         // BEGIN CODE
         while (opModeIsActive()) {
 
-            // START OF MOTORS
-
-            // START OF DRIVING
-            double max;
-
-            // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-            double axial = gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
+            double axial = gamepad1.left_stick_y;
             double lateral = -gamepad1.left_stick_x;
             double yaw = gamepad1.right_stick_x;
 
-            // Combine the joystick requests for each axis-motion to determine each wheel's power.
-            // Set up a variable for each drive wheel to save the power level for telemetry.
-            double leftFrontPower = axial + lateral + yaw;
-            double rightFrontPower = axial - lateral - yaw;
-            double leftBackPower = axial - lateral + yaw;
-            double rightBackPower = axial + lateral - yaw;
+            driveClarityHandler.updateRobotSpeed(gamepad1, cfg);
+            driveClarityHandler.updateHolonomicDriveMotors(axial, lateral, yaw, cfg.getLfD(), cfg.getRfD(), cfg.getLbD(),cfg.getRbD(), cfg);
 
-            // arm variable for power level
-            double slidesPower = -gamepad2.left_stick_y * 10;
+            driveClarityHandler.updateSlideMotors(gamepad2, slidesPID, cfg);
 
-            // Normalize the values so no wheel power exceeds 100%
-            // This ensures that the robot maintains the desired motion.
-            max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
-            max = Math.max(max, Math.abs(leftBackPower));
-            max = Math.max(max, Math.abs(rightBackPower));
+            driveClarityHandler.updateGamepadServos(gamepad2, closeClaw, cfg);
 
-            if (max > 1.0) {
-                leftFrontPower /= max;
-                rightFrontPower /= max;
-                leftBackPower /= max;
-                rightBackPower /= max;
-            }
+            double[] updatedServoValues = driveClarityHandler.updateConeServos(gamepad2, turnInit, turnInit2, turnInit3, cfg);
+            turnInit = updatedServoValues[0];
+            turnInit2 = updatedServoValues[1];
+            turnInit3 = updatedServoValues[2];
+            closeClaw = updatedServoValues[3] == 1;
 
-            // START OF FAST / SLOW MODE
-
-            // Change state
-            if (gamepad1.cross) {
-                cfg.setSpeedMultiplier(1);
-            }
-            if (gamepad1.square) {
-                cfg.setSpeedMultiplier(.75);
-            }
-            if (gamepad1.triangle) {
-                cfg.setSpeedMultiplier(.5);
-            }
-            if (gamepad1.circle) {
-                cfg.setSpeedMultiplier(.25);
-            }
-            // Adjust power
-            leftFrontPower *= cfg.getSpeedMultiplier();
-            rightFrontPower *= cfg.getSpeedMultiplier();
-            leftBackPower *= cfg.getSpeedMultiplier();
-            rightBackPower *= cfg.getSpeedMultiplier();
-            // END OF FAST / SLOW MODE
-            // UPDATE WHEELS POWER
-            cfg.getLfD().setPower(leftFrontPower);
-            cfg.getRfD().setPower(rightFrontPower);
-            cfg.getLbD().setPower(leftBackPower);
-            cfg.getRbD().setPower(rightBackPower);
-
-            // END OF DRIVING
-            // START OF LINEAR SLIDE / ARM (MOTOR)
-
-            // Set adjust position
-            int armNewPos = (int) (cfg.getSlide1Position() + slidesPower);
-
-            if (armNewPos < -4600) {
-                armNewPos = -4600;
-            }
-            if (armNewPos > 0) {
-                armNewPos = 0;
-            }
-
-            double currentArmPID = slidesPID.getOutputFromError(armNewPos, cfg.getSlide1Motor().getCurrentPosition());
-
-            if (gamepad2.dpad_up) {
-                armNewPos = -4114;
-            }
-            if (gamepad2.dpad_left) {
-                armNewPos = -3023;
-            }
-            if (gamepad2.dpad_right) {
-                armNewPos = -1755;
-            }
-            if (gamepad2.dpad_down) {
-                armNewPos = 0;
-            }
-
-            cfg.getSlide1Motor().setPower(currentArmPID);
-            cfg.getSlide2Motor().setPower(currentArmPID);
-
-            cfg.setSlide1Position(armNewPos);
-
-            // END OF LINEAR SLIDE / ARM (MOTOR)
-
-            // END OF MOTORS
-            // START OF SERVOS
-            // START OF CLAW 1 (Claw grab)
-            if (gamepad2.left_bumper) {
-                cfg.getClawServo().setPosition(1);
-                closeClaw = true;
-            }
-            if (gamepad2.right_bumper) {
-                cfg.getClawServo().setPosition(0);
-                closeClaw = false;
-
-            }
-            // END OF CLAW 1
-
-            // START OF CLAW 2 (180 turn around)
-            if (gamepad2.left_trigger != 0) {
-                if (cfg.getRotateServo().getPosition() >= 1) {
-                    cfg.getRotateServo().setPosition(1);
-                } else {
-                    cfg.getRotateServo().setPosition(cfg.getRotateServo().getPosition() + cfg.getINCREMENT());
-                }
-            }
-            if (gamepad2.right_trigger != 0) {
-                if (cfg.getRotateServo().getPosition() <= 0) {
-                    cfg.getRotateServo().setPosition(0);
-                } else {
-                    cfg.getRotateServo().setPosition(cfg.getRotateServo().getPosition() - cfg.getINCREMENT());
-                }
-            }
-            // END OF CLAW 2
-
-            // IDK THE RIGHT FOUR SHAPES
-
-            // Pickup
-            if (gamepad2.cross) {
-                cfg.getPivotServo().setPosition(0);
-                cfg.getRotateServo().setPosition(1);
-
-                if (turnInit2 == 0) {
-                    turnInit2 = cfg.getrTime().milliseconds();
-                    turnInit = 0;
-                    turnInit3 = 0;
-                }
-            }
+            double[] updatedServoValuesAfterDelay = driveClarityHandler.updateServosAfterDelay(turnInit, turnInit2, turnInit3, lastPing, closeClaw, cfg);
+            turnInit = updatedServoValuesAfterDelay[0];
+            turnInit2 = updatedServoValuesAfterDelay[1];
+            turnInit3 = updatedServoValuesAfterDelay[2];
+            lastPing = updatedServoValuesAfterDelay[3];
 
 
-            // Placedown (put on pole)
-            if (gamepad2.circle) {
-                cfg.getClawServo().setPosition(1);
-                closeClaw = true;
-                cfg.getPivotServo().setPosition(.9);
-
-                if(turnInit == 0) {
-                    turnInit = cfg.getrTime().milliseconds();
-                    turnInit2 = 0;
-                    turnInit3 = 0;
-                }
-            }
-
-            if (gamepad2.square) {
-                cfg.getClawServo().setPosition(1);
-                closeClaw = true;
-                cfg.getPivotServo().setPosition(.5);
-            }
-
-
-            if (cfg.getrTime().milliseconds() >= turnInit2 + 1000 && turnInit2 != 0) {
-                turnInit2 = 0;
-
-                closeClaw = false;
-                cfg.getClawServo().setPosition(0);
-            }
-
-            if (cfg.getrTime().milliseconds() >= turnInit + 1000 && turnInit != 0) {
-                turnInit = 0;
-                cfg.getRotateServo().setPosition(0);
-                turnInit3 = cfg.getrTime().milliseconds();
-            }
-            if (cfg.getrTime().milliseconds() >= turnInit3 + 1000 && turnInit3 != 0) {
-                turnInit3 = 0;
-                cfg.getPivotServo().setPosition(1);
-            }
-            if (cfg.getrTime().milliseconds() >= lastPing + 3000) {
-                lastPing = cfg.getrTime().milliseconds();
-                if (closeClaw) {
-                    if (cfg.getClawServo().getPosition() == 1) {
-                        cfg.getClawServo().setPosition(.95);
-                    } else {
-                        cfg.getClawServo().setPosition(1);
-                    }
-                } /*else {
-                    if (cfg.getClawServo().getPosition() == 0) {
-                        cfg.getClawServo().setPosition(0.05);
-                    } else {
-                        cfg.getClawServo().setPosition(0);
-                    }
-                }*/
-            }
-
-            // END OF SERVOS
-
-            // telemetry
             telemetry.addData("Status", "Run Time: " + cfg.getrTime().toString());
+
             telemetry.addLine("Motors");
             telemetry.addData("Front left/Right", axial + lateral + yaw);
-            telemetry.addData("Back  left/Right",  axial - lateral + yaw);
+            telemetry.addData("Back left/Right", axial - lateral + yaw);
+
             telemetry.addLine("Servos");
             telemetry.addData("Claw1, Claw2, Claw3", "%4.2f, %4.2f, %4.2f", cfg.getClawServo().getPosition(), cfg.getRotateServo().getPosition(), cfg.getPivotServo().getPosition());
+
             telemetry.addLine("Motor Rotations (Current vs Set)");
-            telemetry.addData("Arm", "%d, %d", cfg.getSlide1Motor().getCurrentPosition(), cfg.getSlide1MotorTargetPosition());
-            telemetry.addData("Elbow", "%d, %d", cfg.getSlide2Motor().getCurrentPosition(), cfg.getSlide2MotorTargetPosition());
-            telemetry.addData("Arm Power", "%4.2f", cfg.getSlide1Motor().getPower());
-            telemetry.addData("Timers", "%4.2f, %4.2f, %4.2f", turnInit, turnInit2, lastPing/1000);
+            telemetry.addData("Slide1 Position", "%d, %d", cfg.getSlide1Motor().getCurrentPosition(), cfg.getSlide1MotorTargetPosition());
+            telemetry.addData("Slide2 Position", "%d, %d", cfg.getSlide2Motor().getCurrentPosition(), cfg.getSlide2MotorTargetPosition());
+            telemetry.addData("Slides Power", "%4.2f", cfg.getSlide1Motor().getPower());
+            telemetry.addData("Timers (s)", "%4.2f, %4.2f, %4.2f", turnInit/1000, turnInit2/1000, lastPing/1000);
             telemetry.addData("Loop timer", "%4.2f", cfg.getrTime().milliseconds() - loopTime);
             //telemetry.addData("Sensors (Chassis, Claw) cm", "%4.2f, %4.2f", chassisSensor.getDistance(DistanceUnit.CM), coneSensor.getDistance(DistanceUnit.CM));
-            telemetry.update();
 
             loopTime = cfg.getrTime().milliseconds();
+            telemetry.update();
         }
     }
 }
