@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.auton;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,531 +12,335 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.misc.PID;
-import org.firstinspires.ftc.teamcode.misc.config;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.vision.AprilTagDemo;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 
-@Autonomous(group = "Autonomous")
+import java.util.concurrent.atomic.AtomicInteger;
+
+
+// WORK ON ONLY AFTER FINISHING "RedLeftAutonomous"
+/* TODO:
+- Adjust starting position - startPose variable
+- Copy values from "RedLeftAutonomous"
+- Adjust according to the needs (you will probably just need to flip some from negative to positive or positive to negative, and change rotation by 180)
+- Dont forget to test parking
+- After you are done dont forget blue side autonomous, again its probably just going to be flipping from negative to positive
+FIXME:
+- Write here whatever you need to be fixed that's not working, I will try to do my best and see whats the issue but do not rely on this.
+ */
+
+/*
+
+------------- General tips & tricks -------------
+1. Upload to GitHub everyday for me to see what's going on as well as if something goes wrong we can version control save it.
+2. Use MeepMeep for coordinate and rotation system. Here is an attached picture https://ctrlv.link/yG1o of the grid, but if you need something more precise use MeepMeep (follow steps here https://github.com/NoahBres/MeepMeep)
+
+
+------------- Get into FTC Dashboard instructions -------------
+1. Connect to the bot wifi with the computer
+2. Open browser and connect to this url - http://192.168.43.1:8080/dash
+3. Top right click the "Default" and switch to "Field"
+4. To start a program use the dropdown on the left side under "OpMode". Click on "INIT" to initialize and then press "START" to begin. To turn off press the "STOP"!
+
+ */
+@Autonomous(group = "Red")
 public class RedRightAutonomous extends LinearOpMode {
 
+    // Create a timer object to track elapsed time
     ElapsedTime runtime = new ElapsedTime();
-    config cfg = new config();
 
+    // Create a PID controller for the slide motors
     PID slidesPID = new PID(.02, 0, .02, .008);
 
-    double totalTimeOfCycles = 0;
-    int numberOfCycles = 0;
-    double averageTimePerCycle = 0;
-
-    int coneStackValue = 5;
+    // Initialize the last ping time to 0 and the closeClaw boolean to true
     double lastPing = 0;
     boolean closeClaw = true;
-    Pose2d startPose = new Pose2d(65.00, -39.00, 180);
-    double msTimeMarker = 0;
-    boolean ranFirstTime = false;
-    boolean startLift = false;
+
+    // Create a pose object representing the starting pose of the robot
+    Pose2d startPose = new Pose2d(-39, -70, Math.toRadians(90));
+
+    // Initialize the loop time to 0
+    double loopTime = 0.0;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
+        // Initialize telemetry for both the driver station and the dashboard
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
+        // Create a vision object
         AprilTagDemo vision = new AprilTagDemo();
-        OpenCvCamera camera;
 
+        // Set up the camera
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+        OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
 
+        // Initialize the camera for the vision object
         vision.initCamera(camera);
-        // ASSIGN LINEAR SLIDE / ARM MOTOR
+
+        // Get the linear slide / arm motors from the hardware map
         DcMotor slide1Motor = hardwareMap.get(DcMotor.class, "s1");
         DcMotor slide2Motor = hardwareMap.get(DcMotor.class, "s2");
 
-        // ASSIGN SERVOS
+        // Set the mode of the motors to STOP_AND_RESET_ENCODER and then RUN_WITHOUT_ENCODER
+        slide1Motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slide2Motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slide1Motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        slide2Motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        // Get the servos from the hardware map
         Servo clawServo = hardwareMap.get(Servo.class, "clawServo");
         Servo rotateServo = hardwareMap.get(Servo.class, "rotateServo");
         Servo pivotServo = hardwareMap.get(Servo.class, "pivotServo");
 
+        // Set the pivot servo to position .5
+        pivotServo.setPosition(.5);
+
+        // Create a drive object
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+
+        // Initialize the cone ID to 0
         int id = 0;
 
+        // Create an AtomicInteger to hold the target position for the motors
+        AtomicInteger targetPos = new AtomicInteger();
+
+        // Initialize the PID controller
         slidesPID.getOutputFromError(0, 0);
 
+        // Set the starting pose of the drive object
         drive.setPoseEstimate(startPose);
 
-        // PRELOAD POLE ADJUSTMENTS
-        /*
-         * Trajectory restartAdjustBackwardPRELOAD =
-         * drive.trajectoryBuilder(adjustFowardPRELOAD.end())
-         * .backward(abs(movedDuringAlignmentBy))
-         * .build();
-         * 
-         * Trajectory adjustFowardPRELOAD =
-         * drive.trajectoryBuilder(driveWithPreloadOption1P2.end())
-         * .forward(.5)
-         * .build();
-         * 
-         * // CONE ADJUSTMENTS
-         * Trajectory restartAdjustBackwardCONE =
-         * drive.trajectoryBuilder(adjustFowardCONE.end())
-         * .backward(abs(movedDuringAlignmentBy))
-         * .build();
-         * 
-         * Trajectory restartAdjustForwardCONE =
-         * drive.trajectoryBuilder(adjustBackwardCONE.end())
-         * .forward(abs(movedDuringAlignmentBy))
-         * .build();
-         * 
-         * Trajectory adjustFowardCONE = drive.trajectoryBuilder(drivePreload2.end())
-         * .forward(.5)
-         * .build();
-         * 
-         * Trajectory adjustBackwardCONE = drive.trajectoryBuilder(drivePreload2.end())
-         * .backward(.5)
-         * .build();
-         * 
-         * // POLE ADJUSTMENTS
-         * Trajectory restartAdjustBackwardPOLE =
-         * drive.trajectoryBuilder(adjustFowardPOLE.end())
-         * .backward(abs(movedDuringAlignmentBy))
-         * .build();
-         * 
-         * Trajectory adjustFowardPOLE = drive.trajectoryBuilder(drivePreload2.end())
-         * .forward(.5)
-         * .build();
-         */
+        /* example of raising slide
+                .addDisplacementMarker(() -> {
+                    targetPos.set(-1500);
+                })*/
+        /* example of moving rotate servo
+                .addDisplacementMarker(() -> {
+                    rotateServo.setPosition(.5);
+                })*/
 
-        // PRELOAD
-        Trajectory getFromWall = drive.trajectoryBuilder(drive.getPoseEstimate())
-                .forward(2)
-                .addDisplacementMarker(() -> {
-                    updateClawServo(clawServo);
-                })
-                .build();
 
-        Trajectory partial1 = drive.trajectoryBuilder(getFromWall.end())
-                .strafeRight(11)
-                .addDisplacementMarker(() -> {
-                    updateClawServo(clawServo);
-                })
-                .build();
-        Trajectory partial2 = drive.trajectoryBuilder(partial1.end())
-                .forward(6.8)
-                .addDisplacementMarker(() -> {
-                    updateClawServo(clawServo);
-                })
-                .build();
-        Trajectory partial3 = drive.trajectoryBuilder(partial2.end())
-                .back(6.8)
-                .addDisplacementMarker(() -> {
-                    updateClawServo(clawServo);
-                })
-                .build();
-
-        Trajectory drive1 = drive.trajectoryBuilder(partial3.end())
-                .strafeRight(13.2)
-                .addDisplacementMarker(() -> {
-                    updateClawServo(clawServo);
-                })
-                .build();
-
-        Trajectory drive2 = drive.trajectoryBuilder(drive1.end())
-                .forward(39.5)
-                .addDisplacementMarker(2, () -> {
-                    startLift = true;
-                })
-                .addDisplacementMarker(() -> {
-                    updateClawServo(clawServo);
-                    /*if (startLift) {
-                        updateMotors(-1000, slide1Motor, slide2Motor);
-                        if (closeEnough(slide1Motor.getCurrentPosition(), -1000, 50)) {
-                            if (!ranFirstTime) {
-                                pivotServo.setPosition(.15);
-                                rotateServo.setPosition(0);
-                            }
-                            if (msTimeMarker == 0) {
-                                msTimeMarker = runtime.milliseconds();
-                            }
-                            if (runtime.milliseconds() > msTimeMarker + 750) {
-                                pivotServo.setPosition(1);
-                            }
-                        }
-                    }*/
-                })
-                .build();
-
-        Trajectory drive3 = drive.trajectoryBuilder(drive2.end().plus(new Pose2d(0, 0, Math.toRadians(-90))))
-                .back(6)
-                .addDisplacementMarker(() -> {
-                    updateClawServo(clawServo);
-                })
-                .build();
-
-        Trajectory drive4 = drive.trajectoryBuilder(drive3.end())
+        TrajectorySequence parkNumber1 = drive.trajectorySequenceBuilder(startPose)
                 .forward(4)
-                .addDisplacementMarker(() -> {
-                    updateClawServo(clawServo);
-                    /*slide1Motor.setPower(0);
-                    slide2Motor.setPower(0);
-                    if (closeEnough(slide1Motor.getCurrentPosition(), 0, 40)) {
-                        if (!ranFirstTime) {
-                            pivotServo.setPosition(0.05);
-                            rotateServo.setPosition(1);
-                        }
-                        if (msTimeMarker == 0) {
-                            msTimeMarker = runtime.milliseconds();
-                        }
-                        if (runtime.milliseconds() > msTimeMarker + 750) {
-                            closeClaw = false;
-                            clawServo.setPosition(0);
-                        }
-                    }*/
-                })
+
+                .lineToLinearHeading(new Pose2d(-58, -60, Math.toRadians(0)))
+
+                .lineTo(new Vector2d(-58,-24))
+
+                .forward(3)
+
+                // Drop Cone
+                .back(2)
+                // Turn claw the other way
+                .lineTo(new Vector2d(-57, -12))
+                .back(2)
+                // Grab cone
+                // turn claw with cone to drop
+                .lineToLinearHeading(new Pose2d(-24, -12, Math.toRadians(270)))
+                .back(3)
+                // drop cone
+                .forward(3)
+                .lineToLinearHeading(new Pose2d(-57, -12, Math.toRadians(180)))
+                .forward(3)
+                // grab cone
+                .back(3)
+                .lineToLinearHeading(new Pose2d(-24, -12, Math.toRadians(90)))
+                .back(3)
+                // drop cone
+                .forward(3)
+
+                // Parking
+                .lineTo(new Vector2d(-59,-12))
+                .lineTo(new Vector2d(-59,-20))
                 .build();
 
-        Trajectory drive5 = drive.trajectoryBuilder(drive4.end())
-                .strafeLeft(16)
-
-                .addDisplacementMarker(5, () -> {
-                    driveWithCone(clawServo, pivotServo);
-                })
-                .addDisplacementMarker(() -> {
-                    updateClawServo(clawServo);
-                })
-                .build();
-
-        Trajectory idk1 = drive.trajectoryBuilder(drive5.end())
-                .back(8)
-
-                .addDisplacementMarker(5, () -> {
-                    pivotServo.setPosition(0);
-                    clawServo.setPosition(0);
-                    closeClaw = false;
-                })
-                .addDisplacementMarker(() -> {
-                    updateClawServo(clawServo);
-                })
-                .build();
-        // CYCLE START
-        Trajectory drive6 = drive.trajectoryBuilder(idk1.end())
-                .back(0.1)
-                .addDisplacementMarker(() -> {
-                    updateClawServo(clawServo);
-                })
-                .build();
-
-        Trajectory drive7 = drive.trajectoryBuilder(drive6.end())
-                .back(15.7)
-                .addDisplacementMarker(2, () -> {
-                    startLift = true;
-                })
-                .addDisplacementMarker(() -> {
-                    updateClawServo(clawServo);
-                    /*if (startLift) {
-                        updateMotors(-3000, slide1Motor, slide2Motor);
-                        if (closeEnough(slide1Motor.getCurrentPosition(), -3000, 50)) {
-                            if (!ranFirstTime) {
-                                pivotServo.setPosition(.15);
-                                rotateServo.setPosition(0);
-                            }
-                            if (msTimeMarker == 0) {
-                                msTimeMarker = runtime.milliseconds();
-                            }
-                            if (runtime.milliseconds() > msTimeMarker + 750) {
-                                pivotServo.setPosition(1);
-                            }
-                        }
-                    }*/
-                })
-                .build();
-
-        Trajectory drive8 = drive.trajectoryBuilder(drive7.end())
-                .strafeRight(13)
-                .addDisplacementMarker(() -> {
-                    updateClawServo(clawServo);
-                    if (runtime.milliseconds() > msTimeMarker + 750) {
-                        pivotServo.setPosition(1);
-                        msTimeMarker = 0;
-                    }
-                })
-
-                .build();
-
-        Trajectory drive9 = drive.trajectoryBuilder(drive8.end())
-                .back(4)
-                .addDisplacementMarker(() -> {
-                    updateClawServo(clawServo);
-                })
-                .build();
-
-        Trajectory drive10 = drive.trajectoryBuilder(drive9.end())
+        TrajectorySequence parkNumber2 = drive.trajectorySequenceBuilder(startPose)
                 .forward(4)
-                .addDisplacementMarker(() -> {
-                    updateClawServo(clawServo);
-                    /*slide1Motor.setPower(0);
-                    slide2Motor.setPower(0);
-                    if (closeEnough(slide1Motor.getCurrentPosition(), 0, 50)) {
-                        if (!ranFirstTime) {
-                            pivotServo.setPosition(0.05);
-                            rotateServo.setPosition(1);
-                        }
-                        if (msTimeMarker == 0) {
-                            msTimeMarker = runtime.milliseconds();
-                        }
-                        if (runtime.milliseconds() > msTimeMarker + 750) {
-                            closeClaw = false;
-                            clawServo.setPosition(0);
-                        }
-                    }*/
-                })
-                .build();
 
-        Trajectory drive11 = drive.trajectoryBuilder(drive10.end())
-                .strafeLeft(12)
-                .addDisplacementMarker(() -> {
-                    updateClawServo(clawServo);
-                    if (runtime.milliseconds() > msTimeMarker + 750) {
-                        closeClaw = false;
-                        clawServo.setPosition(0);
-                    }
-                })
-                .build();
+                .lineToLinearHeading(new Pose2d(-58, -60, Math.toRadians(0)))
 
-        // CYCLE END
+                .lineTo(new Vector2d(-58,-24))
 
-        Trajectory parkNumber1 = drive.trajectoryBuilder(drive11.end())
-                .back(25)
-                .addDisplacementMarker(() -> {
-                    updateClawServo(clawServo);
-                })
+                .forward(3)
+
+                // Drop Cone
+                .back(2)
+                // Turn claw the other way
+                .lineTo(new Vector2d(-57, -12))
+                .back(2)
+                // Grab cone
+                // turn claw with cone to drop
+                .lineToLinearHeading(new Pose2d(-24, -12, Math.toRadians(270)))
+                .back(3)
+                // drop cone
+                .forward(3)
+                .lineToLinearHeading(new Pose2d(-57, -12, Math.toRadians(180)))
+                .forward(3)
+                // grab cone
+                .back(3)
+                .lineToLinearHeading(new Pose2d(-24, -12, Math.toRadians(90)))
+                .back(3)
+                // drop cone
+                .forward(3)
+
+                // Parking
+                .lineTo(new Vector2d(-36,-12))
+                .lineTo(new Vector2d(-36,-20))
                 .build();
-        Trajectory parkNumber3 = drive.trajectoryBuilder(drive11.end())
-                .forward(25)
-                .addDisplacementMarker(() -> {
-                    updateClawServo(clawServo);
-                })
+        TrajectorySequence parkNumber3 = drive.trajectorySequenceBuilder(startPose)
+                .forward(4)
+
+                .lineToLinearHeading(new Pose2d(-58, -60, Math.toRadians(0)))
+
+                .lineTo(new Vector2d(-58,-24))
+
+
+                .forward(3)
+
+                // Drop Cone
+                .back(2)
+                // Turn claw the other way
+                .lineTo(new Vector2d(-57, -12))
+                .back(2)
+                // Grab cone
+                // turn claw with cone to drop
+                .lineToLinearHeading(new Pose2d(-24, -12, Math.toRadians(270)))
+                .back(3)
+                // drop cone
+                .forward(3)
+                .lineToLinearHeading(new Pose2d(-57, -12, Math.toRadians(180)))
+                .forward(3)
+                // grab cone
+                .back(3)
+                .lineToLinearHeading(new Pose2d(-24, -12, Math.toRadians(90)))
+                .back(3)
+                // drop cone
+                .forward(3)
+
+                // Parking
+                .lineTo(new Vector2d(-12,-12))
+                .lineTo(new Vector2d(-12,-20))
                 .build();
 
         while (!opModeIsActive() && !isStopRequested()) {
-            // loop detection here
+            // Update the vision object to detect any visible tags
             vision.updateTags();
 
-            if (vision.idGetter() != 0) {;
+            // If a tag is detected, get its ID and display it in telemetry
+            if (vision.idGetter() != 0) {
                 id = vision.idGetter();
                 telemetry.addData("Cone id", "%d", id);
                 telemetry.update();
             }
         }
+
+        // Wait for the start command
         waitForStart();
+
+        // Reset runtime
+        runtime.reset();
+
+        // Set the claw servo to position 0 and set closeClaw to false
         clawServo.setPosition(0);
         closeClaw = false;
 
+        // Drive with the cone using the claw and pivot servos
         driveWithCone(clawServo, pivotServo);
-        telemetryUpdate("Starting to follow trajectory with preload");
-        drive.followTrajectory(getFromWall);
-        drive.followTrajectory(partial1);
-        pivotServo.setPosition(0.05);
-        drive.followTrajectory(partial2);
-        clawServo.setPosition(0);
-        closeClaw = false;
-        drive.followTrajectory(partial3);
-        drive.followTrajectory(drive1);
-        drive.followTrajectory(drive2);
- /*
-        while (!closeEnough(slide1Motor.getCurrentPosition(), -1000, 50)) {
-            updateClawServo(clawServo);
-            updateMotors(-1000, slide1Motor, slide2Motor);
-            if (runtime.milliseconds() > msTimeMarker + 750) {
-                pivotServo.setPosition(1);
-            }
-        }*/
-        ranFirstTime = false;
-        msTimeMarker = 0;
-        startLift = false;
-        drive.turn(Math.toRadians(-90));
-        drive.followTrajectory(drive3);
-        //dropCone(clawServo);
-        drive.followTrajectory(drive4);
-        drive.followTrajectory(drive5);
-        clawServo.setPosition(0);
-        closeClaw = false;
-        msTimeMarker = 0;
-        startLift = false;
-        ranFirstTime = false;
-        drive.followTrajectory(idk1);
-        drive.followTrajectory(drive6);
-        //grabCone(clawServo);
-        //driveWithCone(clawServo, pivotServo);
-        drive.followTrajectory(drive7);
-        drive.followTrajectory(drive8);
-        msTimeMarker = 0;
-        startLift = false;
-        ranFirstTime = false;
-        drive.followTrajectory(drive9);
-        //dropCone(clawServo);
-        drive.followTrajectory(drive10);
-        drive.followTrajectory(drive11);
-        msTimeMarker = 0;
-        startLift = false;
-        ranFirstTime = false;
+
+        // Display a message in telemetry
+        telemetryUpdate("Starting to follow trajectory");
+
+        // Choose the appropriate trajectory based on the detected cone ID
         if (id == 440) { // Number 1
-            drive.followTrajectory(parkNumber1);
+            drive.followTrajectorySequenceAsync(parkNumber1);
         } else if (id == 373) { // Number 2
+            drive.followTrajectorySequenceAsync(parkNumber2);
 
         } else if (id == 182) { // Number 3
-            drive.followTrajectory(parkNumber3);
+            drive.followTrajectorySequenceAsync(parkNumber3);
+        } else { // Found none
+            drive.followTrajectorySequenceAsync(parkNumber1);
         }
 
-        /*
-         * if (movedDuringAlignmentBy > 0) {
-         * drive.followTrajectory(restartAdjustBackward);
-         * } else if (movedDuringAlignmentBy < 0) {
-         * drive.followTrajectory(restartAdjustForward);
-         * }
-         */
+        // Run the loop until the op mode is no longer active
+        while (opModeIsActive()) {
+            // Update the drive object
+            drive.update();
 
-    }
+            // Update the power of the slide motors based on the target position and the current position
+            updateMotors(targetPos.get(), slide1Motor, slide2Motor);
 
-    // METHODS
-    void placeOnPole(int level, DcMotor slide1Motor, DcMotor slide2Motor, Servo clawServo, Servo pivotServo, Servo rotateServo) {
-        if (level == 0) {
-            placeOnPoleHandler(-150, slide1Motor, slide2Motor, clawServo, pivotServo, rotateServo);
-            return;
-        }
-        if (level == 1) {
-            placeOnPoleHandler(-2179, slide1Motor, slide2Motor, clawServo, pivotServo, rotateServo);
-            return;
-        }
-        if (level == 2) {
-            placeOnPoleHandler(-3440, slide1Motor, slide2Motor, clawServo, pivotServo, rotateServo);
-            return;
-        }
-        if (level == 3) {
-            placeOnPoleHandler(-4610, slide1Motor, slide2Motor, clawServo, pivotServo, rotateServo);
-            return;
+            // Update the position of the claw servo based on the value of closeClaw
+            updateClawServo(clawServo);
+
+            // Display the loop time in telemetry
+            telemetry.addData("Loop time (ms)", runtime.milliseconds() - loopTime);
+            loopTime = runtime.milliseconds();
+            telemetry.update();
         }
     }
 
-    boolean closeEnough(int currentPos, int desiredPos, int deadZone) {
+    /*
 
-        int floorValue = desiredPos - deadZone;
-        int ceilValue = desiredPos + deadZone;
+    ---------------- Function description ----------------
 
-        if (currentPos > floorValue && currentPos < ceilValue) {
-            return true;
-        }
-        return false;
-    }
-
+    This function is used to update the power of two motors (slide1Motor and slide2Motor) based on a target state (targetState) and a PID controller (slidesPID).
+    The function calculates the output power for the motors using the getOutputFromError method of the slidesPID object, and then sets the power of the motors to this value.
+     */
     void updateMotors(int targetState, DcMotor slide1Motor, DcMotor slide2Motor) {
+        // Calculate the output power for the motors using a PID controller
         double currentArmPID = slidesPID.getOutputFromError(targetState, slide1Motor.getCurrentPosition());
+
+        // Set the power of both motors to the calculated output power
         slide1Motor.setPower(currentArmPID);
         slide2Motor.setPower(currentArmPID);
     }
 
-    void placeOnPoleHandler(int targetPos, DcMotor slide1Motor, DcMotor slide2Motor, Servo clawServo, Servo pivotServo, Servo rotateServo) {
-
-        while (closeEnough(slide1Motor.getCurrentPosition(), targetPos, 10) == false) {
-            updateMotors(targetPos, slide1Motor, slide2Motor);
-            updateClawServo(clawServo);
-        }
-
-        clawServo.setPosition(1);
-        closeClaw = false;
-
-        pivotServo.setPosition(.15);
-        rotateServo.setPosition(0);
-
-        double currentMsTime = runtime.milliseconds();
-        while (runtime.milliseconds() < currentMsTime + 750) {
-            updateMotors(targetPos, slide1Motor, slide2Motor);
-            updateClawServo(clawServo);
-        }
-        pivotServo.setPosition(1);
-        currentMsTime = runtime.milliseconds();
-        while (runtime.milliseconds() < currentMsTime + 750) {
-            updateMotors(targetPos, slide1Motor, slide2Motor);
-            updateClawServo(clawServo);
-        }
-    }
 
     void driveWithCone(Servo clawServo, Servo pivotServo) {
+        // Set the claw servo to position 1
         clawServo.setPosition(1);
+
+        // Update the claw servo position based on the value of closeClaw
         updateClawServo(clawServo);
+
+        // Set closeClaw to true
         closeClaw = true;
+
+        // Set the pivot servo to position .5
         pivotServo.setPosition(.5);
     }
 
+
     void updateClawServo(Servo clawServo) {
+        // Check if it has been at least 3 seconds (3000 milliseconds) since the last time the claw servo was updated
         if (runtime.milliseconds() >= lastPing + 3000) {
+            // Update the value of lastPing to the current time
             lastPing = runtime.milliseconds();
+
+            // If closeClaw is true, toggle the position of the claw servo
             if (closeClaw) {
+                // If the claw servo is currently at position 1, set it to .95
                 if (clawServo.getPosition() == 1) {
                     clawServo.setPosition(.95);
-                } else {
+                }
+                // Otherwise, set the claw servo to position 1
+                else {
                     clawServo.setPosition(1);
                 }
             }
         }
     }
 
-    void prepareForGrab(DcMotor slide1Motor, DcMotor slide2Motor, Servo clawServo, Servo pivotServo, Servo rotateServo) {
-        pivotServo.setPosition(0.05);
-        rotateServo.setPosition(1);
-        double currentMsTime = runtime.milliseconds();
-        boolean servoTurned = false;
-        while (closeEnough(slide1Motor.getCurrentPosition(), 0, 20) == false) {
-            updateMotors(0, slide1Motor, slide2Motor);
-            updateClawServo(clawServo);
-            if (runtime.milliseconds() < currentMsTime + 750) {
-                servoTurned = true;
-                closeClaw = false;
-                clawServo.setPosition(0);
-            }
-        }
-        if (servoTurned == false) {
-            closeClaw = false;
-            clawServo.setPosition(0);
-        }
-    }
 
-    void grabCone(Servo clawServo) {
-        closeClaw = true;
-        clawServo.setPosition(1);
-    }
-    void dropCone(Servo clawServo) {
-        closeClaw = false;
-        clawServo.setPosition(0);
-    }
 
-    void checkPolePosition(double desiredDistance, Servo clawServo) {
-        updateClawServo(clawServo);
-        telemetry.addLine("Pole alignment");
-        closeClaw = false;
-        clawServo.setPosition(0);
-    }
-
-    void cycleRun() {
-
-    }
 
     void telemetryUpdate(String message) {
         telemetry.addLine(message);
-        telemetry.update();
-    }
-
-    void telemetryUpdate(String message, double value) {
-        telemetry.addData(message, "%4.2f", value);
-        telemetry.update();
-    }
-
-    void telemetryUpdate(String message, int value) {
-        telemetry.addData(message, "%d", value);
-        telemetry.update();
-    }
-
-    void telemetryUpdate(String message, boolean value) {
-        telemetry.addData(message, "%b", value);
         telemetry.update();
     }
 }

@@ -6,6 +6,14 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+/**
+ * This class initializes the drive motors, linear slide motors, and servos for a robot. It uses the
+ * HardwareMap class to map the hardware devices to their corresponding variables, sets their directions
+ * and behaviors, and initializes their positions. It also includes a speed multiplier that can be used
+ * to adjust the speed of the drive motors.
+ */
+
+
 public class driveInit {
 
     config cfg;
@@ -52,7 +60,7 @@ public class driveInit {
         pivotServo = hwMap.get(Servo.class, "pivotServo");
 
         clawServo.setPosition(0);
-        rotateServo.setPosition(1);
+        rotateServo.setPosition(0);
         pivotServo.setPosition(0);
 
 

@@ -4,6 +4,15 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+/**
+
+ This class is used to store and retrieve global variables such as drive motors, linear slide motors,
+ servos, and runtime for a robot. It also includes a speed multiplier that can be used to adjust the
+ speed of the drive motors and servo position variables. It provides setters and getters for each
+ of these variables.
+
+ */
+
 
 public class config {
 
@@ -23,7 +32,9 @@ public class config {
     double speedMultiplier = 1.0;
 
 
+    // Position of the slide from encoders
     int slide1Position = 0;
+
     // Claw (A1 - Claw, A2 - 180 turn, A3 - Pivot turn)
     Servo clawServo;
     Servo rotateServo;

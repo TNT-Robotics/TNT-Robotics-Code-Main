@@ -65,72 +65,94 @@ import org.firstinspires.ftc.teamcode.misc.driveInit;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
+/**
+
+ This is a teleop OpMode for a 4-motor holonomic drive robot. It allows the robot to move in three axes (directions) simultaneously
+ using the left joystick for axial and lateral motion and the right joystick for yaw motion. It also includes a speed multiplier that
+ can be adjusted with the dpad. The OpMode also includes code for controlling the movement of two linear slide motors using the
+ left joystick on the gamepad2. The OpMode also includes code for controlling three servos using gamepad2 buttons.
+ The code also includes an option to move linear slides into preset positions using the dpad on the gamepad2.
+ */
+
+
+/*
+
+If I was you I wouldnt probably touch the things here unless something works horribly wrong, else if driver works let this exist
+ */
+
 @TeleOp(name="Drive", group="Driving")
 
 public class drive extends LinearOpMode {
     public void runOpMode() {
+        // Initialize configuration, drive initialization, and drive clarity handler objects
         config cfg = new config();
         driveInit init = new driveInit(cfg);
         DriveClarityHandler driveClarityHandler = new DriveClarityHandler();
 
+        // Create PID controller for slides
         PID slidesPID = new PID(.02,.0,.02,.008);
 
+        // Set initial error for PID controller
         slidesPID.getOutputFromError(0,0);
 
+        // Initialize loop variables
         double loopTime = 0;
         double turnInit = 0;
         double turnInit2 = 0;
-        double turnInit3 = 0;
         double lastPing = 0;
-
         boolean closeClaw = false;
 
-        // INIT
+        // Initialize drive motors and servos
         init.initDrive(hardwareMap);
         telemetry.addData(">", "Ready");
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-
+        // Wait for start command
         waitForStart();
+
+        // Reset runtime
         cfg.getrTime().reset();
 
         // BEGIN CODE
         while (opModeIsActive()) {
 
+            // Get joystick values for holonomic drive
             double axial = gamepad1.left_stick_y;
             double lateral = -gamepad1.left_stick_x;
             double yaw = gamepad1.right_stick_x;
 
+            // Update robot speed based on gamepad input
             driveClarityHandler.updateRobotSpeed(gamepad1, cfg);
+
+            // Set holonomic drive motors based on joystick values
             driveClarityHandler.updateHolonomicDriveMotors(axial, lateral, yaw, cfg.getLfD(), cfg.getRfD(), cfg.getLbD(),cfg.getRbD(), cfg);
 
+            // Update slide motors based on gamepad input
             driveClarityHandler.updateSlideMotors(gamepad2, slidesPID, cfg);
 
+            // Update claw servos based on gamepad input
             driveClarityHandler.updateGamepadServos(gamepad2, closeClaw, cfg);
 
-            double[] updatedServoValues = driveClarityHandler.updateConeServos(gamepad2, turnInit, turnInit2, turnInit3, cfg);
+            // Update cone servos based on gamepad input
+            double[] updatedServoValues = driveClarityHandler.updateConeServos(gamepad2, turnInit, turnInit2, cfg);
             turnInit = updatedServoValues[0];
             turnInit2 = updatedServoValues[1];
-            turnInit3 = updatedServoValues[2];
-            closeClaw = updatedServoValues[3] == 1;
+            closeClaw = updatedServoValues[2] == 1;
 
-            double[] updatedServoValuesAfterDelay = driveClarityHandler.updateServosAfterDelay(turnInit, turnInit2, turnInit3, lastPing, closeClaw, cfg);
+            // Update servos after delay based on gamepad input
+            double[] updatedServoValuesAfterDelay = driveClarityHandler.updateServosAfterDelay(turnInit, turnInit2, lastPing, closeClaw, cfg);
             turnInit = updatedServoValuesAfterDelay[0];
             turnInit2 = updatedServoValuesAfterDelay[1];
-            turnInit3 = updatedServoValuesAfterDelay[2];
-            lastPing = updatedServoValuesAfterDelay[3];
+            lastPing = updatedServoValuesAfterDelay[2];
 
-
+            // Add telemetry data
             telemetry.addData("Status", "Run Time: " + cfg.getrTime().toString());
-
             telemetry.addLine("Motors");
             telemetry.addData("Front left/Right", axial + lateral + yaw);
             telemetry.addData("Back left/Right", axial - lateral + yaw);
-
             telemetry.addLine("Servos");
             telemetry.addData("Claw1, Claw2, Claw3", "%4.2f, %4.2f, %4.2f", cfg.getClawServo().getPosition(), cfg.getRotateServo().getPosition(), cfg.getPivotServo().getPosition());
-
             telemetry.addLine("Motor Rotations (Current vs Set)");
             telemetry.addData("Slide1 Position", "%d, %d", cfg.getSlide1Motor().getCurrentPosition(), cfg.getSlide1MotorTargetPosition());
             telemetry.addData("Slide2 Position", "%d, %d", cfg.getSlide2Motor().getCurrentPosition(), cfg.getSlide2MotorTargetPosition());
@@ -138,7 +160,6 @@ public class drive extends LinearOpMode {
             telemetry.addData("Timers (s)", "%4.2f, %4.2f, %4.2f", turnInit/1000, turnInit2/1000, lastPing/1000);
             telemetry.addData("Loop timer", "%4.2f", cfg.getrTime().milliseconds() - loopTime);
             //telemetry.addData("Sensors (Chassis, Claw) cm", "%4.2f, %4.2f", chassisSensor.getDistance(DistanceUnit.CM), coneSensor.getDistance(DistanceUnit.CM));
-
             loopTime = cfg.getrTime().milliseconds();
             telemetry.update();
         }

@@ -3,6 +3,23 @@ package org.firstinspires.ftc.teamcode.misc;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+/**
+
+ This class handles the control of the holonomic drive motors, robot speed, and linear slide motors
+ using input from gamepads. It includes methods to update the motor speeds for the holonomic drive
+ based on input from the gamepad's axial, lateral, and yaw values, as well as a method to update the
+ robot's speed based on input from the gamepad's buttons. It also includes a method to update the
+ linear slide motors based on input from the gamepad's left stick y-axis and dpad, and a method to
+ update the servos for the claw, rotate, and pivot based on input from the gamepad's buttons.
+
+ */
+
+
+
+
+
+
+
 public class DriveClarityHandler {
 
     double max;
@@ -125,30 +142,28 @@ public class DriveClarityHandler {
         return closeClaw;
     }
 
-    public double[] updateConeServos(Gamepad gamepad2, double turnInit, double turnInit2, double turnInit3, config cfg) {
+    public double[] updateConeServos(Gamepad gamepad2, double turnInit, double turnInit2, config cfg) {
         double closeClaw = 0;
         // Pickup
         if (gamepad2.cross) {
             cfg.getPivotServo().setPosition(0);
-            cfg.getRotateServo().setPosition(1);
+            cfg.getRotateServo().setPosition(0);
 
             if (turnInit2 == 0) {
                 turnInit2 = cfg.getrTime().milliseconds();
                 turnInit = 0;
-                turnInit3 = 0;
             }
         }
-
         // Placedown (put on pole)
         if (gamepad2.circle) {
             cfg.getClawServo().setPosition(1);
             closeClaw = 1;
-            cfg.getPivotServo().setPosition(.9);
+            cfg.getPivotServo().setPosition(0.05);
+            cfg.getRotateServo().setPosition(1);
 
             if(turnInit == 0) {
                 turnInit = cfg.getrTime().milliseconds();
                 turnInit2 = 0;
-                turnInit3 = 0;
             }
         }
 
@@ -158,25 +173,20 @@ public class DriveClarityHandler {
             cfg.getPivotServo().setPosition(.5);
         }
 
-        return new double[] { turnInit, turnInit2, turnInit3, closeClaw};
+        return new double[] { turnInit, turnInit2, closeClaw};
     }
 
-    public double[] updateServosAfterDelay(double turnInit, double turnInit2, double turnInit3, double lastPing, boolean closeClaw, config cfg) {
+    public double[] updateServosAfterDelay(double turnInit, double turnInit2, double lastPing, boolean closeClaw, config cfg) {
+        if (cfg.getrTime().milliseconds() >= turnInit + 1000 && turnInit != 0) {
+            turnInit = 0;
+            cfg.getPivotServo().setPosition(1);
+        }
+
         if (cfg.getrTime().milliseconds() >= turnInit2 + 1000 && turnInit2 != 0) {
             turnInit2 = 0;
 
             closeClaw = false;
             cfg.getClawServo().setPosition(0);
-        }
-
-        if (cfg.getrTime().milliseconds() >= turnInit + 1000 && turnInit != 0) {
-            turnInit = 0;
-            cfg.getRotateServo().setPosition(0);
-            turnInit3 = cfg.getrTime().milliseconds();
-        }
-        if (cfg.getrTime().milliseconds() >= turnInit3 + 1000 && turnInit3 != 0) {
-            turnInit3 = 0;
-            cfg.getPivotServo().setPosition(1);
         }
 
         if (cfg.getrTime().milliseconds() >= lastPing + 3000) {
@@ -191,6 +201,6 @@ public class DriveClarityHandler {
         }
 
 
-        return new double[] {turnInit, turnInit2, turnInit3, lastPing};
+        return new double[] {turnInit, turnInit2, lastPing};
     }
 }
