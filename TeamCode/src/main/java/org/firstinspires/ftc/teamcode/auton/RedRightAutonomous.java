@@ -20,6 +20,12 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * This class represents an autonomous program for a robot that starts on the red side of the field and
+ * follows a path to the right side of the field. It uses the Road Runner library for path following and
+ * a PID (proportional-integral-derivative) controller for controlling the linear slide motors. The program
+ * also utilizes a webcam for vision processing with the OpenCV library and the EasyOpenCV library.
+ */
 
 // WORK ON ONLY AFTER FINISHING "RedLeftAutonomous"
 /* TODO:
