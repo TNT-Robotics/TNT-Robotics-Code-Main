@@ -107,6 +107,8 @@ public class RedLeftAutonomous extends LinearOpMode {
 
         // Set the pivot servo to position .5
         pivotServo.setPosition(.5);
+        clawServo.setPosition(1);
+        closeClaw = true;
 
         // Create a drive object
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
@@ -138,33 +140,73 @@ public class RedLeftAutonomous extends LinearOpMode {
 
                 .lineToLinearHeading(new Pose2d(-58, -60, Math.toRadians(0)))
 
-                .lineTo(new Vector2d(-58,-24))
-
-                .forward(3)
+                .addDisplacementMarker(() -> {
+                    targetPos.set(-1350);
+                    pivotServo.setPosition(0);
+                })
+                .lineTo(new Vector2d(-58,-20))
+                .forward(1)
 
                 // Drop Cone
-                .back(2)
+                .addDisplacementMarker(() -> {
+                    clawServo.setPosition(0);
+                    closeClaw = false;
+                })
+                .back(1)
+                .addDisplacementMarker(() -> {
+                    targetPos.set(-350);
+                    pivotServo.setPosition(1);
+                })
+
                 // Turn claw the other way
-                .lineTo(new Vector2d(-57, -12))
-                .back(2)
+                .lineTo(new Vector2d(-57, -5.5))
+                .back(5)
                 // Grab cone
+                .addDisplacementMarker(() -> {
+                    clawServo.setPosition(1);
+                    closeClaw = true;
+                })
                 // turn claw with cone to drop
-                .lineToLinearHeading(new Pose2d(-24, -12, Math.toRadians(270)))
-                .back(3)
+                .forward(1)
+
+                .addDisplacementMarker(() -> {
+                    targetPos.set(-1000);
+                })
+                .forward(5.5)
+                .addDisplacementMarker(() -> {
+                    targetPos.set(-4000);
+                })
+                .lineToLinearHeading(new Pose2d(-20, -5.5, Math.toRadians(270)))
+                .back(4)
                 // drop cone
-                .forward(3)
-                .lineToLinearHeading(new Pose2d(-57, -12, Math.toRadians(180)))
-                .forward(3)
+                .addDisplacementMarker(() -> {
+                    targetPos.set(-300);
+                    clawServo.setPosition(0);
+                    closeClaw = false;
+
+                })
+                .forward(4)
+
+                .lineToLinearHeading(new Pose2d(-57, -5.5, Math.toRadians(180)))
+                .forward(4)
                 // grab cone
-                .back(3)
-                .lineToLinearHeading(new Pose2d(-24, -12, Math.toRadians(90)))
+                .addDisplacementMarker(() -> {
+                    clawServo.setPosition(1);
+                    targetPos.set(-600);
+                    closeClaw = true;
+                    pivotServo.setPosition(0);
+                    //rotateServo.setPosition(0);
+                })
+                .back(4)
+
+                .lineToLinearHeading(new Pose2d(-20, -3.5, Math.toRadians(90)))
                 .back(3)
                 // drop cone
                 .forward(3)
 
                 // Parking
-                .lineTo(new Vector2d(-59,-12))
-                .lineTo(new Vector2d(-59,-20))
+                .lineTo(new Vector2d(-59,-2.5))
+                .lineTo(new Vector2d(-59,-6.5))
                 .build();
 
         TrajectorySequence parkNumber2 = drive.trajectorySequenceBuilder(startPose)
@@ -242,6 +284,7 @@ public class RedLeftAutonomous extends LinearOpMode {
             // If a tag is detected, get its ID and display it in telemetry
             if (vision.idGetter() != 0) {
                 id = vision.idGetter();
+                updateClawServo(clawServo);
                 telemetry.addData("Cone id", "%d", id);
                 telemetry.update();
             }
