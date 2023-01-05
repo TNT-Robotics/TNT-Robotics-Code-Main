@@ -14,28 +14,26 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.misc.PID;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.vision.AprilTagDemo;
+import org.firstinspires.ftc.teamcode.vision.AprilTags;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * This class represents an autonomous program for a robot that starts on the blue side of the field and
- * follows a path to the left side of the field. It uses the Road Runner library for path following and
+ * This class represents an autonomous program for a robot that starts on the right side of the field
+ * follows a path. It uses the Road Runner library for path following and
  * a PID (proportional-integral-derivative) controller for controlling the linear slide motors. The program
  * also utilizes a webcam for vision processing with the OpenCV library and the EasyOpenCV library.
  */
 
-
-// WORK ON ONLY AFTER FINISHING BOTH RED AUTONOMOUS
+// WORK ON ONLY AFTER FINISHING "Left"
 /* TODO:
 - Adjust starting position - startPose variable
-- Copy values from "RedLeftAutonomous"
+- Copy values from "Left"
 - Adjust according to the needs (you will probably just need to flip some from negative to positive or positive to negative, and change rotation by 180)
-- Dont forget to test parking
-- After you are done dont forget blue side autonomous, again its probably just going to be flipping from negative to positive
-
+- Don't forget to test parking
+- After you are done don't forget blue side autonomous, again its probably just going to be flipping from negative to positive
 FIXME:
 - Write here whatever you need to be fixed that's not working, I will try to do my best and see whats the issue but do not rely on this.
  */
@@ -46,6 +44,7 @@ FIXME:
 1. Upload to GitHub everyday for me to see what's going on as well as if something goes wrong we can version control save it.
 2. Use MeepMeep for coordinate and rotation system. Here is an attached picture https://ctrlv.link/yG1o of the grid, but if you need something more precise use MeepMeep (follow steps here https://github.com/NoahBres/MeepMeep)
 
+
 ------------- Get into FTC Dashboard instructions -------------
 1. Connect to the bot wifi with the computer
 2. Open browser and connect to this url - http://192.168.43.1:8080/dash
@@ -53,8 +52,8 @@ FIXME:
 4. To start a program use the dropdown on the left side under "OpMode". Click on "INIT" to initialize and then press "START" to begin. To turn off press the "STOP"!
 
  */
-@Autonomous(group = "Red")
-public class BlueLeftAutonomous extends LinearOpMode {
+@Autonomous(group = "Autonomous")
+public class Right extends LinearOpMode {
 
     // Create a timer object to track elapsed time
     ElapsedTime runtime = new ElapsedTime();
@@ -79,7 +78,7 @@ public class BlueLeftAutonomous extends LinearOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         // Create a vision object
-        AprilTagDemo vision = new AprilTagDemo();
+        AprilTags vision = new AprilTags();
 
         // Set up the camera
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -105,6 +104,8 @@ public class BlueLeftAutonomous extends LinearOpMode {
 
         // Set the pivot servo to position .5
         pivotServo.setPosition(.5);
+        clawServo.setPosition(1);
+        closeClaw = true;
 
         // Create a drive object
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
@@ -136,33 +137,83 @@ public class BlueLeftAutonomous extends LinearOpMode {
 
                 .lineToLinearHeading(new Pose2d(-58, -60, Math.toRadians(0)))
 
-                .lineTo(new Vector2d(-58,-24))
-
-                .forward(3)
+                .addDisplacementMarker(() -> {
+                    targetPos.set(-1350);
+                    pivotServo.setPosition(0);
+                })
+                .lineTo(new Vector2d(-58,-20))
+                .forward(1)
 
                 // Drop Cone
-                .back(2)
+                .addDisplacementMarker(() -> {
+                    clawServo.setPosition(0);
+                    closeClaw = false;
+                })
+                .back(1)
+                .addDisplacementMarker(() -> {
+                    targetPos.set(-350);
+                    pivotServo.setPosition(1);
+                })
+
                 // Turn claw the other way
-                .lineTo(new Vector2d(-57, -12))
-                .back(2)
+                .lineTo(new Vector2d(-57, -5.5))
+                .back(5)
                 // Grab cone
+                .addDisplacementMarker(() -> {
+                    clawServo.setPosition(1);
+                    closeClaw = true;
+                })
                 // turn claw with cone to drop
-                .lineToLinearHeading(new Pose2d(-24, -12, Math.toRadians(270)))
-                .back(3)
+                .forward(1)
+
+                .addDisplacementMarker(() -> {
+                    targetPos.set(-1000);
+                })
+                .forward(6)
+                .addDisplacementMarker(() -> {
+                    targetPos.set(-4000);
+                })
+                .lineToLinearHeading(new Pose2d(-20, -5.5, Math.toRadians(270)))
+                .back(5)
                 // drop cone
-                .forward(3)
-                .lineToLinearHeading(new Pose2d(-57, -12, Math.toRadians(180)))
-                .forward(3)
+                .addDisplacementMarker(() -> {
+                    targetPos.set(-300);
+                    clawServo.setPosition(0);
+                    closeClaw = false;
+
+                })
+                .forward(4)
+                .lineToLinearHeading(new Pose2d(-62, -5.5, Math.toRadians(180)))
+                .forward(4)
                 // grab cone
+                .addDisplacementMarker(() -> {
+                    clawServo.setPosition(1);
+                    closeClaw = true;
+                })
+
+                .back(1)
+                .addDisplacementMarker(() -> {
+                    targetPos.set(-1000);
+                })
                 .back(3)
-                .lineToLinearHeading(new Pose2d(-24, -12, Math.toRadians(90)))
+                .addDisplacementMarker(() -> {
+                    targetPos.set(-2900);
+                })
+
+                .lineToLinearHeading(new Pose2d(-20, -3.5, Math.toRadians(90)))
                 .back(3)
                 // drop cone
+                .addDisplacementMarker(() -> {
+                    targetPos.set(0);
+                    clawServo.setPosition(0);
+                    closeClaw = false;
+
+                })
                 .forward(3)
 
                 // Parking
-                .lineTo(new Vector2d(-59,-12))
-                .lineTo(new Vector2d(-59,-20))
+                .lineTo(new Vector2d(-62,-2.5))
+                .lineTo(new Vector2d(-62,-6.5))
                 .build();
 
         TrajectorySequence parkNumber2 = drive.trajectorySequenceBuilder(startPose)
@@ -240,6 +291,7 @@ public class BlueLeftAutonomous extends LinearOpMode {
             // If a tag is detected, get its ID and display it in telemetry
             if (vision.idGetter() != 0) {
                 id = vision.idGetter();
+                updateClawServo(clawServo);
                 telemetry.addData("Cone id", "%d", id);
                 telemetry.update();
             }
@@ -263,9 +315,9 @@ public class BlueLeftAutonomous extends LinearOpMode {
 
         // Choose the appropriate trajectory based on the detected cone ID
         if (id == 440) { // Number 1
-            drive.followTrajectorySequenceAsync(parkNumber1);
         } else if (id == 373) { // Number 2
             drive.followTrajectorySequenceAsync(parkNumber2);
+            drive.followTrajectorySequenceAsync(parkNumber1);
 
         } else if (id == 182) { // Number 3
             drive.followTrajectorySequenceAsync(parkNumber3);
