@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 /* TODO:
-- Adjust starting position - startPose variable
+- Adjust starting position - startPose variable ! FINISHED !
 - Adjust the values for driving in autonomous (including park, the code is written just double check the values are accurate if not adjust)
 - For vision don't forget to change the route in each parkNumber. They start like this: TrajectorySequence parkNumber1 = drive.trajectorySequenceBuilder(startPose)
 - Write code for servos to turn claw/rotate/pivot so pickup/drive/drop off works properly (should be done though)
