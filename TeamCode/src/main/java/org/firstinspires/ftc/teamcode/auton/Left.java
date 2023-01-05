@@ -508,10 +508,9 @@ public class Left extends LinearOpMode {
 
         // Choose the appropriate trajectory based on the detected cone ID
         if (id == 440) { // Number 1
+            drive.followTrajectorySequenceAsync(parkNumber1);
         } else if (id == 373) { // Number 2
             drive.followTrajectorySequenceAsync(parkNumber2);
-            drive.followTrajectorySequenceAsync(parkNumber1);
-
         } else if (id == 182) { // Number 3
             drive.followTrajectorySequenceAsync(parkNumber3);
         } else { // Found none
