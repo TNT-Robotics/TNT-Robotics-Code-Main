@@ -164,22 +164,24 @@ public class Right extends LinearOpMode {
                     closeClaw = true;
                 })
                 // turn claw with cone to drop
-                .forward(1)
+                .forward(.5)
+                .forward(.5)
 
                 .addDisplacementMarker(() -> {
                     targetPos.set(-1000);
                 })
                 .forward(6)
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-4000);
+                    targetPos.set(-3750);
                 })
                 .lineToLinearHeading(new Pose2d(-20, -5.5, Math.toRadians(270)))
                 .back(5)
                 // drop cone
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-300);
+                    targetPos.set(-200);
                     clawServo.setPosition(0);
                     closeClaw = false;
+                    pivotServo.setPosition(0);
 
                 })
                 .forward(4)
@@ -194,14 +196,16 @@ public class Right extends LinearOpMode {
                 .back(1)
                 .addDisplacementMarker(() -> {
                     targetPos.set(-1000);
+                    rotateServo.setPosition(1);
                 })
                 .back(3)
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-2900);
+                    targetPos.set(-2500);
+                    pivotServo.setPosition(1);
                 })
 
-                .lineToLinearHeading(new Pose2d(-20, -3.5, Math.toRadians(90)))
-                .back(3)
+                .lineToLinearHeading(new Pose2d(-24, -3.5, Math.toRadians(90)))
+                .back(1)
                 // drop cone
                 .addDisplacementMarker(() -> {
                     targetPos.set(0);
@@ -212,8 +216,8 @@ public class Right extends LinearOpMode {
                 .forward(3)
 
                 // Parking
-                .lineTo(new Vector2d(-62,-2.5))
-                .lineTo(new Vector2d(-62,-6.5))
+                .lineTo(new Vector2d(-65,-2.5))
+                .lineTo(new Vector2d(-65,-10))
                 .build();
 
         TrajectorySequence parkNumber2 = drive.trajectorySequenceBuilder(startPose)
