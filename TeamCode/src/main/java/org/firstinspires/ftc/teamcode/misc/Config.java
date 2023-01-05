@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 
-public class config {
+public class Config {
 
     // Motors (left front drive, left back drive, right front drive, right back drive)
     DcMotor lfD = null;

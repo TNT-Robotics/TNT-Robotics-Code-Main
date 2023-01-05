@@ -14,11 +14,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 
-public class driveInit {
+public class DriveInit {
 
-    config cfg;
+    Config cfg;
 
-    public driveInit(config cfg) {
+    public DriveInit(Config cfg) {
         this.cfg = cfg;
     }
 
