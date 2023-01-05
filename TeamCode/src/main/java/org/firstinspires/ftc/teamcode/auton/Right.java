@@ -329,7 +329,7 @@ public class Right extends LinearOpMode {
         }
 
         // Run the loop until the op mode is no longer active
-        while (opModeIsActive()) {
+        while (opModeIsActive() && !isStopRequested()) {
             // Update the drive object
             drive.update();
 
