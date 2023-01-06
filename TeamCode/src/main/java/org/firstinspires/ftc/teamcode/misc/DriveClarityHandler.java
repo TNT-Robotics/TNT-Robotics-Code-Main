@@ -87,13 +87,13 @@ public class DriveClarityHandler {
         double currentArmPID = slidesPID.getOutputFromError(armNewPos, cfg.getSlide1Motor().getCurrentPosition());
 
         if (gamepad2.dpad_up) {
-            armNewPos = -4114;
+            armNewPos = -3775;
         }
         if (gamepad2.dpad_left) {
-            armNewPos = -3023;
+            armNewPos = -2668;
         }
         if (gamepad2.dpad_right) {
-            armNewPos = -1755;
+            armNewPos = -1467;
         }
         if (gamepad2.dpad_down) {
             armNewPos = 0;
@@ -159,7 +159,7 @@ public class DriveClarityHandler {
             cfg.getClawServo().setPosition(1);
             closeClaw = 1;
             cfg.getPivotServo().setPosition(0.05);
-            cfg.getRotateServo().setPosition(1);
+            cfg.getRotateServo().setPosition(.80);
 
             if(turnInit == 0) {
                 turnInit = cfg.getrTime().milliseconds();
