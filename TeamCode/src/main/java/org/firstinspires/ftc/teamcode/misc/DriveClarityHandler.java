@@ -142,8 +142,12 @@ public class DriveClarityHandler {
         return closeClaw;
     }
 
-    public double[] updateConeServos(Gamepad gamepad2, double turnInit, double turnInit2, Config cfg) {
+    public double[] updateConeServos(Gamepad gamepad2, double turnInit, double turnInit2, Config cfg, boolean bCloseClaw) {
         double closeClaw = 0;
+        if(bCloseClaw) {
+            closeClaw = 1;
+        }
+
         // Pickup
         if (gamepad2.cross) {
             cfg.getPivotServo().setPosition(0);
@@ -193,12 +197,13 @@ public class DriveClarityHandler {
             lastPing = cfg.getrTime().milliseconds();
             if (closeClaw) {
                 if (cfg.getClawServo().getPosition() == 1) {
-                    cfg.getClawServo().setPosition(.95);
+                    cfg.getClawServo().setPosition(.9);
                 } else {
                     cfg.getClawServo().setPosition(1);
                 }
             }
         }
+
 
 
         return new double[] {turnInit, turnInit2, lastPing};
