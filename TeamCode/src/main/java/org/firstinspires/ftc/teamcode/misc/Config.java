@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 
-public class config {
+public class Config {
 
     // Motors (left front drive, left back drive, right front drive, right back drive)
     DcMotor lfD = null;
@@ -95,34 +95,23 @@ public class config {
         return slide2Motor;
     }
 
-    public void setSlide2Motor(DcMotor slide2Motor) {
-        this.slide2Motor = slide2Motor;
-    }
+    public void setSlide2Motor(DcMotor slide2Motor) {this.slide2Motor = slide2Motor;}
 
     public ElapsedTime getrTime() {
         return rTime;
     }
 
-    public void setrTime(ElapsedTime rTime) {
-        this.rTime = rTime;
-    }
+    public void setrTime(ElapsedTime rTime) {this.rTime = rTime;}
 
     public double getSpeedMultiplier() {
         return speedMultiplier;
     }
 
-    public void setSpeedMultiplier(double speedMultiplier) {
-        this.speedMultiplier = speedMultiplier;
-    }
+    public void setSpeedMultiplier(double speedMultiplier) {this.speedMultiplier = speedMultiplier;}
 
-    public int getSlide1Position() {
-        return slide1Position;
-    }
+    public int getSlide1Position() {return slide1Position;}
 
-    public void setSlide1Position(int slide1Position) {
-        this.slide1Position = slide1Position;
-    }
-
+    public void setSlide1Position(int slide1Position) {this.slide1Position = slide1Position;}
     public Servo getClawServo() {
         return clawServo;
     }
@@ -147,17 +136,9 @@ public class config {
         this.pivotServo = pivotServo;
     }
 
+    public double getINCREMENT() {return INCREMENT;}
 
-    public double getINCREMENT() {
-        return INCREMENT;
-    }
+    public int getSlide1MotorTargetPosition() {return slide1MotorTargetPosition;}
 
-    public int getSlide1MotorTargetPosition() {
-        return slide1MotorTargetPosition;
-    }
-
-
-    public int getSlide2MotorTargetPosition() {
-        return slide2MotorTargetPosition;
-    }
+    public int getSlide2MotorTargetPosition() {return slide2MotorTargetPosition;}
 }

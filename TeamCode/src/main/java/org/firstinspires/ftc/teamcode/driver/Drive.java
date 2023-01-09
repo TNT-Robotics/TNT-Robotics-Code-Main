@@ -34,8 +34,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.misc.PID;
 import org.firstinspires.ftc.teamcode.misc.DriveClarityHandler;
-import org.firstinspires.ftc.teamcode.misc.config;
-import org.firstinspires.ftc.teamcode.misc.driveInit;
+import org.firstinspires.ftc.teamcode.misc.Config;
+import org.firstinspires.ftc.teamcode.misc.DriveInit;
 
 /**
  * This file contains an example of a Linear "OpMode".
@@ -77,16 +77,16 @@ import org.firstinspires.ftc.teamcode.misc.driveInit;
 
 /*
 
-If I was you I wouldnt probably touch the things here unless something works horribly wrong, else if driver works let this exist
+If I was you I wouldn't probably touch the things here unless something works horribly wrong, else if driver has no issue and everything works let this exist
  */
 
 @TeleOp(name="Drive", group="Driving")
 
-public class drive extends LinearOpMode {
+public class Drive extends LinearOpMode {
     public void runOpMode() {
         // Initialize configuration, drive initialization, and drive clarity handler objects
-        config cfg = new config();
-        driveInit init = new driveInit(cfg);
+        Config cfg = new Config();
+        DriveInit init = new DriveInit(cfg);
         DriveClarityHandler driveClarityHandler = new DriveClarityHandler();
 
         // Create PID controller for slides

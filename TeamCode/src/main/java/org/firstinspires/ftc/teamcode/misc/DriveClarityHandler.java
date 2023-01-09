@@ -24,7 +24,7 @@ public class DriveClarityHandler {
 
     double max;
 
-    public void updateHolonomicDriveMotors(double axial, double lateral, double yaw, DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4, config cfg) {
+    public void updateHolonomicDriveMotors(double axial, double lateral, double yaw, DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4, Config cfg) {
         // Calculate motor speeds here
         double leftFrontMotor = axial + lateral + yaw;
         double rightFrontMotor = axial - lateral - yaw;
@@ -55,7 +55,7 @@ public class DriveClarityHandler {
         motor4.setPower(rightBackMotor);
     }
 
-    public void updateRobotSpeed(Gamepad gamepad1, config cfg) {
+    public void updateRobotSpeed(Gamepad gamepad1, Config cfg) {
         // Change state
         if (gamepad1.cross) {
             cfg.setSpeedMultiplier(1);
@@ -72,7 +72,7 @@ public class DriveClarityHandler {
 
     }
 
-    public void updateSlideMotors(Gamepad gamepad2, PID slidesPID, config cfg) {
+    public void updateSlideMotors(Gamepad gamepad2, PID slidesPID, Config cfg) {
 
         double slidesPower = -gamepad2.left_stick_y * 10;
         int armNewPos = (int) (cfg.getSlide1Position() + slidesPower);
@@ -110,7 +110,7 @@ public class DriveClarityHandler {
         cfg.setSlide1Position(armNewPos);
     }
 
-    public boolean updateGamepadServos(Gamepad gamepad2, boolean closeClaw, config cfg) {
+    public boolean updateGamepadServos(Gamepad gamepad2, boolean closeClaw, Config cfg) {
         if (gamepad2.left_bumper) {
             cfg.getClawServo().setPosition(1);
             closeClaw = true;
@@ -142,7 +142,7 @@ public class DriveClarityHandler {
         return closeClaw;
     }
 
-    public double[] updateConeServos(Gamepad gamepad2, double turnInit, double turnInit2, config cfg) {
+    public double[] updateConeServos(Gamepad gamepad2, double turnInit, double turnInit2, Config cfg) {
         double closeClaw = 0;
         // Pickup
         if (gamepad2.cross) {
@@ -176,7 +176,7 @@ public class DriveClarityHandler {
         return new double[] { turnInit, turnInit2, closeClaw};
     }
 
-    public double[] updateServosAfterDelay(double turnInit, double turnInit2, double lastPing, boolean closeClaw, config cfg) {
+    public double[] updateServosAfterDelay(double turnInit, double turnInit2, double lastPing, boolean closeClaw, Config cfg) {
         if (cfg.getrTime().milliseconds() >= turnInit + 1000 && turnInit != 0) {
             turnInit = 0;
             cfg.getPivotServo().setPosition(1);
