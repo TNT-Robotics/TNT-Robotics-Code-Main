@@ -126,7 +126,7 @@ public class Drive extends LinearOpMode {
             driveClarityHandler.updateRobotSpeed(gamepad1, cfg);
 
             // Set holonomic drive motors based on joystick values
-            driveClarityHandler.updateHolonomicDriveMotors(axial, lateral, yaw, cfg.getLfD(), cfg.getRfD(), cfg.getLbD(),cfg.getRbD(), cfg);
+            driveClarityHandler.updateHolonomicDriveMotors(axial, lateral, yaw, cfg);
 
             // Update slide motors based on gamepad input
             driveClarityHandler.updateSlideMotors(gamepad2, slidesPID, cfg);

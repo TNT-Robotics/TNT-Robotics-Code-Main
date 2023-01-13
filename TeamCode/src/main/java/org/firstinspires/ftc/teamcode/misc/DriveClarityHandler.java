@@ -24,7 +24,7 @@ public class DriveClarityHandler {
 
     double max;
 
-    public void updateHolonomicDriveMotors(double axial, double lateral, double yaw, DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4, Config cfg) {
+    public void updateHolonomicDriveMotors(double axial, double lateral, double yaw, Config cfg) {
         // Calculate motor speeds here
         double leftFrontMotor = axial + lateral + yaw;
         double rightFrontMotor = axial - lateral - yaw;
@@ -47,12 +47,6 @@ public class DriveClarityHandler {
         cfg.getRfD().setPower(rightFrontMotor * cfg.getSpeedMultiplier());
         cfg.getLbD().setPower(leftBackMotor * cfg.getSpeedMultiplier());
         cfg.getRbD().setPower(rightBackMotor * cfg.getSpeedMultiplier());
-
-        // Set motor speeds
-        motor1.setPower(leftFrontMotor);
-        motor2.setPower(rightFrontMotor);
-        motor3.setPower(leftBackMotor);
-        motor4.setPower(rightBackMotor);
     }
 
     public void updateRobotSpeed(Gamepad gamepad1, Config cfg) {
