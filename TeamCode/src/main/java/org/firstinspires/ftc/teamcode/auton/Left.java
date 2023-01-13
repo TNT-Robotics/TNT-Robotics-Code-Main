@@ -144,7 +144,7 @@ public class Left extends LinearOpMode {
 
                 // start moving linear slides up and prepare cone drop with pivotServo
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-1350);
+                    targetPos.set(-1450);
                     pivotServo.setPosition(0);
                 })
                 // drive to middle junction

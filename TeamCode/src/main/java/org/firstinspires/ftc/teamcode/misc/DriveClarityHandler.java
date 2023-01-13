@@ -87,13 +87,13 @@ public class DriveClarityHandler {
         double currentArmPID = slidesPID.getOutputFromError(armNewPos, cfg.getSlide1Motor().getCurrentPosition());
 
         if (gamepad2.dpad_up) {
-            armNewPos = -3775;
+            armNewPos = -3710;
         }
         if (gamepad2.dpad_left) {
-            armNewPos = -2668;
+            armNewPos = -2530;
         }
         if (gamepad2.dpad_right) {
-            armNewPos = -1467;
+            armNewPos = -1330;
         }
         if (gamepad2.dpad_down) {
             armNewPos = 0;
