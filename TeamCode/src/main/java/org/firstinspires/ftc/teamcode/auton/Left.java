@@ -163,7 +163,7 @@ public class Left extends LinearOpMode {
                 .back(1)
                 // prepare slides and pivotServo for grab from cone stack
                 .addDisplacementMarker(() -> {
-                    targetPos.set(75);
+                    targetPos.set(125);
                     pivotServo.setPosition(1);
                 })
 
@@ -192,7 +192,7 @@ public class Left extends LinearOpMode {
                     targetPos.set(-3700);
                 })
                 // drive to tall junction
-                .lineToLinearHeading(new Pose2d(-20, -5.5, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(-21, -5.5, Math.toRadians(270)))
                 // center above tall junction
                 .back(5)
                 // drop cone and prepare linear slides for grab from cone stack
@@ -225,12 +225,14 @@ public class Left extends LinearOpMode {
                 })
                 .addDisplacementMarker(() -> {
                     pivotServo.setPosition(1);
-                    rotateServo.setPosition(.8);
-                    rotateServoAllowed = false;
                 })
 
                 // back from the cone stack
                 .back(3)
+                .addDisplacementMarker(() -> {
+                    rotateServo.setPosition(.8);
+                    rotateServoAllowed = false;
+                })
 
                 // ----- The below has not been really tested at all, so you will probably need to tweak a few numbers here -----
                 // move linear slides for middle junction
@@ -239,7 +241,7 @@ public class Left extends LinearOpMode {
                 })
 
                 // drive to middle junction
-                .lineToLinearHeading(new Pose2d(-20, -3.5, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(-25, -3.5, Math.toRadians(90)))
 
                 // center above middle junction
                 .back(3)
@@ -254,8 +256,7 @@ public class Left extends LinearOpMode {
                 .forward(3)
 
                 // Parking
-                .lineTo(new Vector2d(-64,-2.5))
-                .lineTo(new Vector2d(-64,-6.5))
+                .lineTo(new Vector2d(-72,-2.5))
                 .build();
 
         TrajectorySequence parkNumber2 = drive.trajectorySequenceBuilder(startPose)
