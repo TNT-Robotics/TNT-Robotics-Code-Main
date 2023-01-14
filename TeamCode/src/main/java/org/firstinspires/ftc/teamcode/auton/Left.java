@@ -108,6 +108,7 @@ public class Left extends LinearOpMode {
         // Set the pivot servo to position .5
         pivotServo.setPosition(.5);
         clawServo.setPosition(1);
+        rotateServo.setPosition(0);
         closeClaw = true;
 
         // Create a drive object
@@ -144,7 +145,7 @@ public class Left extends LinearOpMode {
 
                 // start moving linear slides up and prepare cone drop with pivotServo
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-1450);
+                    targetPos.set(-1725);
                     pivotServo.setPosition(0);
                 })
                 // drive to middle junction
@@ -161,7 +162,7 @@ public class Left extends LinearOpMode {
                 .back(1)
                 // prepare slides and pivotServo for grab from cone stack
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-350);
+                    targetPos.set(75);
                     pivotServo.setPosition(1);
                 })
 
@@ -187,7 +188,7 @@ public class Left extends LinearOpMode {
                 .forward(6)
                 // move linear slides to tall junction drop
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-4000);
+                    targetPos.set(-3700);
                 })
                 // drive to tall junction
                 .lineToLinearHeading(new Pose2d(-20, -5.5, Math.toRadians(270)))
@@ -195,13 +196,16 @@ public class Left extends LinearOpMode {
                 .back(5)
                 // drop cone and prepare linear slides for grab from cone stack
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-300);
+                    targetPos.set(-400);
                     clawServo.setPosition(0);
                     closeClaw = false;
 
                 })
                 // back from tall junction
                 .forward(4)
+                .addDisplacementMarker(() -> {
+                    pivotServo.setPosition(0);
+                })
 
                 // drive toward cone stack
                 .lineToLinearHeading(new Pose2d(-62, -5.5, Math.toRadians(180)))
@@ -218,6 +222,10 @@ public class Left extends LinearOpMode {
                 .addDisplacementMarker(() -> {
                     targetPos.set(-1000);
                 })
+                .addDisplacementMarker(() -> {
+                    pivotServo.setPosition(1);
+                    rotateServo.setPosition(.8);
+                })
 
                 // back from the cone stack
                 .back(3)
@@ -225,7 +233,7 @@ public class Left extends LinearOpMode {
                 // ----- The below has not been really tested at all, so you will probably need to tweak a few numbers here -----
                 // move linear slides for middle junction
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-2900);
+                    targetPos.set(-2700);
                 })
 
                 // drive to middle junction
@@ -308,7 +316,7 @@ public class Left extends LinearOpMode {
                 .back(5)
                 // drop cone and prepare linear slides for grab from cone stack
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-300);
+                    targetPos.set(-200);
                     clawServo.setPosition(0);
                     closeClaw = false;
 
@@ -476,7 +484,7 @@ public class Left extends LinearOpMode {
         while (!opModeIsActive() && !isStopRequested()) {
             // Update the vision object to detect any visible tags
             vision.updateTags();
-            updateClawServo(clawServo);
+            updateClawServo(clawServo, rotateServo);
 
             // If a tag is detected, get its ID and display it in telemetry
             if (vision.idGetter() != 0) {
@@ -501,7 +509,7 @@ public class Left extends LinearOpMode {
         closeClaw = false;
 
         // Drive with the cone using the claw and pivot servos
-        driveWithCone(clawServo, pivotServo);
+        driveWithCone(clawServo, pivotServo, rotateServo);
 
         // Display a message in telemetry
         telemetryUpdate("Starting to follow trajectory");
@@ -526,7 +534,7 @@ public class Left extends LinearOpMode {
             updateMotors(targetPos.get(), slide1Motor, slide2Motor);
 
             // Update the position of the claw servo based on the value of closeClaw
-            updateClawServo(clawServo);
+            updateClawServo(clawServo, rotateServo);
 
             // Display the loop time in telemetry
             telemetry.addData("Loop time (ms)", runtime.milliseconds() - loopTime);
@@ -552,12 +560,12 @@ public class Left extends LinearOpMode {
     }
 
 
-    void driveWithCone(Servo clawServo, Servo pivotServo) {
+    void driveWithCone(Servo clawServo, Servo pivotServo, Servo rotateServo) {
         // Set the claw servo to position 1
         clawServo.setPosition(1);
 
         // Update the claw servo position based on the value of closeClaw
-        updateClawServo(clawServo);
+        updateClawServo(clawServo, rotateServo);
 
         // Set closeClaw to true
         closeClaw = true;
@@ -567,9 +575,10 @@ public class Left extends LinearOpMode {
     }
 
 
-    void updateClawServo(Servo clawServo) {
+    void updateClawServo(Servo clawServo, Servo rotateServo) {
         // Check if it has been at least 3 seconds (3000 milliseconds) since the last time the claw servo was updated
         if (runtime.milliseconds() >= lastPing + 3000) {
+            rotateServo.setPosition(0);
             // Update the value of lastPing to the current time
             lastPing = runtime.milliseconds();
 
