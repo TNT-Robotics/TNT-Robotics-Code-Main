@@ -193,8 +193,6 @@ public class Left extends LinearOpMode {
                 // move linear slides to tall junction drop
                 .addDisplacementMarker(() -> {
                     targetPos.set(-3700);
-                    rotateServo.setPosition(0);
-                    rotateServoAllowed = true;
                 })
                 // drive to tall junction
                 .lineToLinearHeading(new Pose2d(-21, -5.5, Math.toRadians(270)))
@@ -211,6 +209,8 @@ public class Left extends LinearOpMode {
                 .forward(4)
                 .addDisplacementMarker(() -> {
                     pivotServo.setPosition(0);
+                    rotateServo.setPosition(0);
+                    rotateServoAllowed = true;
                 })
 
                 // drive toward cone stack
