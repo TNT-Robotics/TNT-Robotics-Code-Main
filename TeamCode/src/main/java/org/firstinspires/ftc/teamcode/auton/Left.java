@@ -67,6 +67,7 @@ public class Left extends LinearOpMode {
     // Initialize the last ping time to 0 and the closeClaw boolean to true
     double lastPing = 0;
     boolean closeClaw = true;
+    boolean rotateServoAllowed = true;
 
     // Create a pose object representing the starting pose of the robot
     Pose2d startPose = new Pose2d(-39, -70, Math.toRadians(90));
@@ -225,6 +226,7 @@ public class Left extends LinearOpMode {
                 .addDisplacementMarker(() -> {
                     pivotServo.setPosition(1);
                     rotateServo.setPosition(.8);
+                    rotateServoAllowed = false;
                 })
 
                 // back from the cone stack
@@ -252,8 +254,8 @@ public class Left extends LinearOpMode {
                 .forward(3)
 
                 // Parking
-                .lineTo(new Vector2d(-62,-2.5))
-                .lineTo(new Vector2d(-62,-6.5))
+                .lineTo(new Vector2d(-64,-2.5))
+                .lineTo(new Vector2d(-64,-6.5))
                 .build();
 
         TrajectorySequence parkNumber2 = drive.trajectorySequenceBuilder(startPose)
@@ -578,7 +580,9 @@ public class Left extends LinearOpMode {
     void updateClawServo(Servo clawServo, Servo rotateServo) {
         // Check if it has been at least 3 seconds (3000 milliseconds) since the last time the claw servo was updated
         if (runtime.milliseconds() >= lastPing + 3000) {
-            rotateServo.setPosition(0);
+            if (rotateServoAllowed) {
+                rotateServo.setPosition(0);
+            }
             // Update the value of lastPing to the current time
             lastPing = runtime.milliseconds();
 
