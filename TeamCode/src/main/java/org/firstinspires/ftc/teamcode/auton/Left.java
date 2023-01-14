@@ -163,7 +163,7 @@ public class Left extends LinearOpMode {
                 .back(1)
                 // prepare slides and pivotServo for grab from cone stack
                 .addDisplacementMarker(() -> {
-                    targetPos.set(125);
+                    targetPos.set(-400);
                     pivotServo.setPosition(1);
                     rotateServo.setPosition(.8);
                     rotateServoAllowed = false;
@@ -246,10 +246,10 @@ public class Left extends LinearOpMode {
                 })
 
                 // drive to middle junction
-                .lineToLinearHeading(new Pose2d(-25, -3.5, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(-26, -3.5, Math.toRadians(90)))
 
                 // center above middle junction
-                .back(3)
+                .back(1)
                 // drop cone
                 .addDisplacementMarker(() -> {
                     targetPos.set(0);
@@ -258,7 +258,7 @@ public class Left extends LinearOpMode {
 
                 })
                 // back from middle junction
-                .forward(3)
+                .forward(1)
 
                 // Parking
                 .lineTo(new Vector2d(-72,-2.5))
