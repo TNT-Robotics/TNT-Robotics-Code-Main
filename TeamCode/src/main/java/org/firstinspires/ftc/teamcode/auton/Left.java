@@ -165,15 +165,12 @@ public class Left extends LinearOpMode {
                 .addDisplacementMarker(() -> {
                     targetPos.set(125);
                     pivotServo.setPosition(1);
+                    rotateServo.setPosition(.8);
+                    rotateServoAllowed = false;
                 })
 
                 // drive to cone stack
                 .lineTo(new Vector2d(-57, -5.5))
-
-                .addDisplacementMarker(() -> {
-                    rotateServo.setPosition(.8);
-                    rotateServoAllowed = false;
-                })
 
                 // center above cone stack
                 .back(5)
@@ -189,14 +186,15 @@ public class Left extends LinearOpMode {
                 // dont drop the whole cone stack. Dont forget you cannot use wait since that turns off our linear slides
                 .addDisplacementMarker(() -> {
                     targetPos.set(-1000);
-                    rotateServo.setPosition(0);
-                    rotateServoAllowed = true;
                 })
                 // drive away from cone stack
                 .forward(6)
+
                 // move linear slides to tall junction drop
                 .addDisplacementMarker(() -> {
                     targetPos.set(-3700);
+                    rotateServo.setPosition(0);
+                    rotateServoAllowed = true;
                 })
                 // drive to tall junction
                 .lineToLinearHeading(new Pose2d(-21, -5.5, Math.toRadians(270)))
