@@ -92,8 +92,13 @@ public class Drive extends LinearOpMode {
         // Create PID controller for slides
         PID slidesPID = new PID(.02,.0,.02,.008);
 
+        PID pivotPID = new PID(.02, .0, .02, .008);
+
         // Set initial error for PID controller
         slidesPID.getOutputFromError(0,0);
+        pivotPID.getOutputFromError(0,0);
+
+        int pivotMotorTargetPosition = 0;
 
         // Initialize loop variables
         double loopTime = 0;
@@ -135,16 +140,20 @@ public class Drive extends LinearOpMode {
             driveClarityHandler.updateGamepadServos(gamepad2, closeClaw, cfg);
 
             // Update cone servos based on gamepad input
-            double[] updatedServoValues = driveClarityHandler.updateConeServos(gamepad2, turnInit, turnInit2, cfg);
+            double[] updatedServoValues = driveClarityHandler.updateConeServos(gamepad2, turnInit, turnInit2, pivotMotorTargetPosition, cfg);
             turnInit = updatedServoValues[0];
             turnInit2 = updatedServoValues[1];
             closeClaw = updatedServoValues[2] == 1;
+            pivotMotorTargetPosition = (int) updatedServoValues[3];
 
             // Update servos after delay based on gamepad input
-            double[] updatedServoValuesAfterDelay = driveClarityHandler.updateServosAfterDelay(turnInit, turnInit2, lastPing, closeClaw, cfg);
+            double[] updatedServoValuesAfterDelay = driveClarityHandler.updateServosAfterDelay(turnInit, turnInit2, lastPing, closeClaw, pivotMotorTargetPosition, cfg);
             turnInit = updatedServoValuesAfterDelay[0];
             turnInit2 = updatedServoValuesAfterDelay[1];
             lastPing = updatedServoValuesAfterDelay[2];
+            pivotMotorTargetPosition = (int) updatedServoValuesAfterDelay[3];
+
+            driveClarityHandler.updatePivotMotor(pivotMotorTargetPosition, pivotPID, cfg);
 
             // Add telemetry data
             telemetry.addData("Status", "Run Time: " + cfg.getrTime().toString());
@@ -152,7 +161,7 @@ public class Drive extends LinearOpMode {
             telemetry.addData("Front left/Right", axial + lateral + yaw);
             telemetry.addData("Back left/Right", axial - lateral + yaw);
             telemetry.addLine("Servos");
-            telemetry.addData("Claw1, Claw2, Claw3", "%4.2f, %4.2f, %4.2f", cfg.getClawServo().getPosition(), cfg.getRotateServo().getPosition(), cfg.getPivotServo().getPosition());
+            telemetry.addData("Claw1, Claw2, Claw3", "%4.2f, %4.2f, %4.2f", cfg.getClawServo().getPosition(), cfg.getRotateServo().getPosition(), cfg.getPivotMotor().getCurrentPosition());
             telemetry.addLine("Motor Rotations (Current vs Set)");
             telemetry.addData("Slide1 Position", "%d, %d", cfg.getSlide1Motor().getCurrentPosition(), cfg.getSlide1MotorTargetPosition());
             telemetry.addData("Slide2 Position", "%d, %d", cfg.getSlide2Motor().getCurrentPosition(), cfg.getSlide2MotorTargetPosition());

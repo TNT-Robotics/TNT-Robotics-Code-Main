@@ -24,6 +24,13 @@ public class DriveClarityHandler {
 
     double max;
 
+    int[] pivotPositions = {
+            0, // Starting
+            117, // Half way
+            234, // All the way
+            12, // Little bit from the ground
+    };
+
     public void updateHolonomicDriveMotors(double axial, double lateral, double yaw, DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4, Config cfg) {
         // Calculate motor speeds here
         double leftFrontMotor = axial + lateral + yaw;
@@ -110,6 +117,17 @@ public class DriveClarityHandler {
         cfg.setSlide1Position(armNewPos);
     }
 
+    public void updatePivotMotor(int targetPos, PID pivotPID, Config cfg) {
+
+
+        double currentPivotPID = pivotPID.getOutputFromError(targetPos, cfg.getPivotMotor().getCurrentPosition());
+
+        cfg.getSlide1Motor().setPower(currentPivotPID);
+        cfg.getSlide2Motor().setPower(currentPivotPID);
+
+        cfg.setPivotPosition(targetPos);
+    }
+
     public boolean updateGamepadServos(Gamepad gamepad2, boolean closeClaw, Config cfg) {
         if (gamepad2.left_bumper) {
             cfg.getClawServo().setPosition(1);
@@ -142,11 +160,11 @@ public class DriveClarityHandler {
         return closeClaw;
     }
 
-    public double[] updateConeServos(Gamepad gamepad2, double turnInit, double turnInit2, Config cfg) {
+    public double[] updateConeServos(Gamepad gamepad2, double turnInit, double turnInit2, int pivotPos, Config cfg) {
         double closeClaw = 0;
         // Pickup
         if (gamepad2.cross) {
-            cfg.getPivotServo().setPosition(0);
+            pivotPos = pivotPositions[0];
             cfg.getRotateServo().setPosition(0);
 
             if (turnInit2 == 0) {
@@ -158,7 +176,7 @@ public class DriveClarityHandler {
         if (gamepad2.circle) {
             cfg.getClawServo().setPosition(1);
             closeClaw = 1;
-            cfg.getPivotServo().setPosition(0.05);
+            pivotPos = pivotPositions[3];
             cfg.getRotateServo().setPosition(1);
 
             if(turnInit == 0) {
@@ -170,16 +188,16 @@ public class DriveClarityHandler {
         if (gamepad2.square) {
             cfg.getClawServo().setPosition(1);
             closeClaw = 1;
-            cfg.getPivotServo().setPosition(.5);
+            pivotPos = pivotPositions[1];
         }
 
-        return new double[] { turnInit, turnInit2, closeClaw};
+        return new double[] { turnInit, turnInit2, closeClaw, pivotPos};
     }
 
-    public double[] updateServosAfterDelay(double turnInit, double turnInit2, double lastPing, boolean closeClaw, Config cfg) {
+    public double[] updateServosAfterDelay(double turnInit, double turnInit2, double lastPing, boolean closeClaw, int pivotPos, Config cfg) {
         if (cfg.getrTime().milliseconds() >= turnInit + 1000 && turnInit != 0) {
             turnInit = 0;
-            cfg.getPivotServo().setPosition(1);
+            pivotPos = pivotPositions[2];
         }
 
         if (cfg.getrTime().milliseconds() >= turnInit2 + 1000 && turnInit2 != 0) {
@@ -201,6 +219,6 @@ public class DriveClarityHandler {
         }
 
 
-        return new double[] {turnInit, turnInit2, lastPing};
+        return new double[] {turnInit, turnInit2, lastPing, pivotPos};
     }
 }

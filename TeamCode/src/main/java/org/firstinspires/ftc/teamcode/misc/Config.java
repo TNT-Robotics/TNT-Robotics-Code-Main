@@ -34,13 +34,12 @@ public class Config {
 
     // Position of the slide from encoders
     int slide1Position = 0;
+    int pivotPosition = 0;
 
     // Claw (A1 - Claw, A2 - 180 turn, A3 - Pivot turn)
     Servo clawServo;
     Servo rotateServo;
-    Servo pivotServo;
-
-
+    DcMotor pivotMotor = null;
 
     // Servos Misc
     final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
@@ -112,6 +111,11 @@ public class Config {
     public int getSlide1Position() {return slide1Position;}
 
     public void setSlide1Position(int slide1Position) {this.slide1Position = slide1Position;}
+
+    public int getPivotPosition() {return pivotPosition;}
+
+    public void setPivotPosition(int pivotPosition) {this.pivotPosition = pivotPosition;}
+
     public Servo getClawServo() {
         return clawServo;
     }
@@ -128,14 +132,9 @@ public class Config {
         this.rotateServo = rotateServo;
     }
 
-    public Servo getPivotServo() {
-        return pivotServo;
-    }
+    public DcMotor getPivotMotor() {return pivotMotor;}
 
-    public void setPivotServo(Servo pivotServo) {
-        this.pivotServo = pivotServo;
-    }
-
+    public void setPivotMotor(DcMotor pivotMotor) {this.pivotMotor = pivotMotor;}
     public double getINCREMENT() {return INCREMENT;}
 
     public int getSlide1MotorTargetPosition() {return slide1MotorTargetPosition;}

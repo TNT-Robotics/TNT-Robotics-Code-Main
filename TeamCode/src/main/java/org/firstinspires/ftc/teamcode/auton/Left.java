@@ -58,11 +58,18 @@ FIXME:
 @Autonomous(group = "Autonomous")
 public class Left extends LinearOpMode {
 
+    int[] pivotPositions = {
+      0, // Starting
+      117, // Half way
+      234, // All the way
+    };
+
     // Create a timer object to track elapsed time
     ElapsedTime runtime = new ElapsedTime();
 
     // Create a PID controller for the slide motors
     PID slidesPID = new PID(.02, 0, .02, .008);
+    PID pivotPID = new PID(.02, 0, .02, .008);
 
     // Initialize the last ping time to 0 and the closeClaw boolean to true
     double lastPing = 0;
@@ -103,10 +110,11 @@ public class Left extends LinearOpMode {
         // Get the servos from the hardware map
         Servo clawServo = hardwareMap.get(Servo.class, "clawServo");
         Servo rotateServo = hardwareMap.get(Servo.class, "rotateServo"); // I don't think we even need to use this one
-        Servo pivotServo = hardwareMap.get(Servo.class, "pivotServo");
+        DcMotor pivotMotor = hardwareMap.get(DcMotor.class, "pivotMotor");
 
-        // Set the pivot servo to position .5
-        pivotServo.setPosition(.5);
+        pivotMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        pivotMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         clawServo.setPosition(1);
         closeClaw = true;
 
@@ -117,10 +125,12 @@ public class Left extends LinearOpMode {
         int id = 0;
 
         // Create an AtomicInteger to hold the target position for the motors
+        AtomicInteger pivotTargetPos = new AtomicInteger();
         AtomicInteger targetPos = new AtomicInteger();
 
         // Initialize the PID controller
         slidesPID.getOutputFromError(0, 0);
+        pivotPID.getOutputFromError(0, 0);
 
         // Set the starting pose of the drive object
         drive.setPoseEstimate(startPose);
@@ -145,7 +155,7 @@ public class Left extends LinearOpMode {
                 // start moving linear slides up and prepare cone drop with pivotServo
                 .addDisplacementMarker(() -> {
                     targetPos.set(-1350);
-                    pivotServo.setPosition(0);
+                    pivotTargetPos.set(pivotPositions[0]);
                 })
                 // drive to middle junction
                 .lineTo(new Vector2d(-58,-20))
@@ -162,7 +172,7 @@ public class Left extends LinearOpMode {
                 // prepare slides and pivotServo for grab from cone stack
                 .addDisplacementMarker(() -> {
                     targetPos.set(-350);
-                    pivotServo.setPosition(1);
+                    pivotTargetPos.set(pivotPositions[2]);
                 })
 
                 // drive to cone stack
@@ -258,7 +268,7 @@ public class Left extends LinearOpMode {
                 // start moving linear slides up and prepare cone drop with pivotServo
                 .addDisplacementMarker(() -> {
                     targetPos.set(-1350);
-                    pivotServo.setPosition(0);
+                    pivotTargetPos.set(pivotPositions[0]);
                 })
                 // drive to middle junction
                 .lineTo(new Vector2d(-58,-20))
@@ -275,7 +285,7 @@ public class Left extends LinearOpMode {
                 // prepare slides and pivotServo for grab from cone stack
                 .addDisplacementMarker(() -> {
                     targetPos.set(-350);
-                    pivotServo.setPosition(1);
+                    pivotTargetPos.set(pivotPositions[2]);
                 })
 
                 // drive to cone stack
@@ -370,7 +380,7 @@ public class Left extends LinearOpMode {
                 // start moving linear slides up and prepare cone drop with pivotServo
                 .addDisplacementMarker(() -> {
                     targetPos.set(-1350);
-                    pivotServo.setPosition(0);
+                    pivotTargetPos.set(pivotPositions[0]);
                 })
                 // drive to middle junction
                 .lineTo(new Vector2d(-58,-20))
@@ -387,7 +397,7 @@ public class Left extends LinearOpMode {
                 // prepare slides and pivotServo for grab from cone stack
                 .addDisplacementMarker(() -> {
                     targetPos.set(-350);
-                    pivotServo.setPosition(1);
+                    pivotTargetPos.set(pivotPositions[2]);
                 })
 
                 // drive to cone stack
@@ -477,6 +487,7 @@ public class Left extends LinearOpMode {
             // Update the vision object to detect any visible tags
             vision.updateTags();
             updateClawServo(clawServo);
+            updatePivot(pivotTargetPos.get(), pivotMotor);
 
             // If a tag is detected, get its ID and display it in telemetry
             if (vision.idGetter() != 0) {
@@ -501,7 +512,18 @@ public class Left extends LinearOpMode {
         closeClaw = false;
 
         // Drive with the cone using the claw and pivot servos
-        driveWithCone(clawServo, pivotServo);
+        // Set the claw servo to position 1
+        clawServo.setPosition(1);
+
+        // Set closeClaw to true
+        closeClaw = true;
+
+        // Update the claw servo position based on the value of closeClaw
+        updateClawServo(clawServo);
+
+
+        // Set the pivot servo to position .5
+        pivotTargetPos.set(pivotPositions[1]);
 
         // Display a message in telemetry
         telemetryUpdate("Starting to follow trajectory");
@@ -523,7 +545,7 @@ public class Left extends LinearOpMode {
             drive.update();
 
             // Update the power of the slide motors based on the target position and the current position
-            updateMotors(targetPos.get(), slide1Motor, slide2Motor);
+            updateMotors(targetPos.get(), slide1Motor, slide2Motor, pivotTargetPos.get(), pivotMotor);
 
             // Update the position of the claw servo based on the value of closeClaw
             updateClawServo(clawServo);
@@ -542,30 +564,24 @@ public class Left extends LinearOpMode {
     This function is used to update the power of two motors (slide1Motor and slide2Motor) based on a target state (targetState) and a PID controller (slidesPID).
     The function calculates the output power for the motors using the getOutputFromError method of the slidesPID object, and then sets the power of the motors to this value.
      */
-    void updateMotors(int targetState, DcMotor slide1Motor, DcMotor slide2Motor) {
+    void updateMotors(int targetState, DcMotor slide1Motor, DcMotor slide2Motor, int pivotTargetState, DcMotor pivotMotor) {
         // Calculate the output power for the motors using a PID controller
         double currentArmPID = slidesPID.getOutputFromError(targetState, slide1Motor.getCurrentPosition());
+        double currentPivotPID = pivotPID.getOutputFromError(pivotTargetState, pivotMotor.getCurrentPosition());
 
         // Set the power of both motors to the calculated output power
         slide1Motor.setPower(currentArmPID);
         slide2Motor.setPower(currentArmPID);
+
+        pivotMotor.setPower(currentPivotPID);
     }
 
+    void updatePivot(int pivotTargetState, DcMotor pivotMotor) {
+        // Calculate the output power for the motors using a PID controller
+        double currentPivotPID = pivotPID.getOutputFromError(pivotTargetState, pivotMotor.getCurrentPosition());
 
-    void driveWithCone(Servo clawServo, Servo pivotServo) {
-        // Set the claw servo to position 1
-        clawServo.setPosition(1);
-
-        // Update the claw servo position based on the value of closeClaw
-        updateClawServo(clawServo);
-
-        // Set closeClaw to true
-        closeClaw = true;
-
-        // Set the pivot servo to position .5
-        pivotServo.setPosition(.5);
+        pivotMotor.setPower(currentPivotPID);
     }
-
 
     void updateClawServo(Servo clawServo) {
         // Check if it has been at least 3 seconds (3000 milliseconds) since the last time the claw servo was updated
