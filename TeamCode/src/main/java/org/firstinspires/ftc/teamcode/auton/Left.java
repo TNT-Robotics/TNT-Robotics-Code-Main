@@ -7,6 +7,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -112,6 +113,7 @@ public class Left extends LinearOpMode {
         Servo rotateServo = hardwareMap.get(Servo.class, "rotateServo"); // I don't think we even need to use this one
         DcMotor pivotMotor = hardwareMap.get(DcMotor.class, "pivotMotor");
 
+        pivotMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         pivotMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         pivotMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -545,7 +547,9 @@ public class Left extends LinearOpMode {
             drive.update();
 
             // Update the power of the slide motors based on the target position and the current position
-            updateMotors(targetPos.get(), slide1Motor, slide2Motor, pivotTargetPos.get(), pivotMotor);
+            updateMotors(targetPos.get(), slide1Motor, slide2Motor);
+
+            updatePivot(pivotTargetPos.get(), pivotMotor);
 
             // Update the position of the claw servo based on the value of closeClaw
             updateClawServo(clawServo);
@@ -564,16 +568,13 @@ public class Left extends LinearOpMode {
     This function is used to update the power of two motors (slide1Motor and slide2Motor) based on a target state (targetState) and a PID controller (slidesPID).
     The function calculates the output power for the motors using the getOutputFromError method of the slidesPID object, and then sets the power of the motors to this value.
      */
-    void updateMotors(int targetState, DcMotor slide1Motor, DcMotor slide2Motor, int pivotTargetState, DcMotor pivotMotor) {
+    void updateMotors(int targetState, DcMotor slide1Motor, DcMotor slide2Motor) {
         // Calculate the output power for the motors using a PID controller
         double currentArmPID = slidesPID.getOutputFromError(targetState, slide1Motor.getCurrentPosition());
-        double currentPivotPID = pivotPID.getOutputFromError(pivotTargetState, pivotMotor.getCurrentPosition());
 
         // Set the power of both motors to the calculated output power
         slide1Motor.setPower(currentArmPID);
         slide2Motor.setPower(currentArmPID);
-
-        pivotMotor.setPower(currentPivotPID);
     }
 
     void updatePivot(int pivotTargetState, DcMotor pivotMotor) {

@@ -161,7 +161,7 @@ public class Drive extends LinearOpMode {
             telemetry.addData("Front left/Right", axial + lateral + yaw);
             telemetry.addData("Back left/Right", axial - lateral + yaw);
             telemetry.addLine("Servos");
-            telemetry.addData("Claw1, Claw2, Claw3", "%4.2f, %4.2f, %4.2f", cfg.getClawServo().getPosition(), cfg.getRotateServo().getPosition(), cfg.getPivotMotor().getCurrentPosition());
+            telemetry.addData("Claw, Rotate, Pivot", "%4.2f, %4.2f, %d", cfg.getClawServo().getPosition(), cfg.getRotateServo().getPosition(), cfg.getPivotMotor().getCurrentPosition());
             telemetry.addLine("Motor Rotations (Current vs Set)");
             telemetry.addData("Slide1 Position", "%d, %d", cfg.getSlide1Motor().getCurrentPosition(), cfg.getSlide1MotorTargetPosition());
             telemetry.addData("Slide2 Position", "%d, %d", cfg.getSlide2Motor().getCurrentPosition(), cfg.getSlide2MotorTargetPosition());
