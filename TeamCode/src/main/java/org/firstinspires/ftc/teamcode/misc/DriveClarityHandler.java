@@ -26,9 +26,9 @@ public class DriveClarityHandler {
 
     int[] pivotPositions = {
             0, // Starting
-            117, // Half way
-            234, // All the way
-            12, // Little bit from the ground
+            1000, // Half way
+            1700, // All the way
+            30, // Little bit from the ground
     };
 
     public void updateHolonomicDriveMotors(double axial, double lateral, double yaw, DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4, Config cfg) {
@@ -122,8 +122,7 @@ public class DriveClarityHandler {
 
         double currentPivotPID = pivotPID.getOutputFromError(targetPos, cfg.getPivotMotor().getCurrentPosition());
 
-        cfg.getSlide1Motor().setPower(currentPivotPID);
-        cfg.getSlide2Motor().setPower(currentPivotPID);
+        cfg.getPivotMotor().setPower(currentPivotPID);
 
         cfg.setPivotPosition(targetPos);
     }
