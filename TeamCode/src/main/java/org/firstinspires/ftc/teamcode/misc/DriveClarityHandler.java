@@ -26,8 +26,8 @@ public class DriveClarityHandler {
 
     int[] pivotPositions = {
             0, // Starting
-            1000, // Half way
-            1700, // All the way
+            800, // Half way
+            1400, // All the way
             30, // Little bit from the ground
     };
 
@@ -174,7 +174,7 @@ public class DriveClarityHandler {
             cfg.getClawServo().setPosition(1);
             closeClaw = 1;
             pivotPos = pivotPositions[3];
-            cfg.getRotateServo().setPosition(1);
+            cfg.getRotateServo().setPosition(.8);
 
             if(turnInit == 0) {
                 turnInit = cfg.getrTime().milliseconds();

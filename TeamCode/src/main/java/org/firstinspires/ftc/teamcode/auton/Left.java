@@ -549,7 +549,7 @@ public class Left extends LinearOpMode {
             // Update the power of the slide motors based on the target position and the current position
             updateMotors(targetPos.get(), slide1Motor, slide2Motor);
 
-            updatePivot(pivotTargetPos.get(), pivotMotor);
+         //   updatePivot(pivotTargetPos.get(), pivotMotor);
 
             // Update the position of the claw servo based on the value of closeClaw
             updateClawServo(clawServo);
