@@ -31,7 +31,7 @@ public class DriveClarityHandler {
             30, // Little bit from the ground
     };
 
-    public void updateHolonomicDriveMotors(double axial, double lateral, double yaw, DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4, Config cfg) {
+    public void updateHolonomicDriveMotors(double axial, double lateral, double yaw, double maxSpeed, DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4, Config cfg) {
         // Calculate motor speeds here
         double leftFrontMotor = axial + lateral + yaw;
         double rightFrontMotor = axial - lateral - yaw;
@@ -54,12 +54,6 @@ public class DriveClarityHandler {
         cfg.getRfD().setPower(rightFrontMotor * cfg.getSpeedMultiplier());
         cfg.getLbD().setPower(leftBackMotor * cfg.getSpeedMultiplier());
         cfg.getRbD().setPower(rightBackMotor * cfg.getSpeedMultiplier());
-
-        // Set motor speeds
-        motor1.setPower(leftFrontMotor);
-        motor2.setPower(rightFrontMotor);
-        motor3.setPower(leftBackMotor);
-        motor4.setPower(rightBackMotor);
     }
 
     public void updateRobotSpeed(Gamepad gamepad1, Config cfg) {
@@ -95,15 +89,19 @@ public class DriveClarityHandler {
 
         if (gamepad2.dpad_up) {
             armNewPos = -4114;
+            cfg.setSpeedMultiplier(.25);
         }
         if (gamepad2.dpad_left) {
             armNewPos = -3023;
+            cfg.setSpeedMultiplier(.5);
         }
         if (gamepad2.dpad_right) {
             armNewPos = -1755;
+            cfg.setSpeedMultiplier(.75);
         }
         if (gamepad2.dpad_down) {
             armNewPos = 0;
+            cfg.setSpeedMultiplier(1);
         }
 
         // Secure placement
