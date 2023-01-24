@@ -7,7 +7,6 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -113,7 +112,8 @@ public class Left extends LinearOpMode {
         Servo rotateServo = hardwareMap.get(Servo.class, "rotateServo"); // I don't think we even need to use this one
         DcMotor pivotMotor = hardwareMap.get(DcMotor.class, "pivotMotor");
 
-        pivotMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        pivotMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        pivotMotor.setDirection(DcMotor.Direction.FORWARD);
         pivotMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         pivotMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -548,9 +548,12 @@ public class Left extends LinearOpMode {
 
             // Update the power of the slide motors based on the target position and the current position
             updateMotors(targetPos.get(), slide1Motor, slide2Motor);
-
-         //   updatePivot(pivotTargetPos.get(), pivotMotor);
-
+            if (pivotMotor.getCurrentPosition() > pivotTargetPos.get() + 20 || pivotMotor.getCurrentPosition() < pivotTargetPos.get() - 20) {
+                updatePivot(pivotTargetPos.get(), pivotMotor);
+            } else
+            {
+                pivotMotor.setPower(0);
+            }
             // Update the position of the claw servo based on the value of closeClaw
             updateClawServo(clawServo);
 
