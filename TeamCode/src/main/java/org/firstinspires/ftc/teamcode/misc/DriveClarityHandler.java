@@ -31,7 +31,7 @@ public class DriveClarityHandler {
             30, // Little bit from the ground
     };
 
-    public void updateHolonomicDriveMotors(double axial, double lateral, double yaw, double maxSpeed, DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4, Config cfg) {
+    public void updateHolonomicDriveMotors(double axial, double lateral, double yaw, DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4, Config cfg) {
         // Calculate motor speeds here
         double leftFrontMotor = axial + lateral + yaw;
         double rightFrontMotor = axial - lateral - yaw;
