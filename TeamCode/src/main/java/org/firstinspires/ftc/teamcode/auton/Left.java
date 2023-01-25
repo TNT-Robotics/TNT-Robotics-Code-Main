@@ -283,7 +283,7 @@ public class Left extends LinearOpMode {
                     closeClaw = false;
                 })
                 // back from middle junction
-                .back(6)
+                .back(3)
                 // prepare slides and pivotServo for grab from cone stack
                 .addDisplacementMarker(() -> {
                     targetPos.set(-350);
@@ -315,7 +315,7 @@ public class Left extends LinearOpMode {
                     targetPos.set(-4000);
                 })
                 // drive to tall junction
-                .lineToLinearHeading(new Pose2d(-20, -5.5, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(-20, -5.5, Math.toRadians(90)))
                 // center above tall junction
                 .back(5)
                 // drop cone and prepare linear slides for grab from cone stack
@@ -329,7 +329,7 @@ public class Left extends LinearOpMode {
                 .forward(4)
 
                 // drive toward cone stack
-                .lineToLinearHeading(new Pose2d(-62, -5.5, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-62, -5.5, Math.toRadians(0)))
                 // center above cone stack
                 .forward(4)
                 // grab cone
@@ -354,7 +354,7 @@ public class Left extends LinearOpMode {
                 })
 
                 // drive to middle junction
-                .lineToLinearHeading(new Pose2d(-20, -3.5, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(-20, -3.5, Math.toRadians(270)))
 
                 // center above middle junction
                 .back(3)
