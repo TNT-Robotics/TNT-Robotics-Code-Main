@@ -290,7 +290,7 @@ public class Left extends LinearOpMode {
                 .back(3)
                 // prepare slides and pivotServo for grab from cone stack
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-350);
+                    targetPos.set(-500);
                   //  pivotTargetPos.set(pivotPositions[2]);
                 })
 
@@ -324,7 +324,7 @@ public class Left extends LinearOpMode {
                 .forward(6)
                 // drop cone and prepare linear slides for grab from cone stack
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-300);
+                    targetPos.set(-350);
                     clawServo.setPosition(0);
                     closeClaw = false;
 
@@ -335,7 +335,7 @@ public class Left extends LinearOpMode {
                 // drive toward cone stack
                 .lineToLinearHeading(new Pose2d(-62, -5.5, Math.toRadians(180)))
                 // center above cone stack
-                .back(4)
+                .forward(4)
                 // grab cone
                 .addDisplacementMarker(() -> {
                     clawServo.setPosition(1);
