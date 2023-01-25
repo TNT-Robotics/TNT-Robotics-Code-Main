@@ -550,7 +550,7 @@ public class Left extends LinearOpMode {
             updateMotors(targetPos.get(), slide1Motor, slide2Motor);
             if (pivotMotor.getCurrentPosition() > pivotTargetPos.get() + 20 || pivotMotor.getCurrentPosition() < pivotTargetPos.get() - 20) {
                 updatePivot(pivotTargetPos.get(), pivotMotor);
-            } else
+            } else if (pivotMotor.getPower() != 0)
             {
                 pivotMotor.setPower(0);
             }
