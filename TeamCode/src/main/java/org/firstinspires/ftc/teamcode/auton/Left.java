@@ -261,6 +261,10 @@ public class Left extends LinearOpMode {
                 .build();
 
         TrajectorySequence parkNumber2 = drive.trajectorySequenceBuilder(startPose)
+                .addDisplacementMarker(() -> {
+                    targetPos.set(-200);
+                    //       pivotTargetPos.set(pivotPositions[0]);
+                })
                 // get away from wall
                 .forward(4)
 
@@ -269,7 +273,7 @@ public class Left extends LinearOpMode {
 
                 // start moving linear slides up and prepare cone drop with pivotServo
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-1350);
+                    targetPos.set(-1700);
              //       pivotTargetPos.set(pivotPositions[0]);
                 })
                 // drive to middle junction
@@ -315,9 +319,9 @@ public class Left extends LinearOpMode {
                     targetPos.set(-4000);
                 })
                 // drive to tall junction
-                .lineToLinearHeading(new Pose2d(-20, -5.5, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(-22, -5.5, Math.toRadians(90)))
                 // center above tall junction
-                .forward(5)
+                .forward(6)
                 // drop cone and prepare linear slides for grab from cone stack
                 .addDisplacementMarker(() -> {
                     targetPos.set(-300);
@@ -326,10 +330,10 @@ public class Left extends LinearOpMode {
 
                 })
                 // back from tall junction
-                .back(4)
+                .back(5)
 
                 // drive toward cone stack
-                .lineToLinearHeading(new Pose2d(-62, -5.5, Math.toRadians(0)))
+                .lineToLinearHeading(new Pose2d(-62, -5.5, Math.toRadians(180)))
                 // center above cone stack
                 .back(4)
                 // grab cone
@@ -366,7 +370,7 @@ public class Left extends LinearOpMode {
 
                 })
                 // back from middle junction
-                .back(3)
+                .back(6)
 
                 // Parking
                 .lineTo(new Vector2d(-36,-12))
