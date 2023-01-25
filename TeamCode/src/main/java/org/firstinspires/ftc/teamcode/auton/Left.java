@@ -270,7 +270,7 @@ public class Left extends LinearOpMode {
                 // start moving linear slides up and prepare cone drop with pivotServo
                 .addDisplacementMarker(() -> {
                     targetPos.set(-1350);
-                    pivotTargetPos.set(pivotPositions[0]);
+             //       pivotTargetPos.set(pivotPositions[0]);
                 })
                 // drive to middle junction
                 .lineTo(new Vector2d(-58,-20))
@@ -283,25 +283,25 @@ public class Left extends LinearOpMode {
                     closeClaw = false;
                 })
                 // back from middle junction
-                .back(1)
+                .back(6)
                 // prepare slides and pivotServo for grab from cone stack
                 .addDisplacementMarker(() -> {
                     targetPos.set(-350);
-                    pivotTargetPos.set(pivotPositions[2]);
+                  //  pivotTargetPos.set(pivotPositions[2]);
                 })
 
                 // drive to cone stack
-                .lineTo(new Vector2d(-57, -5.5))
+                .lineToLinearHeading(new Pose2d(-57, -5.5, Math.toRadians(180)))
 
                 // center above cone stack
-                .back(5)
+                .forward(5)
                 // Grab cone
                 .addDisplacementMarker(() -> {
                     clawServo.setPosition(1);
                     closeClaw = true;
                 })
                 // turn claw with cone to drop
-                .forward(1)
+                .back(1)
 
                 // go up, if it is not reliable then try thinking of another solution how to make sure we
                 // dont drop the whole cone stack. Dont forget you cannot use wait since that turns off our linear slides
@@ -309,7 +309,7 @@ public class Left extends LinearOpMode {
                     targetPos.set(-1000);
                 })
                 // drive away from cone stack
-                .forward(6)
+                .back(6)
                 // move linear slides to tall junction drop
                 .addDisplacementMarker(() -> {
                     targetPos.set(-4000);
@@ -538,7 +538,7 @@ public class Left extends LinearOpMode {
         } else if (id == 182) { // Number 3
             drive.followTrajectorySequenceAsync(parkNumber3);
         } else { // Found none
-            drive.followTrajectorySequenceAsync(parkNumber1);
+            drive.followTrajectorySequenceAsync(parkNumber2);
         }
 
         // Run the loop until the op mode is no longer active
@@ -548,12 +548,12 @@ public class Left extends LinearOpMode {
 
             // Update the power of the slide motors based on the target position and the current position
             updateMotors(targetPos.get(), slide1Motor, slide2Motor);
-            if (pivotMotor.getCurrentPosition() > pivotTargetPos.get() + 20 || pivotMotor.getCurrentPosition() < pivotTargetPos.get() - 20) {
+/*            if (pivotMotor.getCurrentPosition() > pivotTargetPos.get() + 20 || pivotMotor.getCurrentPosition() < pivotTargetPos.get() - 20) {
                 updatePivot(pivotTargetPos.get(), pivotMotor);
             } else if (pivotMotor.getPower() != 0)
             {
                 pivotMotor.setPower(0);
-            }
+            } */
             // Update the position of the claw servo based on the value of closeClaw
             updateClawServo(clawServo);
 
