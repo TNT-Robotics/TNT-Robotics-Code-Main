@@ -60,8 +60,8 @@ public class Left extends LinearOpMode {
 
     int[] pivotPositions = {
       0, // Starting
-      117, // Half way
-      234, // All the way
+      800, // Half way
+      1400, // All the way
     };
 
     // Create a timer object to track elapsed time
