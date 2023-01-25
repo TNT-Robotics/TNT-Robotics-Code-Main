@@ -294,14 +294,14 @@ public class Left extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(-57, -5.5, Math.toRadians(180)))
 
                 // center above cone stack
-                .back(5)
+                .forward(5)
                 // Grab cone
                 .addDisplacementMarker(() -> {
                     clawServo.setPosition(1);
                     closeClaw = true;
                 })
                 // turn claw with cone to drop
-                .forward(1)
+                .back(1)
 
                 // go up, if it is not reliable then try thinking of another solution how to make sure we
                 // dont drop the whole cone stack. Dont forget you cannot use wait since that turns off our linear slides
@@ -309,7 +309,7 @@ public class Left extends LinearOpMode {
                     targetPos.set(-1000);
                 })
                 // drive away from cone stack
-                .forward(6)
+                .back(6)
                 // move linear slides to tall junction drop
                 .addDisplacementMarker(() -> {
                     targetPos.set(-4000);
