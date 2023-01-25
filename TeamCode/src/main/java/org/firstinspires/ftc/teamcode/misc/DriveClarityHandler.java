@@ -157,8 +157,12 @@ public class DriveClarityHandler {
         return closeClaw;
     }
 
-    public double[] updateConeServos(Gamepad gamepad2, double turnInit, double turnInit2, int pivotPos, Config cfg) {
-        double closeClaw = 0;
+    public double[] updateConeServos(Gamepad gamepad2, boolean closeClaw, double turnInit, double turnInit2, int pivotPos, Config cfg) {
+        double closeClaw2 = 0;
+
+        if (closeClaw == true) {
+            closeClaw2 = 1;
+        }
         // Pickup
         if (gamepad2.cross) {
             pivotPos = pivotPositions[0];
@@ -172,7 +176,7 @@ public class DriveClarityHandler {
         // Placedown (put on pole)
         if (gamepad2.circle) {
             cfg.getClawServo().setPosition(1);
-            closeClaw = 1;
+            closeClaw2 = 1;
             pivotPos = pivotPositions[3];
             cfg.getRotateServo().setPosition(.8);
 
@@ -184,11 +188,11 @@ public class DriveClarityHandler {
 
         if (gamepad2.square) {
             cfg.getClawServo().setPosition(1);
-            closeClaw = 1;
+            closeClaw2 = 1;
             pivotPos = pivotPositions[1];
         }
 
-        return new double[] { turnInit, turnInit2, closeClaw, pivotPos};
+        return new double[] { turnInit, turnInit2, closeClaw2, pivotPos};
     }
 
     public double[] updateServosAfterDelay(double turnInit, double turnInit2, double lastPing, boolean closeClaw, int pivotPos, Config cfg) {

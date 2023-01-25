@@ -137,10 +137,10 @@ public class Drive extends LinearOpMode {
             driveClarityHandler.updateSlideMotors(gamepad2, slidesPID, cfg);
 
             // Update claw servos based on gamepad input
-            driveClarityHandler.updateGamepadServos(gamepad2, closeClaw, cfg);
+            closeClaw = driveClarityHandler.updateGamepadServos(gamepad2, closeClaw, cfg);
 
             // Update cone servos based on gamepad input
-            double[] updatedServoValues = driveClarityHandler.updateConeServos(gamepad2, turnInit, turnInit2, pivotMotorTargetPosition, cfg);
+            double[] updatedServoValues = driveClarityHandler.updateConeServos(gamepad2, closeClaw, turnInit, turnInit2, pivotMotorTargetPosition, cfg);
             turnInit = updatedServoValues[0];
             turnInit2 = updatedServoValues[1];
             closeClaw = updatedServoValues[2] == 1;
