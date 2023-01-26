@@ -290,7 +290,7 @@ public class Left extends LinearOpMode {
                 .back(3)
                 // prepare slides and pivotServo for grab from cone stack
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-500);
+                    targetPos.set(-600);
                   //  pivotTargetPos.set(pivotPositions[2]);
                 })
 
@@ -324,7 +324,7 @@ public class Left extends LinearOpMode {
                 .forward(6)
                 // drop cone and prepare linear slides for grab from cone stack
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-350);
+                    targetPos.set(-400);
                     clawServo.setPosition(0);
                     closeClaw = false;
 
@@ -335,7 +335,7 @@ public class Left extends LinearOpMode {
                 // drive toward cone stack
                 .lineToLinearHeading(new Pose2d(-62, -5.5, Math.toRadians(180)))
                 // center above cone stack
-                .forward(1)
+                .forward(.7)
                 // grab cone
                 .addDisplacementMarker(() -> {
                     clawServo.setPosition(1);
@@ -345,7 +345,7 @@ public class Left extends LinearOpMode {
                 // same as before, trying to not throw the whole cone stack down, try finding something more reliable, maybe try experimenting with going up already when grabbing the cone
                 .forward(1)
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-1000);
+                    targetPos.set(-900);
                 })
 
                 // back from the cone stack
@@ -354,14 +354,14 @@ public class Left extends LinearOpMode {
                 // ----- The below has not been really tested at all, so you will probably need to tweak a few numbers here -----
                 // move linear slides for middle junction
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-2900);
+                    targetPos.set(-3000);
                 })
 
                 // drive to middle junction
-                .lineToLinearHeading(new Pose2d(-20, -3.5, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(-19, -3.5, Math.toRadians(270)))
 
                 // center above middle junction
-                .forward(3)
+                .forward(6)
                 // drop cone
                 .addDisplacementMarker(() -> {
                     targetPos.set(0);

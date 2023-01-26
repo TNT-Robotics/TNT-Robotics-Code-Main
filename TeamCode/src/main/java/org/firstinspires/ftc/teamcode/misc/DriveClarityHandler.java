@@ -27,7 +27,7 @@ public class DriveClarityHandler {
     int[] pivotPositions = {
             0, // Starting
             800, // Half way
-            1400, // All the way
+            1350, // All the way
             30, // Little bit from the ground
     };
 
@@ -88,15 +88,15 @@ public class DriveClarityHandler {
         double currentArmPID = slidesPID.getOutputFromError(armNewPos, cfg.getSlide1Motor().getCurrentPosition());
 
         if (gamepad2.dpad_up) {
-            armNewPos = -4114;
+            armNewPos = -3800;
             cfg.setSpeedMultiplier(.25);
         }
         if (gamepad2.dpad_left) {
-            armNewPos = -3023;
+            armNewPos = -2700;
             cfg.setSpeedMultiplier(.5);
         }
         if (gamepad2.dpad_right) {
-            armNewPos = -1755;
+            armNewPos = -1470;
             cfg.setSpeedMultiplier(.75);
         }
         if (gamepad2.dpad_down) {
