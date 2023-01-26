@@ -167,6 +167,8 @@ public class DriveClarityHandler {
         if (gamepad2.cross) {
             pivotPos = pivotPositions[0];
             cfg.getRotateServo().setPosition(0);
+            cfg.getClawServo().setPosition(1);
+            closeClaw2 = 1;
 
             if (turnInit2 == 0) {
                 turnInit2 = cfg.getrTime().milliseconds();
