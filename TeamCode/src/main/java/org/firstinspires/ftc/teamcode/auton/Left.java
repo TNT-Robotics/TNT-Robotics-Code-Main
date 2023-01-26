@@ -148,6 +148,10 @@ public class Left extends LinearOpMode {
 
 
         TrajectorySequence parkNumber1 = drive.trajectorySequenceBuilder(startPose)
+                .addDisplacementMarker(() -> {
+                    targetPos.set(-200);
+                    //       pivotTargetPos.set(pivotPositions[0]);
+                })
                 // get away from wall
                 .forward(4)
 
@@ -156,11 +160,11 @@ public class Left extends LinearOpMode {
 
                 // start moving linear slides up and prepare cone drop with pivotServo
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-1850);
-                    pivotTargetPos.set(pivotPositions[0]);
+                    targetPos.set(-1775);
+                    //       pivotTargetPos.set(pivotPositions[0]);
                 })
                 // drive to middle junction
-                .lineTo(new Vector2d(-58,-20))
+                .lineTo(new Vector2d(-58,-20.5))
                 // center above middle junction
                 .forward(1)
 
@@ -170,25 +174,25 @@ public class Left extends LinearOpMode {
                     closeClaw = false;
                 })
                 // back from middle junction
-                .back(1)
+                .back(3)
                 // prepare slides and pivotServo for grab from cone stack
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-350);
-                    pivotTargetPos.set(pivotPositions[2]);
+                    targetPos.set(-600);
+                    //  pivotTargetPos.set(pivotPositions[2]);
                 })
 
                 // drive to cone stack
-                .lineTo(new Vector2d(-57, -5.5))
+                .lineToLinearHeading(new Pose2d(-57, -5.5, Math.toRadians(180)))
 
                 // center above cone stack
-                .back(5)
+                .forward(5)
                 // Grab cone
                 .addDisplacementMarker(() -> {
                     clawServo.setPosition(1);
                     closeClaw = true;
                 })
                 // turn claw with cone to drop
-                .forward(1)
+                .back(1)
 
                 // go up, if it is not reliable then try thinking of another solution how to make sure we
                 // dont drop the whole cone stack. Dont forget you cannot use wait since that turns off our linear slides
@@ -196,29 +200,29 @@ public class Left extends LinearOpMode {
                     targetPos.set(-1000);
                 })
                 // drive away from cone stack
-                .forward(6)
+                .back(6)
                 // move linear slides to tall junction drop
                 .addDisplacementMarker(() -> {
                     targetPos.set(-4000);
                 })
                 // drive to tall junction
-                .lineToLinearHeading(new Pose2d(-20, -5.5, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(-22, -5.5, Math.toRadians(90)))
                 // center above tall junction
-                .back(5)
+                .forward(6)
                 // drop cone and prepare linear slides for grab from cone stack
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-300);
+                    targetPos.set(-400);
                     clawServo.setPosition(0);
                     closeClaw = false;
 
                 })
                 // back from tall junction
-                .forward(4)
+                .back(5)
 
                 // drive toward cone stack
                 .lineToLinearHeading(new Pose2d(-62, -5.5, Math.toRadians(180)))
                 // center above cone stack
-                .forward(4)
+                .forward(.7)
                 // grab cone
                 .addDisplacementMarker(() -> {
                     clawServo.setPosition(1);
@@ -226,25 +230,25 @@ public class Left extends LinearOpMode {
                 })
 
                 // same as before, trying to not throw the whole cone stack down, try finding something more reliable, maybe try experimenting with going up already when grabbing the cone
-                .back(1)
+                .forward(1)
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-1000);
+                    targetPos.set(-900);
                 })
 
                 // back from the cone stack
-                .back(3)
+                .forward(3)
 
                 // ----- The below has not been really tested at all, so you will probably need to tweak a few numbers here -----
                 // move linear slides for middle junction
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-2900);
+                    targetPos.set(-3000);
                 })
 
                 // drive to middle junction
-                .lineToLinearHeading(new Pose2d(-20, -3.5, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(-19, -3.5, Math.toRadians(270)))
 
                 // center above middle junction
-                .back(3)
+                .forward(6)
                 // drop cone
                 .addDisplacementMarker(() -> {
                     targetPos.set(0);
@@ -253,11 +257,11 @@ public class Left extends LinearOpMode {
 
                 })
                 // back from middle junction
-                .forward(3)
+                .back(6)
 
                 // Parking
                 .lineTo(new Vector2d(-62,-2.5))
-                .lineTo(new Vector2d(-62,-6.5))
+                //.lineTo(new Vector2d(-62,-6.5))
                 .build();
 
         TrajectorySequence parkNumber2 = drive.trajectorySequenceBuilder(startPose)
@@ -374,9 +378,13 @@ public class Left extends LinearOpMode {
 
                 // Parking
                 .lineTo(new Vector2d(-36,-12))
-                .lineTo(new Vector2d(-36,-20))
+                //.lineTo(new Vector2d(-36,-20))
                 .build();
         TrajectorySequence parkNumber3 = drive.trajectorySequenceBuilder(startPose)
+                .addDisplacementMarker(() -> {
+                    targetPos.set(-200);
+                    //       pivotTargetPos.set(pivotPositions[0]);
+                })
                 // get away from wall
                 .forward(4)
 
@@ -385,11 +393,11 @@ public class Left extends LinearOpMode {
 
                 // start moving linear slides up and prepare cone drop with pivotServo
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-1350);
-                    pivotTargetPos.set(pivotPositions[0]);
+                    targetPos.set(-1775);
+                    //       pivotTargetPos.set(pivotPositions[0]);
                 })
                 // drive to middle junction
-                .lineTo(new Vector2d(-58,-20))
+                .lineTo(new Vector2d(-58,-20.5))
                 // center above middle junction
                 .forward(1)
 
@@ -399,25 +407,25 @@ public class Left extends LinearOpMode {
                     closeClaw = false;
                 })
                 // back from middle junction
-                .back(1)
+                .back(3)
                 // prepare slides and pivotServo for grab from cone stack
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-350);
-                    pivotTargetPos.set(pivotPositions[2]);
+                    targetPos.set(-600);
+                    //  pivotTargetPos.set(pivotPositions[2]);
                 })
 
                 // drive to cone stack
-                .lineTo(new Vector2d(-57, -5.5))
+                .lineToLinearHeading(new Pose2d(-57, -5.5, Math.toRadians(180)))
 
                 // center above cone stack
-                .back(5)
+                .forward(5)
                 // Grab cone
                 .addDisplacementMarker(() -> {
                     clawServo.setPosition(1);
                     closeClaw = true;
                 })
                 // turn claw with cone to drop
-                .forward(1)
+                .back(1)
 
                 // go up, if it is not reliable then try thinking of another solution how to make sure we
                 // dont drop the whole cone stack. Dont forget you cannot use wait since that turns off our linear slides
@@ -425,29 +433,29 @@ public class Left extends LinearOpMode {
                     targetPos.set(-1000);
                 })
                 // drive away from cone stack
-                .forward(6)
+                .back(6)
                 // move linear slides to tall junction drop
                 .addDisplacementMarker(() -> {
                     targetPos.set(-4000);
                 })
                 // drive to tall junction
-                .lineToLinearHeading(new Pose2d(-20, -5.5, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(-22, -5.5, Math.toRadians(90)))
                 // center above tall junction
-                .back(5)
+                .forward(6)
                 // drop cone and prepare linear slides for grab from cone stack
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-300);
+                    targetPos.set(-400);
                     clawServo.setPosition(0);
                     closeClaw = false;
 
                 })
                 // back from tall junction
-                .forward(4)
+                .back(5)
 
                 // drive toward cone stack
                 .lineToLinearHeading(new Pose2d(-62, -5.5, Math.toRadians(180)))
                 // center above cone stack
-                .forward(4)
+                .forward(.7)
                 // grab cone
                 .addDisplacementMarker(() -> {
                     clawServo.setPosition(1);
@@ -455,25 +463,25 @@ public class Left extends LinearOpMode {
                 })
 
                 // same as before, trying to not throw the whole cone stack down, try finding something more reliable, maybe try experimenting with going up already when grabbing the cone
-                .back(1)
+                .forward(1)
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-1000);
+                    targetPos.set(-900);
                 })
 
                 // back from the cone stack
-                .back(3)
+                .forward(3)
 
                 // ----- The below has not been really tested at all, so you will probably need to tweak a few numbers here -----
                 // move linear slides for middle junction
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-2900);
+                    targetPos.set(-3000);
                 })
 
                 // drive to middle junction
-                .lineToLinearHeading(new Pose2d(-20, -3.5, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(-19, -3.5, Math.toRadians(270)))
 
                 // center above middle junction
-                .back(3)
+                .forward(6)
                 // drop cone
                 .addDisplacementMarker(() -> {
                     targetPos.set(0);
@@ -482,11 +490,11 @@ public class Left extends LinearOpMode {
 
                 })
                 // back from middle junction
-                .forward(3)
+                .back(6)
 
                 // Parking
                 .lineTo(new Vector2d(-12,-12))
-                .lineTo(new Vector2d(-12,-20))
+                //.lineTo(new Vector2d(-12,-20))
                 .build();
 
         while (!opModeIsActive() && !isStopRequested()) {
