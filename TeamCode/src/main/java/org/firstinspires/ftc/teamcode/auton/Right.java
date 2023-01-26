@@ -427,13 +427,14 @@ public class Right extends LinearOpMode {
                 // go up, if it is not reliable then try thinking of another solution how to make sure we
                 // dont drop the whole cone stack. Dont forget you cannot use wait since that turns off our linear slides
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-1000);
+                    targetPos.set(-1400);
                 })
                 // drive away from cone stack
                 .back(6)
+                .waitSeconds(.5)
                 // move linear slides to tall junction drop
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-4000);
+                    targetPos.set(-4100);
                 })
                 // drive to tall junction
                 .lineToLinearHeading(new Pose2d(22, -5.5, Math.toRadians(270)))
@@ -460,9 +461,9 @@ public class Right extends LinearOpMode {
                 })
 
                 // same as before, trying to not throw the whole cone stack down, try finding something more reliable, maybe try experimenting with going up already when grabbing the cone
-                .forward(1)
+                .forward(.2)
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-900);
+                    targetPos.set(-1400);
                 })
 
                 // back from the cone stack
@@ -623,4 +624,4 @@ public class Right extends LinearOpMode {
         telemetry.addLine(message);
         telemetry.update();
     }
-}}
+}
