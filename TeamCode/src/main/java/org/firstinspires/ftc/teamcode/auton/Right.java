@@ -407,7 +407,7 @@ public class Right extends LinearOpMode {
                 .back(3)
                 // prepare slides and pivotServo for grab from cone stack
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-600);
+                    targetPos.set(-500);
                     //  pivotTargetPos.set(pivotPositions[2]);
                 })
 
@@ -427,7 +427,7 @@ public class Right extends LinearOpMode {
                 // go up, if it is not reliable then try thinking of another solution how to make sure we
                 // dont drop the whole cone stack. Dont forget you cannot use wait since that turns off our linear slides
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-1400);
+                    targetPos.set(-1600);
                 })
                 // drive away from cone stack
                 .back(6)
@@ -463,7 +463,7 @@ public class Right extends LinearOpMode {
                 // same as before, trying to not throw the whole cone stack down, try finding something more reliable, maybe try experimenting with going up already when grabbing the cone
                 .forward(.2)
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-1400);
+                    targetPos.set(-1600);
                 })
 
                 // back from the cone stack
@@ -472,7 +472,7 @@ public class Right extends LinearOpMode {
                 // ----- The below has not been really tested at all, so you will probably need to tweak a few numbers here -----
                 // move linear slides for middle junction
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-3000);
+                    targetPos.set(-3300);
                 })
 
                 // drive to middle junction

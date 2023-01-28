@@ -188,6 +188,7 @@ public class Left extends LinearOpMode {
                 .forward(5)
                 // Grab cone
                 .addDisplacementMarker(() -> {
+                    targetPos.set(-2000);
                     clawServo.setPosition(1);
                     closeClaw = true;
                 })
@@ -196,9 +197,6 @@ public class Left extends LinearOpMode {
 
                 // go up, if it is not reliable then try thinking of another solution how to make sure we
                 // dont drop the whole cone stack. Dont forget you cannot use wait since that turns off our linear slides
-                .addDisplacementMarker(() -> {
-                    targetPos.set(-1000);
-                })
                 // drive away from cone stack
                 .back(6)
                 // move linear slides to tall junction drop
@@ -206,7 +204,7 @@ public class Left extends LinearOpMode {
                     targetPos.set(-4000);
                 })
                 // drive to tall junction
-                .lineToLinearHeading(new Pose2d(-22, -5.5, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(-22, -5.3, Math.toRadians(90)))
                 // center above tall junction
                 .forward(6)
                 // drop cone and prepare linear slides for grab from cone stack
@@ -220,30 +218,23 @@ public class Left extends LinearOpMode {
                 .back(5)
 
                 // drive toward cone stack
-                .lineToLinearHeading(new Pose2d(-62, -5.5, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-62, -5.3, Math.toRadians(180)))
                 // center above cone stack
                 .forward(.7)
                 // grab cone
                 .addDisplacementMarker(() -> {
+                    targetPos.set(-2000);
                     clawServo.setPosition(1);
                     closeClaw = true;
                 })
 
                 // same as before, trying to not throw the whole cone stack down, try finding something more reliable, maybe try experimenting with going up already when grabbing the cone
-                .forward(1)
-                .addDisplacementMarker(() -> {
-                    targetPos.set(-900);
-                })
 
                 // back from the cone stack
                 .forward(3)
 
                 // ----- The below has not been really tested at all, so you will probably need to tweak a few numbers here -----
                 // move linear slides for middle junction
-                .addDisplacementMarker(() -> {
-                    targetPos.set(-3000);
-                })
-
                 // drive to middle junction
                 .lineToLinearHeading(new Pose2d(-19, -3.5, Math.toRadians(270)))
 
@@ -294,7 +285,7 @@ public class Left extends LinearOpMode {
                 .back(3)
                 // prepare slides and pivotServo for grab from cone stack
                 .addDisplacementMarker(() -> {
-                    targetPos.set(-600);
+                    targetPos.set(-580);
                   //  pivotTargetPos.set(pivotPositions[2]);
                 })
 
@@ -305,6 +296,7 @@ public class Left extends LinearOpMode {
                 .forward(5)
                 // Grab cone
                 .addDisplacementMarker(() -> {
+                    targetPos.set(-2000);
                     clawServo.setPosition(1);
                     closeClaw = true;
                 })
@@ -313,9 +305,6 @@ public class Left extends LinearOpMode {
 
                 // go up, if it is not reliable then try thinking of another solution how to make sure we
                 // dont drop the whole cone stack. Dont forget you cannot use wait since that turns off our linear slides
-                .addDisplacementMarker(() -> {
-                    targetPos.set(-1000);
-                })
                 // drive away from cone stack
                 .back(6)
                 // move linear slides to tall junction drop
@@ -337,20 +326,18 @@ public class Left extends LinearOpMode {
                 .back(5)
 
                 // drive toward cone stack
-                .lineToLinearHeading(new Pose2d(-62, -5.5, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-62, -5.3, Math.toRadians(180)))
                 // center above cone stack
                 .forward(.7)
                 // grab cone
                 .addDisplacementMarker(() -> {
+                    targetPos.set(-2000);
                     clawServo.setPosition(1);
                     closeClaw = true;
                 })
 
                 // same as before, trying to not throw the whole cone stack down, try finding something more reliable, maybe try experimenting with going up already when grabbing the cone
                 .forward(1)
-                .addDisplacementMarker(() -> {
-                    targetPos.set(-900);
-                })
 
                 // back from the cone stack
                 .forward(3)
@@ -421,6 +408,7 @@ public class Left extends LinearOpMode {
                 .forward(5)
                 // Grab cone
                 .addDisplacementMarker(() -> {
+                    targetPos.set(-2000);
                     clawServo.setPosition(1);
                     closeClaw = true;
                 })
@@ -429,9 +417,7 @@ public class Left extends LinearOpMode {
 
                 // go up, if it is not reliable then try thinking of another solution how to make sure we
                 // dont drop the whole cone stack. Dont forget you cannot use wait since that turns off our linear slides
-                .addDisplacementMarker(() -> {
-                    targetPos.set(-1000);
-                })
+
                 // drive away from cone stack
                 .back(6)
                 // move linear slides to tall junction drop
@@ -453,20 +439,18 @@ public class Left extends LinearOpMode {
                 .back(5)
 
                 // drive toward cone stack
-                .lineToLinearHeading(new Pose2d(-62, -5.5, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-62, -5.3, Math.toRadians(180)))
                 // center above cone stack
                 .forward(.7)
                 // grab cone
                 .addDisplacementMarker(() -> {
+                    targetPos.set(-2000);
                     clawServo.setPosition(1);
                     closeClaw = true;
                 })
 
                 // same as before, trying to not throw the whole cone stack down, try finding something more reliable, maybe try experimenting with going up already when grabbing the cone
                 .forward(1)
-                .addDisplacementMarker(() -> {
-                    targetPos.set(-900);
-                })
 
                 // back from the cone stack
                 .forward(3)
